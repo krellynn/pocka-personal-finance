@@ -10,7 +10,7 @@ POCKA puts **financial correctness, privacy, clarity, and ease of use** ahead of
 
 ## Status
 
-**Phase 0: Documentation & Architecture Foundation (in review).** The V1 architecture decisions (ADR-001 to ADR-013) were approved on 2026-11-13. The documentation is under review in [PR #1](https://github.com/krellynn/pocka-personal-finance/pull/1) and not yet merged into `main`. Phase 0B (Application Foundation) has not started.
+**Phase 0: Documentation & Architecture Foundation (complete).** The V1 architecture decisions (ADR-001 to ADR-013) were approved on 2026-11-13, and the documentation was merged into `main` via [PR #1](https://github.com/krellynn/pocka-personal-finance/pull/1). Phase 0B (Application Foundation) has not started.
 
 The application itself has **not been built yet**. The repository holds:
 
