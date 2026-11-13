@@ -1,21 +1,20 @@
 # POCKA — Project Status
 
 **Last updated:** 2026-11-13
-**Current phase:** Phase 0, Documentation & Architecture Foundation. V1 architecture decisions ADR-001 to ADR-013 are **approved** (2026-11-13) and documented. Awaiting product-owner approval to start the application foundation phase.
+**Current phase:** Phase 0, Documentation & Architecture Foundation. **In review.** The Phase 0A documentation has been created, and V1 architecture decisions ADR-001 to ADR-013 are **approved** (2026-11-13) and documented. **Phase 0B (Application Foundation) has not started.** It needs explicit product-owner approval after PR #1 is merged.
 
 ---
 
-## 1. Last Verified Git Baseline
+## 1. Last Verified Git State
 
 | Item | Value |
 |---|---|
-| Branch | `main` (tracking `origin/main`) |
-| Latest commit | `122b3bb` "Initial POCKA prototype and gitignore" |
-| Previous commit | `f841ead` "Initial commit" |
+| `main` (origin) | `122b3bb` "Initial POCKA prototype and gitignore". Phase 0 documentation is **not yet merged** into `main` |
+| Documentation branch | `docs/phase-0-architecture`, first documentation commit `11690eb` "docs: add Phase 0 documentation and approved V1 architecture decisions" |
+| Pull request | [krellynn/pocka-personal-finance#1](https://github.com/krellynn/pocka-personal-finance/pull/1), `docs/phase-0-architecture` → `main`, **open for review** |
 | Remote | `origin` → `https://github.com/krellynn/pocka-personal-finance.git` |
-| Working tree at start of Phase 0A | Clean |
 
-All Phase 0 documentation (Phase 0A plus the 2026-11-13 decision update) is **uncommitted** until the product owner approves it.
+The Phase 0 documentation (Phase 0A plus the 2026-11-13 decision update) is **committed on `docs/phase-0-architecture`** and reaches `main` only when PR #1 is approved and merged.
 
 ---
 
@@ -23,7 +22,7 @@ All Phase 0 documentation (Phase 0A plus the 2026-11-13 decision update) is **un
 
 | Component | Status |
 |---|---|
-| Product & architecture documentation | **Drafted** (pending review) |
+| Product & architecture documentation | **Created** and committed on `docs/phase-0-architecture`. In review via PR #1, not yet merged into `main` |
 | Architecture decisions (ADR-001 to ADR-013) | **Approved and documented** in `docs/DECISION_REGISTER.md` and `docs/decisions/` |
 | Static design prototype (`index.html`, root) | **Exists** (demo only). Relocation to `prototype/index.html` is **planned** for the Vite foundation phase (ADR-012), **not yet done** |
 | React/Vite application | **Not started** |
@@ -78,7 +77,7 @@ Authentication, accounts/ledger, transfers, edit/delete of transactions, pockets
 
 ## 4. Known Issues in the Prototype
 
-These are documented only. **Phase 0A does not modify `index.html`.** They must not be carried into the real app.
+These are documented only. **Phase 0 does not modify `index.html`.** They must not be carried into the real app.
 
 1. **Brand palette mismatch.** The prototype uses a lime/deep-green palette (`#b7ef72`, `#294b37`, `#f7f8f5`). The approved palette is `#F4F6F2` / `#FFFFFF` / `#172D45` / `#64766C` / sage `#9BCDB6` / soft blue `#9BC5F5` / soft yellow `#F6D58A`. The **approved palette governs** the real app.
 2. **Currency format.** The prototype renders `Rp 12.450.000` (with a space). The approved format is `Rp12.450.000` (no space).
@@ -102,7 +101,7 @@ Everything in the target architecture: app scaffold, auth, workspaces, ledger, a
 
 ## 6. Next Milestones
 
-1. **Documentation review**: product owner reviews `docs/`, including the Decision Register and ADRs.
+1. **Documentation review**: product owner reviews PR #1 (`docs/`, Decision Register, ADRs), then merges it into `main`.
 2. **Phase 0B — Application Foundation.** It starts only after explicit approval: scaffold, move the prototype to `prototype/index.html` (ADR-012), design tokens, i18n with Bahasa Indonesia default (ADR-011), money/date helpers (ADR-001), Supabase Auth, profiles, personal workspace.
 3. **Design reviews** for the implementation details listed in ARCHITECTURE §9.3, scheduled before the phase that needs each one.
 
@@ -128,3 +127,5 @@ Everything in the target architecture: app scaffold, auth, workspaces, ledger, a
 |---|---|---|
 | 2026-11-13 | 0A | Created README, PROJECT_STATUS, and `docs/` (6 files). No code, dependency, database, or deployment changes. `index.html` untouched. |
 | 2026-11-13 | 0 (decisions) | Recorded 13 approved ADRs: created `docs/DECISION_REGISTER.md` and `docs/decisions/ADR-001…013`. Updated all docs for consistency. Retired the old `ADR-01…12` labels in favour of `BL-01…09`. Documentation only. `index.html` untouched. |
+| 2026-11-13 | 0 (commit) | Committed all Phase 0 documentation as `11690eb` on `docs/phase-0-architecture` and opened PR #1 to `main`. Application foundation named Phase 0B. |
+| 2026-11-13 | 0 (review) | PR #1 review corrections: Git/PR status brought up to date in PROJECT_STATUS and README. |
