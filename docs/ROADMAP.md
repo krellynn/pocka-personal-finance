@@ -89,3 +89,26 @@ The phase sequence is **Approved** (from the Phase 0A brief). Approved architect
 ## Later / Out of V1 (Pending)
 
 Bank aggregation, investment tracking, unrealized FX revaluation (ADR-006), optional recurring auto-posting (ADR-004), advanced credit-card features such as statement cycles and rewards (ADR-007), any `shared_summary` field (ADR-003), English and other UI languages (ADR-011), email/push notifications, native mobile apps, additional budget periods, data export formats beyond CSV.
+
+
+---
+
+## Accelerated V1 Execution Overlay (Proposed; pending package approval)
+
+The approved phase sequence and each phase's exit criteria above remain authoritative. To shorten calendar time without bypassing financial/security gates, use controlled parallel workstreams as specified in [PARALLEL_EXECUTION_PLAN_V1.md](PARALLEL_EXECUTION_PLAN_V1.md).
+
+**Planning target:** 26–28 calendar weeks from approval of the complete planning package, including approximately 2 weeks for planning/design lock and 24–26 weeks for implementation and release work, assuming 15–20 focused hours per week. This is an estimate, not a commitment.
+
+| Window | Main focus | Parallel preparation |
+|---|---|---|
+| Weeks 1–2 | Complete planning and design lock | Functional/UX/QA reviews, decision closure, ERD/RPC/RLS design |
+| Weeks 3–5 | Phase 0B foundation | Design system, Auth, CI, local Supabase, Cloudflare local/preview configuration |
+| Weeks 6–9 | Phase 2 ledger and core transactions | Transaction UI, account screens, finance unit tests and read models |
+| Weeks 10–12 | Complete core personal finance | Categories/sources, refunds/reversals, reports scaffolding, E2E |
+| Weeks 13–16 | Phase 3 planning modules | Pockets, budgets, goals, debt and recurring |
+| Weeks 17–19 | Phase 4 dashboard/reports and FX completion | Report reconciliation, FX tests, in-app notification foundation |
+| Weeks 20–22 | Phase 5 household | Member UI, contribution/expense/settlement and RLS tests |
+| Weeks 23–24 | Phase 6 import/reconciliation | Parser, staging, preview, duplicate and partial-commit tests |
+| Weeks 25–26 | Stabilization/release candidate | Full E2E, accessibility, security, backup and deployment rehearsal |
+
+This overlay does not authorize coding. Implementation begins only after the Master Development Package and Gate G0 are approved and the product owner explicitly authorizes Phase 0B. Parallel work is limited to independent tasks with stable contracts; migrations, ledger semantics and privacy boundaries remain gated and reviewed.
