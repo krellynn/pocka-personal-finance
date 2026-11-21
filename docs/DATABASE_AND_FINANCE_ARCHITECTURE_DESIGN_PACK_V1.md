@@ -761,3 +761,10 @@ D-16 remains pending. Option A (cash/bank/e-wallet balances, excluding card cred
 ### 17.13 Review disposition
 
 R-01–R-05 and R-09–R-10 now have explicit design-level contracts. R-04 and R-07 have explicit RLS boundaries to turn into SQL/tests at their gates. R-06, R-08 and R-12 remain owner/finance choices; R-11 remains a required G2 deliverable, not falsely marked complete. This document remains non-executable and does not authorize coding, migrations or deployment.
+
+
+### 17.14 D-11 — RPC-only financial mutations approved
+
+**Product-owner decision (2026-11-21): Option A approved.** Every balance-affecting financial write must execute through PostgreSQL RPC. The browser/client must not directly insert, update or delete ledger/financial facts. RPCs are responsible for validating `auth.uid()`, active workspace membership, operation authorization, same-workspace references, input constraints, canonical idempotency and concurrency controls as applicable. Related business transaction, journal entries/lines, reversal records and audit facts must commit atomically within the command's defined boundary. Grants are deny-by-default; RPC EXECUTE privileges are narrowly scoped. Reads remain available only through RLS-protected queries and approved views/read models.
+
+This decision approves the mutation boundary only. Final RPC names/signatures and payload schemas, per-function grants, SECURITY INVOKER/DEFINER choices and hardening, error catalogue, and executable RLS/grant tests remain G2 deliverables. No SQL migration or implementation is authorized by this decision alone.
