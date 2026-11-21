@@ -175,7 +175,7 @@ Each workspace receives only the system accounts needed for its type and enabled
 - Realized FX Gain and Realized FX Loss.
 - FX Rounding (if approved).
 - Receivable from Household (per household relationship or a controlled counterparty subledger).
-- Household Contribution expense category/account.
+- Household Contribution expense ledger account (system account); the similarly named transaction category is a separate classification dimension.
 - Interest Expense and Fee Expense where debt/card workflows need them.
 
 **Household workspace candidates**
@@ -183,14 +183,15 @@ Each workspace receives only the system accounts needed for its type and enabled
 - Realized FX Gain/Loss and FX Rounding (if approved).
 - Payable to Member (per member/counterparty subledger).
 - Member Contribution Funding (equity-style classification proposed; requires approval).
-- Household income/expense categories as configured.
+- Stable household income/expense control accounts; user-configured categories remain separate classification dimensions.
 
-**Important:** do not create one generic ledger account per UI category without deciding whether categories are dimensions or account mappings. The existing conceptual spec permits both. Phase 2 design must select one model and document migration/report consequences.
+**Approved D-09 (2026-11-21): categories are dimensions, not ledger accounts.** Do not create one ledger account per UI category and do not store a category-to-ledger-account mapping. Income/expense categories classify transactions and drive category-level reports/budgets; journal lines post to stable ledger accounts selected by the posting rules. The final CoA account list and posting mappings still require G2 review.
 
 ### 4.3 CoA design rules
 
 - System accounts have stable system codes; labels may be localized.
-- User-created categories cannot change the accounting class of a system account.
+- Categories have `kind` (`income` or `expense`) for validation, but never determine or change the accounting class of a ledger account.
+- Category create/rename/archive/reassignment does not create, rename, archive, or remap ledger accounts. Historical transaction reporting must retain a defined category identity/snapshot policy.
 - Asset/liability accounts carry a currency code. Income/expense account currency behaviour must be specified for base-currency and original-currency reporting.
 - A ledger account referenced by posted lines cannot be deleted; archive it.
 - A financial account maps to exactly one ledger account. Credit card maps to liability; other wallet types map to asset.
@@ -204,12 +205,12 @@ Amounts below are positive minor-unit values. Dr/Cr lines are generated server-s
 | Event | Debit | Credit | P&L treatment |
 |---|---|---|---|
 | Opening balance | Asset | Opening Balance Equity | None |
-| Income received | Asset | Income category | Income |
-| Expense paid | Expense category | Asset | Expense |
+| Income received | Asset | Stable income control account | Income; category is transaction metadata/dimension |
+| Expense paid | Stable expense control account | Asset | Expense; category is transaction metadata/dimension |
 | Transfer own accounts | Destination asset | Source asset | None |
 | Refund | Asset | Original expense (offset) | Reduces expense |
 | Adjustment | Approved asset/equity/adjustment pair | Counter-line | Depends on approved reason |
-| Credit-card purchase | Expense category | Card liability | Expense once |
+| Credit-card purchase | Stable expense control account | Card liability | Expense once; category is transaction metadata/dimension |
 | Credit-card bill payment | Card liability | Bank asset | None |
 | Loan disbursement | Cash/bank asset | Loan liability | None |
 | Principal repayment | Loan liability | Cash/bank asset | None |
@@ -697,9 +698,9 @@ Global provider/reference rows (workspace_id IS NULL) are authenticated read-onl
 
 For a member paying a household expense directly from personal funds with contribution intent: personal side Dr Household Contribution expense / Cr Personal asset; household side Dr Household expense / Cr Member Contribution Funding (equity-style classification remains subject to CoA approval). This is not a cash transfer into a household-owned account. For reimbursable advance: personal Dr Receivable from Household / Cr Personal asset; household Dr Household expense / Cr Payable to Member. Reimbursement clears payable/receivable and creates no second expense. An actual transfer into a household-owned account is a separate event and must not be conflated with direct payment.
 
-### 17.6 R-06 — Category model remains a G2 choice
+### 17.6 R-06 — Category model decided; historical semantics remain a G2 detail
 
-Select exactly one before G2: (A) categories as dimensions with stable income/expense control accounts, or (B) categories mapped to income/expense ledger accounts with class constraints and historical mapping. The dimension model is the recommended review candidate, not approved. Owner/finance review must approve category rename/archive/reassignment and historical reporting examples. No hybrid implementation.
+**Decision: Option A — categories as dimensions, approved by the product owner on 2026-11-21.** Categories do not map 1:1 to ledger accounts and are not ledger accounts. Posting RPCs select stable income/expense control accounts from the approved CoA/posting rules; category IDs remain transaction classification metadata for budgets and reports. No hybrid implementation. Before G2, specify category rename/archive/reassignment and historical reporting behaviour (including whether posted transactions retain category ID, immutable category snapshot, or both). The final CoA and posting matrix remain subject to their own approval.
 
 ### 17.7 R-07 — Table-by-table RLS baseline
 
