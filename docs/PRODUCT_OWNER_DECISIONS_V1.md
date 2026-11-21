@@ -32,7 +32,7 @@
 | D-14 | Account archive/unarchive and balance inclusion | **Approved — Option B (2026-11-21)** | An account may be archived only after its balance is zero; archived accounts are excluded from active-balance totals and Net Worth. Preserve posted history. Unarchive behaviour remains a separate design detail. | Prevent misleading totals without hiding assets |
 | D-15 | Refund limits and partial refunds | **Approved — Option A (2026-11-21)** | Allow multiple partial refunds against one original expense; cumulative successful refunds must never exceed the original refundable amount. A single full refund is also allowed. | Support staged returns while preventing over-refund |
 | D-16 | Pocket eligible-funds policy | **Approved — Option A (2026-11-21)** | Eligible funds are the net position of active cash, bank and e-wallet balances: positive balances contribute; negative/overdraft balances reduce the total. Exclude credit-card credit/available limit, receivables and archived accounts. Unallocated may become negative transparently after spending; block new allocations that would increase the shortfall. FX conversion details remain gated by D-18/D-19. | Prevent allocation of borrowed or unavailable funds while showing shortfalls honestly |
-| D-17 | Debt edge cases | Pending design review | Define overpayment, early settlement, schedule edits and fee treatment | Liability accuracy |
+| D-17 | Debt edge cases | **Partially approved — D-17.1 Option A (2026-11-21)** | Reject debt payments that exceed the remaining total obligation; early settlement, schedule edits and fee treatment remain pending | Liability accuracy |
 | D-18 | FX carrying-value method | Pending design review | Choose a documented basis consistent with ADR-006; no unrealized revaluation | Correct realized gain/loss |
 | D-19 | FX rate provider | Pending design review | Select provider only after availability, terms, reliability and cost review; allow manual rate fallback if approved | Multi-currency operation |
 
@@ -115,3 +115,6 @@ The review made technical contracts explicit but has not silently approved the f
 | D-24 household account ownership/visibility | Pending design review | Define shared account types and visibility |
 
 Keep D-11/D-12 synchronized across DEVELOPMENT_GUIDELINES.md, DOMAIN_AND_API_CONTRACTS_V1.md and the Database & Finance Design Pack. G0 may proceed independently of G2 only after its own dependencies are approved; unresolved G2/G5 decisions do not authorize Phase 0B or finance implementation.
+
+
+**D-17.1 decision record (2026-11-21):** The product owner approved **Option A — Reject Overpayment**. A debt payment must be rejected when its total exceeds the remaining amount due under the debt obligation. For example, if the remaining obligation is Rp5,000,000, an attempted Rp6,000,000 payment is rejected and the user must enter a valid amount. The excess is not accepted as lender credit, a receivable/refundable balance, or an additional expense. This decision resolves overpayment handling only; early settlement, schedule changes and interest/fee treatment remain pending under D-17. It does not authorize migrations or implementation.
