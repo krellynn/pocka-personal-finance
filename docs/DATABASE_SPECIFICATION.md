@@ -25,7 +25,7 @@ auth.users ─1:1─ profiles
      │
      └─< workspace_members >─ workspaces ─┬─< financial_accounts ─1:1─ ledger_accounts
                                           ├─< ledger_accounts (income/expense/equity/liability)
-                                          ├─< transaction_categories ─> ledger_accounts
+                                          ├─< transaction_categories (classification dimension; independent of ledger_accounts)
                                           ├─< income_sources
                                           ├─< transactions ─1:1─ journal_entries ─< journal_lines ─> ledger_accounts
                                           ├─< pockets ─< pocket_allocations
@@ -114,8 +114,7 @@ For conversions and settlements, the posting also records **carrying value** and
 
 ### 3.4 Categories & Income
 
-**transaction_categories**: `id`, `workspace_id`, `kind` (`income`|`expense`), `name`, `icon` (Lucide name), `color`, `parent_id`, `ledger_account_id`, `is_system`, `archived_at`. Unique `(workspace_id, kind, lower(name), parent_id)`.
-*Consolidation note:* each category maps to one income/expense ledger account. Categories may be implemented *as* ledger accounts with presentation fields (implementation detail requiring design review before Phase 2).
+**transaction_categories**: `id`, `workspace_id`, `kind` (`income`|`expense`), `name`, `icon` (Lucide name), `color`, `parent_id`, `is_system`, `archived_at`. Unique `(workspace_id, kind, lower(name), parent_id)`. **Approved D-09: categories are dimensions, not ledger accounts.** There is no `ledger_account_id` mapping. Categories classify transactions and support category-level budgets/reports; posting RPCs select stable ledger control accounts independently. Category lifecycle and historical reporting semantics must be finalized before ledger migrations.
 
 System expense category **Household Contribution** (localised name, e.g. *Kontribusi Rumah Tangga*) exists in every personal workspace for contribution-intent payments (ADR-005).
 
@@ -203,7 +202,7 @@ Full semantics are in `HOUSEHOLD_PRIVACY.md`.
 | `recurring_skips` | Merge into `recurring_executions.status` |
 | `record_permissions` | Defer; use `visibility` + `shared_items` |
 | `idempotency_keys` | Prefer unique columns; table for composite ops |
-| `transaction_categories` vs `ledger_accounts` | Design review before Phase 2: 1:1 link (current proposal) or merge |
+| `transaction_categories` vs `ledger_accounts` | **Approved D-09: separate models; no 1:1 mapping and no merge.** Final CoA and category history semantics remain G2 design items |
 
 All consolidations require product-owner/architect sign-off in a design review before the first ledger migrations (Phase 2).
 
@@ -282,7 +281,7 @@ All consolidations require product-owner/architect sign-off in a design review b
 1. **Idempotency:** the earlier unique (workspace_id, idempotency_key) is not the complete command identity. Use (workspace_id, operation_name, idempotency_key) with a normalized request fingerprint. Identical retries replay the original result/in-progress state; a different fingerprint returns IDEMPOTENCY_CONFLICT; concurrent duplicates serialize. A transaction-level unique key is only a secondary guard.
 2. **Money wire format:** every JSON monetary amount is a decimal integer string in minor units, regardless of JavaScript safe-integer size. Parse to TypeScript bigint; never send monetary JSON numbers. Currency exponent comes from currencies.minor_units.
 3. **Exchange-rate RLS:** global rows (workspace_id IS NULL) are authenticated read-only published data; client writes are denied and ingestion is server-controlled. Workspace manual rows are visible only to active members of that exact workspace and writable only through an authorized audited path. Use separate policies; no blanket authenticated-read policy.
-4. **Category model:** category-as-dimension vs category-to-ledger-account mapping remains unresolved until G2. Select one model and approve historical rename/archive/reassignment behaviour; do not implement a hybrid.
+4. **Category model (D-09 approved 2026-11-21):** categories are dimensions and are not mapped 1:1 to ledger accounts. Finalize historical rename/archive/reassignment behaviour before migrations; no hybrid model.
 5. **Reversal:** reversal is transaction-scoped and reverses the complete posted journal-entry set atomically, with one successful reversal per original. Preserve original rows; replacement is a separate linked transaction; reversal-of-reversal is rejected.
 6. **Data dictionary:** the entity list remains conceptual. G2 requires a complete table-by-table column/type/nullability/default/constraint/index/FK/RLS/write-path/lifecycle/retention/test dictionary before ledger migration.
 
