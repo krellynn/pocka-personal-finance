@@ -197,3 +197,14 @@ Additionally:
 The earlier §7 statement that financial mutations “go through RPC functions” describes the recommended target architecture, not an already approved implementation decision. D-11 remains Proposed and requires explicit product-owner approval at G2. No financial write path may be implemented before that gate. If approved, balance-affecting commands use constrained PostgreSQL RPCs (or an explicitly approved equivalent server-side transaction boundary), with identity/membership/role checks, atomic posting, required row locks, canonical idempotency and audit events. Direct client writes to journal tables are not permitted under the proposed target.
 
 Money remains BIGINT minor units in PostgreSQL and bigint in TypeScript. All monetary JSON values use decimal integer strings in minor units, not conditional number/string serialization. This is a future API contract clarification, not a change to ADR-001 storage.
+
+
+## 6. Financial Mutation Boundary (Approved — D-11, 2026-11-21)
+
+- Every balance-affecting financial write must go through a PostgreSQL RPC.
+- Browser/client code must never directly insert, update or delete ledger/financial facts.
+- RPCs validate authenticated actor (`auth.uid()`), active workspace membership, operation permission, same-workspace references, input constraints, idempotency and concurrency as applicable.
+- A financial command commits its related transaction, journal entries/lines, reversal state and audit facts atomically within its defined boundary.
+- Table grants and RPC EXECUTE grants are deny-by-default and narrowly scoped. Do not assume `SECURITY DEFINER`; choose and harden function security mode during G2 design review.
+- Reads use RLS-protected queries and approved views/read models; D-11 does not require all reads to use RPC.
+- This is a binding architecture boundary, not permission to create migrations or start implementation before the relevant gate is approved.
