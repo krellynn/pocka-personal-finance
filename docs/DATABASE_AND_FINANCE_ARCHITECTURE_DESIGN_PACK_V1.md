@@ -627,7 +627,7 @@ This pack intentionally does not silently close any pending decision.
 | D-12 | Money wire format | Shared API/type generation |
 | D-13 | Balance/read model | Dashboard/report implementation using SQL views; materialization only after measured need and reconciliation tests |
 | D-14 | Account archive and balance inclusion | **Approved Option B (2026-11-21):** zero-balance precondition; exclude archived accounts from active-balance and Net Worth views; preserve history. Unarchive flow remains to be specified |
-| D-15 | Partial refund rules | Refund RPC |
+| D-15 | Partial refund rules | **Approved Option A (2026-11-21):** multiple linked partial refunds allowed; cumulative posted refunds capped at original refundable amount; validate remaining amount under lock and idempotency |
 | D-16 | Pocket eligible funds | Pocket allocation enforcement |
 | D-17 | Debt edge cases | Debt posting/schedule implementation |
 | D-18 | FX carrying-value method | FX posting implementation |
@@ -771,7 +771,7 @@ This decision approves the mutation boundary only. Final RPC names/signatures an
 
 ### 17.15 D-13 — SQL views as the initial balance/read model approved
 
-### 17.16 D-14 — Account archive requires zero balance; excluded from totals
+### 17.17 D-15 — Multiple partial refunds approved\n\n**Product-owner decision (2026-11-21): Option A approved.** An eligible original expense may receive multiple linked partial refunds over time, or one full refund. Each refund is a separate posted business event that offsets the original expense; it is not income and is not an error-correction reversal. Before posting, calculate the remaining refundable amount as the original refundable amount less all successful prior refunds linked to that original. The cumulative successful refund amount must never exceed the original refundable amount. The refund RPC must lock the original transaction before checking the remainder, enforce canonical idempotency and concurrency controls, and commit the refund transaction and journal atomically. Detailed multi-currency carrying-value treatment, fees/return adjustments, and refunds paid to a different account remain G2 design deliverables. This decision does not approve final RPC signatures or authorize migrations/implementation.\n\n### 17.16 D-14 — Account archive requires zero balance; excluded from totals
 
 **Product-owner decision (2026-11-21): Option B approved.** Archiving represents closing an account. An account with posted history is never hard-deleted; it may be archived only after its balance is zero in its own currency. Before archiving, any remaining balance must be cleared through a valid transfer or another separately approved closing transaction. The archive action itself must not write off, delete, or silently remove a nonzero asset/liability. Once archived, the account is excluded from both Total Active Account Balance and current Net Worth, rejects new postings, and remains available in historical transaction/report records. Unarchive/reactivation permissions and flow remain a separate design detail. This decision does not authorize migrations or implementation.
 
