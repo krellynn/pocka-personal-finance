@@ -99,10 +99,10 @@ Every workspace-scoped operation must validate active membership and relevant ro
 ## 6. Categories and income sources
 
 ### Capabilities
-- Separate income and expense categories.
+- Separate income and expense categories; categories are classification dimensions, not ledger accounts (D-09 approved).
 - Multiple income sources (employer, freelance client, business, other).
 - System defaults and user-defined categories (user-defined capability is Proposed until final taxonomy review).
-- Category/source selection in relevant transaction forms and filters.
+- Category/source selection in relevant transaction forms and filters. Category selection is metadata for reporting/budgets and does not select or create a ledger account.
 
 ### Acceptance criteria
 - Income source is not conflated with income category.
