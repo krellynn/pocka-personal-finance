@@ -74,7 +74,7 @@ Workspace selector is a global shell control. Navigation labels and grouping may
 | Accounts list/detail | Account type, currency, balance, activity | no accounts, archived, error |
 | Transaction list/detail | Date, type, amount, category/source, account, status | filter empty, draft, posted, reversed |
 | Transaction form | Type-specific fields, account, category/source, date, note | validation, precision, duplicate submit |
-| Pockets | Pocket allocations, Unallocated, history | no pockets, no eligible funds, overspending |
+| Pockets | Pocket allocations, Unallocated, history | no pockets, no eligible funds, overspending, negative Unallocated shortfall |
 | Budgets | Period, category plan, actual, progress | no budget, overspend, refund adjustment |
 | Goals | Target, progress, milestones | no goals, paused, completed |
 | Debt | Principal, schedule, payments, interest | no debt, due, overdue, settled |
@@ -163,3 +163,11 @@ Before implementation:
 - Review charts and report data accessibility.
 
 Do not treat the current static prototype's palette, labels, hard-coded values or fake balances as design authority. Preserve the prototype unchanged at `prototype/index.html` when the Vite foundation is introduced (ADR-012).
+
+
+### Pocket shortfall behaviour — D-16
+- Show the eligible-funds source basis clearly: active cash, bank and e-wallet accounts; exclude credit-card available credit, receivables and archived accounts.
+- Negative/overdraft balances reduce eligible funds.
+- If spending or another balance change makes Unallocated negative, show the negative amount as a clear shortfall state; do not hide or clamp it to zero.
+- Disable/reject new allocations that would increase the shortfall. Keep deallocation available; pocket-to-pocket transfers must not increase total allocations.
+- For foreign-currency accounts, do not present an unapproved conversion basis/rate; FX behaviour remains gated by D-18/D-19.
