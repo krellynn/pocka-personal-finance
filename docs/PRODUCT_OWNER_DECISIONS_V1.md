@@ -71,3 +71,27 @@
 - A pending item may be deferred only if the dependency plan identifies the exact milestone when it becomes blocking.
 - No AI agent may infer approval from silence.
 - When a decision changes an ADR, create a new ADR that explicitly supersedes the prior decision and update the register and affected docs.
+
+
+---
+
+## 5. Architecture review status clarification (2026-11-21)
+
+The review made technical contracts explicit but has not silently approved the following:
+
+| Decision | Status | Required outcome |
+|---|---|---|
+| D-09 category model and final CoA | Pending design review | Select category dimension or account mapping; approve CoA and historical category behaviour |
+| D-10 posting/reversal matrix | Pending design review | Approve all V1 postings and transaction-level reversal examples |
+| D-11 RPC-only financial mutations | Proposed (P-01) | Explicit approval at G2; align grants and command contracts |
+| D-12 money wire format | Proposed technical contract for owner ratification | All JSON money values as integer minor-unit decimal strings; ratify API/type contract at G2 |
+| D-16 pocket eligible funds | Pending product-owner decision | Resolve negative balances, FX valuation, archived accounts, shortfall, concurrency and household funds |
+| D-18 FX carrying-value method | Pending finance/product decision | Choose weighted-average, FIFO lots or transaction-linked basis; approve examples/rounding |
+| D-19 FX rate provider | Pending product/technical decision | Approve provider, manual fallback, commercial rights, caching and freshness |
+| D-20 household base currency | Pending product-owner decision | Choose reporting currency and cross-currency contribution rules |
+| D-21 household roles | Proposed | Approve table/operation-specific permissions; roles never override privacy |
+| D-22 paired cross-workspace entry | Pending design review | Approve durable pair lifecycle, per-side idempotency, recovery and reconciliation |
+| D-23 settlement access after exit | Pending design review | Approve obligation-only access bound to departed member |
+| D-24 household account ownership/visibility | Pending design review | Define shared account types and visibility |
+
+Keep D-11/D-12 synchronized across DEVELOPMENT_GUIDELINES.md, DOMAIN_AND_API_CONTRACTS_V1.md and the Database & Finance Design Pack. G0 may proceed independently of G2 only after its own dependencies are approved; unresolved G2/G5 decisions do not authorize Phase 0B or finance implementation.
