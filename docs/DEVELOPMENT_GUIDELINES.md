@@ -174,3 +174,16 @@ Additionally:
 - Don't commit or push unless the product owner asks.
 - Don't insert demo or fake financial data into any real user's workspace.
 - When two requirements conflict, document the conflict and ask. Don't resolve it silently.
+
+
+## 11. Cloudflare Deployment (Platform Approved; Workflow Proposed)
+
+- Frontend hosting uses **Cloudflare Workers + Static Assets** (Approved: [ADR-014](decisions/ADR-014-cloudflare-workers-hosting.md)); Vercel is not the approved hosting platform.
+- For the Vite application, use the Cloudflare Vite plugin as the preferred integration direction. Verify current supported versions and configuration against official Cloudflare documentation during Phase 0B.
+- Keep Wrangler configuration (for example, `wrangler.jsonc`) version-controlled. Do not rely on undocumented dashboard-only configuration for reproducible application settings.
+- Workers Builds/GitHub integration and branch preview deployments are **Proposed** until configured and tested. Production deployment from `main` requires the product owner's explicit approval.
+- Treat all browser-delivered assets and Vite-exposed environment variables as public. Only the Supabase project URL and publishable/anon key may be included in frontend configuration. Never expose Supabase service-role keys or other secrets.
+- Any future Worker secrets must be stored as server-side Cloudflare secrets/bindings and must never be returned to client assets.
+- Keep `.wrangler/` and local Worker development variable files (such as `.dev.vars*`) out of Git. Commit only safe example files with placeholder values.
+- Do not add Worker API routes or move business logic from Supabase to Workers without a separately approved requirement.
+- Before enabling deployment, verify SPA fallback/routing, build output, preview/production separation, domain/DNS, observability, rollback, and account/plan requirements.
