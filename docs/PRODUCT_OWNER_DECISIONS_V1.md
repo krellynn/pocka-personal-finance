@@ -26,7 +26,7 @@
 |---|---|---|---|---|
 | D-09 | Category model and CoA boundary | **Approved — Option A (2026-11-21): categories are dimensions** | Keep categories separate from ledger accounts; CoA contains stable accounting/control accounts. Final account classes, system mappings and posting examples remain part of D-10/G2 review | Every posting depends on it |
 | D-10 | Journal posting matrix | **Approved — baseline (2026-11-21)** | Use the §5 matrix in the Database & Finance Architecture Design Pack as the backend accounting baseline. Adjustment reasons require explicit posting rules before implementation; reversal follows the transaction-scoped atomic contract in R-10. UI input fields and form flow remain a separate UX specification. | Financial correctness |
-| D-11 | RPC-only financial mutation | Proposed (P-01) | Approve all balance-affecting writes through PostgreSQL RPC; no direct client writes to ledger tables | Atomicity and authorization |
+| D-11 | RPC-only financial mutation | **Approved — Option A (2026-11-21)** | All balance-affecting financial writes must go through PostgreSQL RPC; no direct client writes to ledger/financial fact tables. Reads remain governed by RLS and approved read models. | Atomicity and authorization |
 | D-12 | Money wire format | Proposed technical contract for owner ratification | Integer minor-unit decimal strings in JSON; parse to bigint in TypeScript | Avoid precision loss |
 | D-13 | Balance/read model | Proposed (P-04) | Start with SQL views; materialize only after measured need | Reconciliation and simplicity |
 | D-14 | Account archive/unarchive with nonzero balance | Pending design review | Archive only when no new posting; retain balance/history; define controlled unarchive | Preserve ledger |
@@ -37,6 +37,8 @@
 | D-19 | FX rate provider | Pending design review | Select provider only after availability, terms, reliability and cost review; allow manual rate fallback if approved | Multi-currency operation |
 
 **D-10 decision record (2026-11-21):** The product owner approved the Journal Posting Matrix in §5 of `DATABASE_AND_FINANCE_ARCHITECTURE_DESIGN_PACK_V1.md` as the V1 backend accounting baseline. This approves the debit/credit treatment shown for the listed transaction events, including the distinction between financial events and non-posting planning events. It does not expose accounting terminology to end users or approve a particular UI form layout. Adjustment posting remains conditional on reason-specific rules being documented and reviewed before that adjustment type is implemented. Reversals must reverse the complete posted journal-entry set atomically at the business-transaction level, preserve the original, permit at most one successful reversal, support an optional separately linked replacement, be idempotent, and reject reversal-of-reversal, as specified in R-10. Detailed multi-currency/partial-refund edge cases and the separate UX input specification remain implementation prerequisites where applicable.
+
+**D-11 decision record (2026-11-21):** The product owner approved Option A: every balance-affecting financial mutation must execute through PostgreSQL RPC. Browser/client code must not directly insert, update or delete ledger/financial facts. RPCs must validate `auth.uid()`, active workspace membership, operation authorization, same-workspace references, input constraints, idempotency and concurrency as applicable; related transaction and journal writes must commit atomically. RLS and grants remain deny-by-default, and RPC execution privileges must be narrowly scoped. Reads continue through RLS-protected queries/views. This approves the mutation boundary, not final RPC names/signatures, grants, SECURITY DEFINER usage, or the complete RLS SQL; those remain G2 design deliverables.
 
 ## 3. Blocking before household / G5
 
@@ -89,7 +91,7 @@ The review made technical contracts explicit but has not silently approved the f
 |---|---|---|
 | D-09 category model | **Approved — Option A (2026-11-21)** | Category-as-dimension selected. Historical category behaviour and final CoA account list/mappings remain G2 review items |
 | D-10 posting/reversal matrix | **Approved — baseline (2026-11-21)** | The product owner approved the §5 posting matrix as the backend accounting baseline. Adjustment-specific rules remain to be specified by reason; reversal must follow R-10. UI input design is separate. |
-| D-11 RPC-only financial mutations | Proposed (P-01) | Explicit approval at G2; align grants and command contracts |
+| D-11 RPC-only financial mutations | **Approved — Option A (2026-11-21)** | All balance-affecting writes through PostgreSQL RPC; finalize grants, authorization checks, command contracts and tests at G2 |
 | D-12 money wire format | Proposed technical contract for owner ratification | All JSON money values as integer minor-unit decimal strings; ratify API/type contract at G2 |
 | D-16 pocket eligible funds | Pending product-owner decision | Resolve negative balances, FX valuation, archived accounts, shortfall, concurrency and household funds |
 | D-18 FX carrying-value method | Pending finance/product decision | Choose weighted-average, FIFO lots or transaction-linked basis; approve examples/rounding |
