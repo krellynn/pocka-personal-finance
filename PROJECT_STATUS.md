@@ -9,7 +9,7 @@
 
 | Item | Value |
 |---|---|
-| `main` (origin) | `0bea092` — merge commit for PR #1; contains the Phase 0A documentation baseline |
+| `main` (origin) | `dc78cb9` — latest verified documentation commit; includes ADR-014 and the post-merge status sync |
 | Completed PR | [PR #1](https://github.com/krellynn/pocka-personal-finance/pull/1), `docs/phase-0-architecture` → `main`, **merged** |
 | Completed PR | [PR #3](https://github.com/krellynn/pocka-personal-finance/pull/3), `docs/cloudflare-workers-deployment` → `main`, **merged** |
 | Remote | `origin` → `https://github.com/krellynn/pocka-personal-finance.git` |
@@ -131,3 +131,4 @@ Everything in the target architecture: app scaffold, auth, workspaces, ledger, a
 | 2026-11-13 | 0 (review) | PR #1 review corrections: Git/PR status brought up to date in PROJECT_STATUS and README. |
 | 2026-11-13 | 0A | Phase 0A documentation merged into `main` via PR #1 (merge commit `0bea092`). |
 | 2026-11-21 | 0 (architecture decision) | Approved ADR-014: Cloudflare Workers + Static Assets supersedes the Vercel hosting portion of BL-04. Documentation-only update; no application or deployment changes. |
+| 2026-11-21 | 0 (documentation merge) | Merged PR #3 into `main` (squash commit `c804e33`); synchronized README, PROJECT_STATUS, and ROADMAP after merge. Phase 0B remains unstarted. |
