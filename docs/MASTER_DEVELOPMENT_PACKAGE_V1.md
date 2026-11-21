@@ -121,7 +121,7 @@ Do not run a big-bang implementation. No two agents may edit the same migration,
 
 Existing product, architecture, database and privacy documents remain detailed reference specifications. This package does not replace them.
 
-## 7. Phase and milestone map
+## 7. Database and finance design gate\n\nThe consolidated database/finance design review is documented in `DATABASE_AND_FINANCE_ARCHITECTURE_DESIGN_PACK_V1.md`. It is a proposed baseline, not an executable schema. D-09 to D-19 must be resolved before the corresponding financial-core work; D-20 to D-25 before household work; D-26 to D-30 before import; D-31 and operational decisions before production. G0/G2/G5/G6/G7 are explicit approval gates.\n\n## 8. Phase and milestone map
 
 The repository's approved phase naming remains unchanged:
 
@@ -135,7 +135,7 @@ The repository's approved phase naming remains unchanged:
 
 The accelerated workstream plan may overlap UI, documentation, test harness, and isolated feature preparation. It must not bypass the phase exit criteria or dependency gates.
 
-## 8. Global Definition of Done
+## 9. Global Definition of Done
 
 A feature is done only when all applicable items are true:
 
@@ -150,7 +150,7 @@ A feature is done only when all applicable items are true:
 9. Documentation and `PROJECT_STATUS.md` are updated.
 10. PR review and CI pass; product owner approves the milestone.
 
-## 9. Planning assumptions and estimate
+## 10. Planning assumptions and estimate
 
 - One primary product owner/operator with AI-assisted development.
 - Available focused time: 15–20 hours per week.
@@ -160,7 +160,7 @@ A feature is done only when all applicable items are true:
 - The target is 26–28 weeks including the planning lock; the implementation target after planning approval is approximately 24–26 weeks.
 - This is a planning estimate, not a delivery guarantee. High-risk financial and privacy gates are not shortened to meet a date.
 
-## 10. Current state and explicit no-code boundary
+## 11. Current state and explicit no-code boundary
 
 Verified repository status on 2026-11-21: Phase 0A docs and ADR-001…ADR-014 are merged; Phase 0B has not started; the root `index.html` is a static prototype; no React app, dependencies, Supabase project, migrations, tests, CI, Cloudflare project or deployment exists.
 
@@ -173,7 +173,7 @@ Until this package and its dependency plan are approved:
 - Do not deploy.
 - Documentation-only changes to complete/review this package are allowed.
 
-## 11. Approval checklist
+## 12. Approval checklist
 
 - [ ] Product owner confirms V1 scope and exclusions.
 - [ ] Product owner resolves or explicitly defers blocking decisions in `PRODUCT_OWNER_DECISIONS_V1.md`.
