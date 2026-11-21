@@ -123,9 +123,11 @@ Every workspace-scoped operation must validate active membership and relevant ro
 - Pockets are not accounts/assets and never change actual cash/account balances.
 - Pocket balances are excluded from net worth and income/expense totals.
 - Unallocated = eligible funds minus allocated funds, calculated rather than stored as an asset.
-- Total allocations cannot exceed eligible funds under the approved eligibility policy.
-- Overspending below allocations is represented transparently.
-- Eligibility rules and handling of negative eligible funds must be resolved before pocket posting logic is implemented.
+- Eligible funds include active cash, bank and e-wallet balances only; positive balances contribute and negative/overdraft balances reduce the aggregate. Exclude credit-card available credit/limits, receivables and archived accounts.
+- `Unallocated = eligible funds − total allocated` is derived, not stored, and may become negative after spending or another balance change; display the shortfall clearly.
+- Reject new allocations that would increase an existing shortfall or cause total allocations to exceed eligible funds. Deallocation remains allowed during a shortfall; pocket-to-pocket transfers preserve total allocations.
+- Serialize allocation validation and writes atomically to prevent concurrent over-allocation.
+- Foreign-currency conversion basis/rate and household/private-fund eligibility remain gated by D-18/D-19 and G5 respectively.
 
 ## 8. Budgets
 
