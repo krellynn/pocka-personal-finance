@@ -273,3 +273,17 @@ All consolidations require product-owner/architect sign-off in a design review b
 7. pgTAP (or equivalent) tests for constraints, invariants, and RLS run in CI before merge.
 
 **No migrations are created in Phase 0A.**
+
+
+---
+
+## 16. Architecture review clarifications (2026-11-21)
+
+1. **Idempotency:** the earlier unique (workspace_id, idempotency_key) is not the complete command identity. Use (workspace_id, operation_name, idempotency_key) with a normalized request fingerprint. Identical retries replay the original result/in-progress state; a different fingerprint returns IDEMPOTENCY_CONFLICT; concurrent duplicates serialize. A transaction-level unique key is only a secondary guard.
+2. **Money wire format:** every JSON monetary amount is a decimal integer string in minor units, regardless of JavaScript safe-integer size. Parse to TypeScript bigint; never send monetary JSON numbers. Currency exponent comes from currencies.minor_units.
+3. **Exchange-rate RLS:** global rows (workspace_id IS NULL) are authenticated read-only published data; client writes are denied and ingestion is server-controlled. Workspace manual rows are visible only to active members of that exact workspace and writable only through an authorized audited path. Use separate policies; no blanket authenticated-read policy.
+4. **Category model:** category-as-dimension vs category-to-ledger-account mapping remains unresolved until G2. Select one model and approve historical rename/archive/reassignment behaviour; do not implement a hybrid.
+5. **Reversal:** reversal is transaction-scoped and reverses the complete posted journal-entry set atomically, with one successful reversal per original. Preserve original rows; replacement is a separate linked transaction; reversal-of-reversal is rejected.
+6. **Data dictionary:** the entity list remains conceptual. G2 requires a complete table-by-table column/type/nullability/default/constraint/index/FK/RLS/write-path/lifecycle/retention/test dictionary before ledger migration.
+
+See DATABASE_AND_FINANCE_ARCHITECTURE_DESIGN_PACK_V1.md §§17.1–17.13 for the table-level policy inventory, paired-entry recovery, contribution posting pair, and pocket/FX decision gates. This document is conceptual, not executable SQL.
