@@ -1,7 +1,7 @@
 # POCKA — Project Status
 
 **Last updated:** 2026-11-21
-**Current phase:** Phase 0A — Documentation & Architecture Foundation. **Complete and merged into `main`.** ADR-001 to ADR-013 were approved on 2026-11-13. ADR-014 (Cloudflare Workers + Static Assets hosting) was approved on 2026-11-21 and is being added through a documentation-only PR. **Phase 0B — Application Foundation & Authentication has not started.**
+**Current phase:** Phase 0A — Documentation & Architecture Foundation. **Complete and merged into `main`.** ADR-001 to ADR-013 were approved on 2026-11-13; ADR-014 (Cloudflare Workers + Static Assets hosting) was approved on 2026-11-21 and merged through PR #3. **Phase 0B — Application Foundation & Authentication has not started.**
 
 ---
 
