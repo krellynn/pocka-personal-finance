@@ -273,3 +273,7 @@ This decision approves the architectural boundary, not the final RPC catalogue, 
 
 ### 10.6 Debt overpayment guard — D-17.1
 **Product-owner decision (2026-11-21): Option A approved.** A debt-payment command must reject a total payment greater than the remaining amount due. It must not convert the excess into lender credit, a receivable/refundable balance or expense. Recalculate/validate the remaining obligation within the serialized posting boundary so concurrent repayments cannot collectively overpay the debt. The payment components must still sum exactly to the total (principal + interest + fee). Early settlement, schedule changes and detailed interest/fee behaviour remain pending under D-17. This records the product rule, not a final RPC signature or implementation authorization.
+
+
+### 10.7 Early settlement — D-17.2
+**Product-owner decision (2026-11-22): Option A approved.** Use the lender-provided/quoted payoff amount for early settlement. The user supplies the total and its components (remaining principal, interest, and applicable fee/penalty); component values must reconcile exactly to the total. POCKA must not independently invent an interest discount, penalty or payoff calculation without an approved rule and authoritative lender data. On successful posting of the full settlement, mark the debt settled and stop future installments. Preserve prior payment history. Schedule edits and detailed interest/fee rules remain pending. This is a product rule, not a final RPC signature or implementation authorization.
