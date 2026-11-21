@@ -131,3 +131,8 @@ Never commit `.env.local`, and never put the Supabase service-role key in fronte
 - **Pending product-owner decision:** open question; do not implement an answer silently.
 
 The Master Development Package is a proposal until the product owner approves it. No coding, migrations, account setup or deployment is authorized by its creation.
+
+
+### Architecture review remediation
+
+The planning branch includes ARCHITECTURE_REVIEW_REPORT_V1.md, documenting findings R-01–R-12 and dispositions. The report and database design addendum improve specification consistency but do not approve unresolved product-owner decisions or authorize implementation. See the design pack §17 and PROJECT_STATUS.md for the readiness boundary.
