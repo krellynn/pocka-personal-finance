@@ -171,7 +171,9 @@ Every workspace-scoped operation must validate active membership and relevant ro
 - Interest and applicable fees are expenses.
 - Payment total equals principal + interest + fee components exactly.
 - Outstanding principal reconciles to debt ledger balances.
-- Overpayment, early settlement and schedule-change rules must be specified before implementation.
+- A payment whose total exceeds the remaining amount due is rejected (D-17.1 Option A approved 2026-11-21); the excess is not stored as lender credit, a receivable/refundable balance or an expense.
+- The remaining amount due must be validated at posting time with concurrency protection so concurrent repayments cannot collectively exceed the obligation.
+- Early settlement, schedule-change and detailed interest/fee rules remain pending under D-17 and must be specified before implementation.
 
 ## 11. Recurring transactions
 
