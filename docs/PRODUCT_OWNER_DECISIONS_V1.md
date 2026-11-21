@@ -23,7 +23,7 @@
 | D-09 | Final chart of accounts | Pending design review | Define account classes and system mappings with worked examples before posting RPCs | Every posting depends on it |
 | D-10 | Journal posting matrix | Pending design review | Document debit/credit lines for every V1 transaction type, including reversals | Financial correctness |
 | D-11 | RPC-only financial mutation | Proposed (P-01) | Approve all balance-affecting writes through PostgreSQL RPC; no direct client writes to ledger tables | Atomicity and authorization |
-| D-12 | Money wire format | Pending design review | Integer minor-unit decimal strings in JSON; parse to bigint in TypeScript | Avoid precision loss |
+| D-12 | Money wire format | Proposed technical contract for owner ratification | Integer minor-unit decimal strings in JSON; parse to bigint in TypeScript | Avoid precision loss |
 | D-13 | Balance/read model | Proposed (P-04) | Start with SQL views; materialize only after measured need | Reconciliation and simplicity |
 | D-14 | Account archive/unarchive with nonzero balance | Pending design review | Archive only when no new posting; retain balance/history; define controlled unarchive | Preserve ledger |
 | D-15 | Refund limits and partial refunds | Pending design review | Support partial refunds with cumulative total capped at original refundable amount | Avoid over-refund |
