@@ -27,7 +27,7 @@ It covers:
 
 The following are binding because they come from approved ADRs or existing approved architecture:
 
-- **ADR-001:** all money is integer minor units in PostgreSQL `BIGINT`; currency exponent comes from currency metadata; never use JavaScript floating-point arithmetic for money. Values beyond JS safe-integer limits travel as decimal strings and are parsed to TypeScript `bigint`.
+- **ADR-001 + D-12 (Option A approved 2026-11-21):** all money is integer minor units in PostgreSQL `BIGINT`; currency exponent comes from currency metadata; never use JavaScript floating-point arithmetic for money. **Every monetary JSON value, regardless of magnitude, is a base-10 decimal integer string in minor units** and is validated then parsed to TypeScript `bigint`. Monetary JSON numbers are prohibited.
 - **ADR-002:** pockets are workspace-level virtual allocations, not assets; no journal lines; mandatory Unallocated is calculated, not stored.
 - **ADR-003:** `shared_summary` whitelist is empty. No automatic disclosure of salary, income, balances, net worth or personal transaction aggregates.
 - **ADR-004:** recurring occurrences create drafts only; drafts have no journal lines and affect no balances/reports.
@@ -249,7 +249,7 @@ Each workspace receives only the system accounts needed for its type and enabled
 
 ## 6. RPC command contracts
 
-**Status:** RPC-only financial mutations are proposed (D-11/P-01), not yet approved. This catalogue describes the recommended contract shape, not final SQL signatures.
+**Status:** RPC-only financial mutations are approved under D-11 Option A (2026-11-21). This catalogue describes the proposed contract shape, not final SQL signatures.
 
 ### 6.1 Common command envelope
 
@@ -264,7 +264,7 @@ Every response should include:
 - `transaction_id` and/or stable resource ID.
 - `status` and `posted_at` where relevant.
 - `journal_entry_ids` when posted.
-- Canonical amounts as decimal integer strings.
+- Canonical monetary amounts as base-10 decimal integer strings in minor units, regardless of magnitude; never JSON numbers.
 - `replayed` boolean to distinguish idempotent retry from first execution.
 - Stable `error_code` and safe localized display message on failure.
 
@@ -742,9 +742,9 @@ This is a policy inventory, not executable SQL. Before G2/G5, convert each row i
 
 D-18 remains pending. Candidate methods are weighted-average, FIFO lots and transaction-linked basis. Before FX implementation, select one and approve worked examples for multiple acquisition rates, partial/full disposal, refund, cross-currency transfer, insufficient lot history, rounding and base-currency reporting. Never substitute current spot rate for carrying value.
 
-### 17.9 R-09 — Canonical money wire format
+### 17.9 R-09 / D-12 — Canonical money wire format
 
-All monetary JSON values are decimal integer strings in minor units, regardless of magnitude. Parse validated strings to TypeScript bigint. JSON must not carry monetary floating-point numbers. Currency exponent is metadata-driven. FX rates/ratios use decimal-safe representations and arithmetic. Examples: IDR 125000 is "125000"; USD 100.00 at exponent 2 is "10000". Formatting is presentation-only.
+**Product-owner decision (2026-11-21): D-12 Option A approved.** All monetary JSON values are base-10 decimal integer strings in minor units, regardless of magnitude. Validate the string at the TypeScript/API boundary, then parse to `bigint` before monetary arithmetic. JSON must never carry monetary values as numbers. Currency exponent is metadata-driven and must not be assumed to be two. FX rates/ratios use decimal-safe representations and arithmetic. Examples: IDR 125,000 is `"125000"`; USD 100.00 at exponent 2 is `"10000"`; JPY 500 at exponent 0 is `"500"`. Formatting is presentation-only.
 
 ### 17.10 R-10 — Transaction-level reversal
 
