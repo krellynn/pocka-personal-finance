@@ -174,3 +174,17 @@ Additionally:
 - Don't commit or push unless the product owner asks.
 - Don't insert demo or fake financial data into any real user's workspace.
 - When two requirements conflict, document the conflict and ask. Don't resolve it silently.
+
+
+## 11. Cloudflare Deployment (Platform Approved; Workflow Proposed)
+
+- Frontend hosting uses **Cloudflare Workers + Static Assets** (Approved: [ADR-014](decisions/ADR-014-cloudflare-workers-hosting.md)); Vercel is not the approved hosting platform.
+- For the Vite application, use the stable Cloudflare Vite plugin as the preferred integration direction; re-check supported versions before implementation. The plugin automatically includes the built client assets, so do not add a duplicate `assets.directory` setting without a specific need.
+- Configure SPA navigation fallback for the React Router application using the supported Static Assets `not_found_handling: "single-page-application"` setting where applicable. Verify direct navigation and refresh on nested routes in preview before production.
+- Keep Wrangler configuration (for example, `wrangler.jsonc`) version-controlled. Do not rely on undocumented dashboard-only configuration for reproducible application settings.
+- Workers Builds/GitHub integration and branch preview deployments are **Proposed** until configured and tested. Production deployment from `main` requires the product owner's explicit approval.
+- Treat all browser-delivered assets and Vite-exposed environment variables as public. Only the Supabase project URL and publishable/anon key may be included in frontend configuration. Never expose Supabase service-role keys or other secrets.
+- Any future Worker secrets must be stored as server-side Cloudflare secrets/bindings and must never be returned to client assets.
+- Keep `.wrangler/`, `.dev.vars`, and real local Worker variable files out of Git. A deliberately named example such as `.dev.vars.example` may be committed only when it contains placeholders and no real credentials.
+- Do not add Worker API routes or move business logic from Supabase to Workers without a separately approved requirement.
+- Before enabling deployment, verify SPA fallback/routing (including direct loads and refreshes on nested React Router paths), build output, preview/production separation, domain/DNS, observability, rollback, and account/plan requirements.

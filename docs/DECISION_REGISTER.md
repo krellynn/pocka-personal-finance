@@ -7,9 +7,9 @@ Impact columns: **DB** = database design · **App** = application behaviour · *
 
 ---
 
-## 1. V1 Architecture Decisions (ADR-001 to ADR-013)
+## 1. V1 Architecture Decisions (ADR-001 to ADR-014)
 
-All approved by the product owner on 2026-11-13.
+ADR-001 to ADR-013 were approved by the product owner on 2026-11-13. ADR-014 was approved on 2026-11-21.
 
 | ID | Title | Status | DB | App | Sec | Fin |
 |---|---|---|:-:|:-:|:-:|:-:|
@@ -26,6 +26,7 @@ All approved by the product owner on 2026-11-13.
 | [ADR-011](decisions/ADR-011-ui-localization.md) | UI Localization Policy | APPROVED | | ✓ | | |
 | [ADR-012](decisions/ADR-012-prototype-preservation.md) | Prototype Preservation and Relocation | APPROVED | | ✓ | | |
 | [ADR-013](decisions/ADR-013-household-privacy-invariants.md) | Household Sharing and Privacy Invariants | APPROVED | ✓ | ✓ | ✓ | |
+| [ADR-014](decisions/ADR-014-cloudflare-workers-hosting.md) | Cloudflare Workers + Static Assets Hosting | APPROVED | | ✓ | | |
 
 ---
 
@@ -124,16 +125,16 @@ All approved by the product owner on 2026-11-13.
 
 ---
 
-## 3. Baseline Decisions (from Project Context v1.0, Approved)
+## 3. Baseline Decisions (from Project Context v1.0)
 
-These foundational decisions predate the ADR series and remain approved. They use `BL-` IDs so they don't collide with ADR numbers. (Earlier drafts of ARCHITECTURE.md labelled them ADR-01…ADR-12; those labels are retired.)
+These foundational decisions predate the ADR series and use `BL-` IDs so they don't collide with ADR numbers. (Earlier drafts of ARCHITECTURE.md labelled them ADR-01…ADR-12; those labels are retired.) Where a later ADR explicitly supersedes part of a baseline decision, the later ADR governs.
 
 | ID | Decision | Status |
 |---|---|---|
 | BL-01 | Unified workspaces (personal + household) on one financial engine | Approved |
 | BL-02 | Double-entry ledger; posted entries immutable; corrections by reversal | Approved |
 | BL-03 | Supabase/PostgreSQL with RLS as the security boundary | Approved |
-| BL-04 | React + TypeScript + Vite SPA, hosted on Vercel; GitHub for source control | Approved |
+| BL-04 | React + TypeScript + Vite SPA; originally hosted on Vercel; GitHub for source control | Partially superseded by ADR-014 for hosting; React/Vite and GitHub remain approved |
 | BL-05 | Pockets are allocations, not assets (detailed by ADR-002) | Approved |
 | BL-06 | Multi-currency with stored FX snapshots (detailed by ADR-006) | Approved |
 | BL-07 | Household privacy: salary and balances private; contributions and expenses shared (detailed by ADR-013) | Approved |
@@ -150,6 +151,18 @@ These are recommendations, **not** decisions. Each needs approval before impleme
 | P-02 | Household roles `owner`, `admin`, `editor`, `viewer` |
 | P-03 | Table consolidations listed in DATABASE_SPECIFICATION §4 |
 | P-04 | Balance caches start as views; materialise only when needed |
+
+### ADR-014 — Cloudflare Workers + Static Assets Hosting
+- **Status:** APPROVED (2026-11-21).
+- **Supersedes:** the Vercel frontend-hosting selection in BL-04 only. The React + TypeScript + Vite SPA and GitHub source-control portions of BL-04 remain approved.
+- **Decision:** Host the POCKA frontend on **Cloudflare Workers using Static Assets**. Cloudflare Workers is the hosting/deployment platform for the Vite application; the built client assets are served as static assets. Vercel is no longer the approved hosting platform for POCKA.
+- **Build integration:** For the Vite application, the Cloudflare Vite plugin is the preferred integration direction. Exact package versions, `wrangler.jsonc`, build scripts, compatibility date, SPA fallback, and Workers Builds/GitHub preview configuration are implementation details to verify during Phase 0B; this ADR does not prescribe unreviewed configuration values.
+- **Responsibilities:** GitHub remains the source-control and pull-request platform. Cloudflare handles frontend hosting, asset delivery, and deployment. Supabase remains the backend/database/auth platform; this decision does not move database or authentication responsibilities to Cloudflare.
+- **Security:** Browser-delivered variables are public by definition. Supabase publishable/anon configuration may be used in the frontend; Supabase service-role credentials and all other secrets must never be bundled into client assets. Any future Worker secrets must be configured as server-side secrets and must not be exposed to the browser.
+- **Scope boundary:** This decision does not require adding custom Worker API routes or moving business logic out of Supabase. Add Worker runtime code only when a separately approved requirement needs it.
+- **Rationale:** Cloudflare Workers Static Assets supports Vite-based SPAs and leaves a path to add Worker-side functionality without changing the core Supabase financial architecture.
+- **Consequences:** Deployment configuration, preview/production environments, domain/DNS, observability, rollback, and plan selection must be designed and verified before deployment. No Cloudflare account, project, domain, deployment, or application configuration is created by this ADR.
+- **Docs:** README · PROJECT_STATUS · ARCHITECTURE §1, §6–7 · DEVELOPMENT_GUIDELINES · ROADMAP.
 
 ## 5. Change Process
 

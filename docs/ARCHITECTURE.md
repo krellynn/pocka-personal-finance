@@ -4,27 +4,29 @@ Status labels: **Approved** · **Proposed** · **Pending product-owner decision*
 
 This document describes the **target** architecture. None of it is implemented yet (see `PROJECT_STATUS.md`).
 
-Approved decisions are indexed in [`DECISION_REGISTER.md`](DECISION_REGISTER.md) (ADR-001 to ADR-013, plus baseline decisions BL-01 to BL-09). Where this document and an ADR differ, **the ADR governs**. Report the discrepancy so it can be fixed.
+Approved decisions are indexed in [`DECISION_REGISTER.md`](DECISION_REGISTER.md) (ADR-001 to ADR-014, plus baseline decisions BL-01 to BL-09; BL-04's hosting choice is superseded by ADR-014). Where this document and an ADR differ, **the ADR governs**. Report the discrepancy so it can be fixed.
 
 ---
 
 ## 1. System Overview
 
 ```
-┌──────────────────────────┐        HTTPS        ┌───────────────────────────────────────┐
-│  Browser (Vercel-hosted) │ ──────────────────► │ Supabase (region: Singapore, prov.)   │
-│  React + TS + Vite SPA   │  publishable key +  │                                       │
-│  shadcn/ui, Tailwind     │  user JWT only      │  Auth ── issues JWT                   │
-│  React Router, RHF + Zod │                     │  PostgREST ── tables (RLS enforced)   │
-│  Recharts                │                     │  RPC ── SECURITY-checked functions    │
-└──────────────────────────┘                     │         for all financial mutations   │
-                                                 │  Edge Functions ── import, schedulers │
-                                                 │  Storage ── import files, attachments │
-                                                 │  PostgreSQL ── ledger, source of truth│
-                                                 └───────────────────────────────────────┘
+┌──────────────────────────────┐      served by      ┌──────────────────────────────┐
+│ Browser                      │ ◄────────────────── │ Cloudflare Workers           │
+│ React + TypeScript + Vite SPA│                    │ Static Assets                │
+│ shadcn/ui · Tailwind         │                    └──────────────────────────────┘
+│ React Router · RHF + Zod     │
+│ Recharts                     │          HTTPS + publishable key + user JWT
+└──────────────────────────────┘ ─────────────────────────────────────────────►
+                                      ┌────────────────────────────────────────┐
+                                      │ Supabase (Singapore, provisional)     │
+                                      │ Auth · PostgREST (RLS enforced)        │
+                                      │ RPC · Edge Functions · Storage         │
+                                      │ PostgreSQL — financial source of truth │
+                                      └────────────────────────────────────────┘
 ```
 
-- **Approved:** Supabase/PostgreSQL with RLS; React + TypeScript + Vite; Vercel; GitHub.
+- **Approved:** Supabase/PostgreSQL with RLS; React + TypeScript + Vite; Cloudflare Workers + Static Assets for frontend hosting (ADR-014); GitHub.
 - **Approved (provisional):** Supabase region Singapore. Re-evaluate before production. Changing region later requires data migration.
 - **Proposed:** a single-page app with no separate custom backend server. Server-side logic lives in Postgres functions and Edge Functions.
 
@@ -189,7 +191,7 @@ Summarised here. Normative rules are in `HOUSEHOLD_PRIVACY.md`, [ADR-013](decisi
 | FX rates | Scheduled fetch from a rate provider into `exchange_rates`; manual entry allowed | Proposed; provider choice requires design review |
 | Notifications | In-app table first; email/push Pending | Proposed |
 | Bank aggregation | Out of V1 scope | Pending (future) |
-| Hosting | Vercel (frontend); env vars for public config only | Approved |
+| Hosting | Cloudflare Workers + Static Assets (frontend); Cloudflare Vite plugin is the preferred Vite integration. Workers Builds/GitHub integration is proposed. | Platform approved: ADR-014; workflow details Proposed |
 
 ## 7. Security Architecture (Approved)
 
@@ -207,7 +209,8 @@ Summarised here. Normative rules are in `HOUSEHOLD_PRIVACY.md`, [ADR-013](decisi
 The authoritative list is [`DECISION_REGISTER.md`](DECISION_REGISTER.md):
 
 - **ADR-001 to ADR-013**: V1 decisions approved 2026-11-13 (money storage, pockets, shared summary, recurring, contributions, FX, credit cards, archiving, membership exit, splits, localisation, prototype, privacy invariants).
-- **BL-01 to BL-09**: baseline decisions from Project Context v1.0 (workspaces, double-entry, Supabase + RLS, React/Vite/Vercel, etc.). The `ADR-01…ADR-12` labels used in earlier drafts of this section are retired and replaced by these IDs.
+- **BL-01 to BL-09**: baseline decisions from Project Context v1.0 (workspaces, double-entry, Supabase + RLS, React/Vite, etc.). The hosting portion of BL-04 is superseded by ADR-014. The `ADR-01…ADR-12` labels used in earlier drafts of this section are retired and replaced by these IDs.
+- **ADR-014**: Cloudflare Workers + Static Assets supersedes the Vercel hosting selection in BL-04.
 - **P-01 to P-04**: proposals awaiting approval (RPC-only mutations, role set, table consolidation, balance views).
 
 ## 9. Open Items
