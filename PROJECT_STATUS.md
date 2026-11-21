@@ -11,10 +11,10 @@
 |---|---|
 | `main` (origin) | `0bea092` — merge commit for PR #1; contains the Phase 0A documentation baseline |
 | Completed PR | [PR #1](https://github.com/krellynn/pocka-personal-finance/pull/1), `docs/phase-0-architecture` → `main`, **merged** |
-| Current documentation branch | `docs/cloudflare-workers-deployment` — ADR-014 and hosting-documentation updates; pending review |
+| Completed PR | [PR #3](https://github.com/krellynn/pocka-personal-finance/pull/3), `docs/cloudflare-workers-deployment` → `main`, **merged** |
 | Remote | `origin` → `https://github.com/krellynn/pocka-personal-finance.git` |
 
-The Phase 0A documentation and ADR-001 to ADR-013 are merged into `main`. ADR-014 and its related documentation updates are in [PR #3](https://github.com/krellynn/pocka-personal-finance/pull/3); this branch contains documentation only and does not change application code.
+The Phase 0A documentation and ADR-001 to ADR-014 are merged into `main`. PR #3 merged the Cloudflare hosting decision and related documentation only; no application code was changed.
 
 ---
 
@@ -23,7 +23,7 @@ The Phase 0A documentation and ADR-001 to ADR-013 are merged into `main`. ADR-01
 | Component | Status |
 |---|---|
 | Product & architecture documentation | **Phase 0A complete** and merged into `main` via PR #1 |
-| Architecture decisions (ADR-001 to ADR-014) | **Approved**; ADR-001 to ADR-013 are merged into `main`, ADR-014 is in this documentation PR |
+| Architecture decisions (ADR-001 to ADR-014) | **Approved and merged** into `main` via PR #1 and PR #3 |
 | Static design prototype (`index.html`, root) | **Exists** (demo only). Relocation to `prototype/index.html` is **planned** for the Vite foundation phase (ADR-012), **not yet done** |
 | React/Vite application | **Not started** |
 | Dependencies / `package.json` | **Not started** |
@@ -101,7 +101,7 @@ Everything in the target architecture: app scaffold, auth, workspaces, ledger, a
 
 ## 6. Next Milestones
 
-1. **Cloudflare hosting documentation update**: ADR-014 and related documentation are under review in [PR #3](https://github.com/krellynn/pocka-personal-finance/pull/3); no implementation has started.
+1. **Cloudflare hosting documentation update**: ADR-014 and related documentation are merged into `main` via [PR #3](https://github.com/krellynn/pocka-personal-finance/pull/3). No implementation has started.
 2. **Phase 0B — Application Foundation.** Implementation has not started: scaffold, move the prototype to `prototype/index.html` (ADR-012), design tokens, i18n with Bahasa Indonesia default (ADR-011), money/date helpers (ADR-001), Supabase Auth, profiles, personal workspace.
 3. **Design reviews** for the implementation details listed in ARCHITECTURE §9.3, scheduled before the phase that needs each one.
 
