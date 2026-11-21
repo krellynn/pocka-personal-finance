@@ -93,7 +93,7 @@ For conversions and settlements, the posting also records **carrying value** and
 
 **transactions** (business event header)
 - `id`, `workspace_id`, `type` (`income`|`expense`|`transfer`|`refund`|`adjustment`|`opening_balance`|`debt_disbursement`|`debt_payment`|`credit_card_payment`|`fx_conversion`|`household_contribution`|`household_advance`|`settlement`|`contribution_transfer`), `status` (`draft`|`posted`|`reversed`; **drafts have no journal lines and affect no balances or reports**, ADR-004; never-posted drafts may be deleted, ADR-008), `transaction_date date`, `description`, `category_id`, `income_source_id`, `counterparty`, `original_amount_minor`, `original_currency`, `fx_conversion_id`, `base_amount_minor`, `refund_of_transaction_id`, `recurring_execution_id`, `import_row_id`, `created_by`, `owner_user_id`, `visibility`, `idempotency_key`, `posted_at`.
-- Unique `(workspace_id, idempotency_key)`.
+- Secondary transaction-level uniqueness may use `(workspace_id, idempotency_key)`; canonical command idempotency is `(workspace_id, operation_name, idempotency_key)` plus request fingerprint (see §16).
 - Indexes: `(workspace_id, transaction_date DESC)`, `(workspace_id, category_id, transaction_date)`, `(refund_of_transaction_id)`.
 - Posted rows are immutable (trigger blocks updates to financial columns once `status = posted`, except `status → reversed` by the reversal function).
 
