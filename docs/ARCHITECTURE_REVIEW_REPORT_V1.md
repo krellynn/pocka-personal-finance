@@ -65,5 +65,5 @@ G0 may be approved independently of G2 if its own scope and dependencies are com
 
 ## 6. Scope and verification
 
-This was a documentation review and remediation. No application code or infrastructure was changed. The PR remains open and draft; it has not been merged. A follow-up read-only review is required to verify the final branch contents and confirm no contradictory statements remain in the changed documents.
+This was a documentation review and remediation. No application code or infrastructure was changed. The PR remains open and draft; it has not been merged. A follow-up read-only consistency check was completed on the updated branch. The reviewed documents contain the new contracts and readiness boundaries; remaining items are explicitly recorded as pending owner decisions or required gate deliverables.
 
