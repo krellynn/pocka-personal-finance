@@ -13,7 +13,9 @@ POCKA's approved frontend stack is React + TypeScript + Vite, with Supabase as t
 
 Host the POCKA frontend on **Cloudflare Workers using Static Assets**. The built Vite client application is delivered as static assets through the Workers platform. Vercel is no longer the approved frontend hosting platform for POCKA.
 
-For the Vite application, the **Cloudflare Vite plugin** is the preferred integration direction. Exact package versions and deployment configuration are implementation details to be verified during Phase 0B.
+For the Vite application, the **stable Cloudflare Vite plugin** is the preferred integration direction. It builds the frontend assets for Workers deployment and integrates Vite with the Workers runtime. Re-check the stable plugin version and supported Vite compatibility during Phase 0B; do not pin unverified versions in this ADR. The plugin can generate the asset directory configuration from the client build, so avoid duplicating `assets.directory` unless a verified requirement calls for it.
+
+Because POCKA is a React Router SPA, configure and test the Static Assets single-page-application fallback so direct navigation and browser refreshes on nested routes return the app shell.
 
 ## Responsibilities and boundaries
 
@@ -31,7 +33,7 @@ For the Vite application, the **Cloudflare Vite plugin** is the preferred integr
 
 ## Consequences
 
-- Configure and verify the Cloudflare Vite plugin, Wrangler configuration (wrangler.jsonc or the supported equivalent), build output, SPA fallback/routing, compatibility date, and deployment scripts during Phase 0B.
+- Configure and verify the Cloudflare Vite plugin, Wrangler configuration (`wrangler.jsonc` or the supported equivalent), build output, SPA fallback/routing, compatibility date, and deployment scripts during Phase 0B. Verify the final generated build configuration rather than assuming the plugin's output layout.
 - Workers Builds/GitHub integration and preview deployments are the proposed delivery workflow; confirm the exact branch and environment configuration before enabling it.
 - Domain/DNS, production and preview environments, observability, rollback, Cloudflare plan selection, and operational access must be reviewed before deployment.
 - No Cloudflare account, project, domain, deployment, application code, or environment configuration is created by this ADR.
@@ -47,4 +49,6 @@ For the Vite application, the **Cloudflare Vite plugin** is the preferred integr
 
 - [Cloudflare Workers Vite plugin](https://developers.cloudflare.com/workers/vite-plugin/)
 - [Cloudflare Workers Static Assets](https://developers.cloudflare.com/workers/static-assets/)
+- [Cloudflare Vite plugin — Static Assets](https://developers.cloudflare.com/workers/vite-plugin/reference/static-assets/)
+- [Cloudflare SPA routing](https://developers.cloudflare.com/workers/static-assets/routing/single-page-application/)
 - [Cloudflare migration guide from Vercel](https://developers.cloudflare.com/workers/static-assets/migration-guides/vercel-to-workers/)
