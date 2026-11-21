@@ -200,7 +200,7 @@ Each workspace receives only the system accounts needed for its type and enabled
 
 ## 5. Journal posting matrix
 
-Amounts below are positive minor-unit values. Dr/Cr lines are generated server-side. All entries must balance in base currency. The matrix is the required baseline; detailed multi-currency and partial-refund edge cases remain in the RPC design review.
+**Product-owner approval (2026-11-21):** The matrix below is approved as the V1 backend accounting baseline under D-10. Amounts are positive minor-unit values. Debit/credit lines are generated server-side; all entries must balance in base currency. Adjustment posting requires reason-specific rules before that adjustment type is implemented. Detailed multi-currency and partial-refund edge cases remain subject to their relevant design decisions. User-facing input fields and form flow are a separate UX specification and are not approved by this matrix.
 
 | Event | Debit | Credit | P&L treatment |
 |---|---|---|---|
@@ -622,7 +622,7 @@ This pack intentionally does not silently close any pending decision.
 | Decision ID | Subject | Required before |
 |---|---|---|
 | D-09 | Final chart of accounts | Ledger schema and posting RPCs |
-| D-10 | Journal posting matrix | Ledger posting implementation |
+| D-10 | Journal posting matrix | **Approved baseline (2026-11-21); adjustment-specific rules and applicable edge cases remain prerequisites** |
 | D-11 | RPC-only financial mutations | Financial write implementation |
 | D-12 | Money wire format | Shared API/type generation |
 | D-13 | Balance/read model | Dashboard/report implementation |
@@ -658,7 +658,7 @@ This pack intentionally does not silently close any pending decision.
 - [ ] Confirm the conceptual ERD and final table inventory.
 - [ ] Approve whether categories are dimensions or ledger-account mappings.
 - [ ] Approve final CoA and system-account provisioning.
-- [ ] Approve the journal posting matrix and worked examples.
+- [x] Approve the journal posting matrix baseline (D-10, 2026-11-21); [ ] complete reason-specific adjustment rules and any remaining edge-case worked examples before implementing those paths.
 - [ ] Approve RPC-only mutations or explicitly choose another safe model.
 - [ ] Approve command signatures, error codes, idempotency and lock strategy.
 - [ ] Approve table-by-table RLS and role/visibility matrix.
