@@ -12,8 +12,8 @@ The phase sequence is **Approved** (from the Phase 0A brief). Approved architect
 - README, PROJECT_STATUS, `docs/` (product, architecture, database, privacy, guidelines, roadmap).
 - Prototype documented and preserved.
 
-**V1 architecture decisions** *(ADR-001 to ADR-013 approved 2026-11-13 and merged into `main`)*
-- ADR-001 to ADR-013 approved and recorded in `DECISION_REGISTER.md` and `docs/decisions/`. These cover money storage, pockets, shared summary, recurring drafts, contributions, FX, credit cards, archiving, household exit, splits, localisation, prototype relocation, and privacy invariants.
+**V1 architecture decisions** *(ADR-001 to ADR-013 approved 2026-11-13 and merged into `main`; ADR-014 approved 2026-11-21 and pending documentation PR)*
+- ADR-001 to ADR-013 are recorded in `DECISION_REGISTER.md` and `docs/decisions/`. ADR-014 selects Cloudflare Workers + Static Assets and supersedes the Vercel hosting portion of BL-04.
 
 **Design review items** *(scheduled before the phase that needs them; see ARCHITECTURE §9.3)*
 - Final consolidated schema (DATABASE_SPECIFICATION §4), chart of accounts, and journal-posting rules with worked examples, before Phase 2.
