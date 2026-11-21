@@ -669,3 +669,94 @@ This pack intentionally does not silently close any pending decision.
 - [ ] Explicitly authorize Phase 0B only after G0; explicitly authorize ledger work only after G2.
 
 **Completion statement:** this document provides a consolidated review baseline. It does not claim that any pending design decision has been approved, that the final executable schema exists, or that implementation may begin.
+
+
+---
+
+## 17. Architecture review resolution addendum (2026-11-21)
+
+This addendum is authoritative where earlier text is less specific. It records R-01–R-12 dispositions without silently approving pending product-owner decisions.
+
+### 17.1 R-01 — Household paired entries: recoverable lifecycle
+
+Personal-side and household-side entries are separately balanced facts, separately authorized, and correlated only by an opaque server-generated pair ID. Household records must not expose personal transaction/account IDs, descriptions, balances or private journal lines. Persist a pair intent, initiator, normalized request fingerprint, pair-level idempotency identity and per-side status before dispatch. Each side posts through its own workspace-authorized command with a distinct side-level idempotency key. Mark complete only after both sides are confirmed posted. If one side fails, retain a pending/partial-failure state and retry only the missing side. If cancellation is required after one side posted, use an audited reversal/compensation; never delete posted facts. Reconcile stale partial pairs. A single PostgreSQL transaction is acceptable only if both workspace authorizations, writes and pair-state transition are proven to occur in that same transaction without widening RLS; otherwise use the durable recoverable workflow. Do not claim distributed atomicity by assumption.
+
+### 17.2 R-02 — Departed-member obligation access
+
+A left/removed member loses all ordinary household access immediately. A narrow obligation endpoint may return only that authenticated member's own obligation amount, currency, status, dates and minimum settlement state. It must bind internally to auth.uid(), require a specific obligation ID, reject enumeration, expose no household-wide data, and never restore membership. Settlement revalidates and locks the obligation and is audited. If implemented with SECURITY DEFINER, fix search_path, restrict EXECUTE grants, validate auth.uid() and every identifier internally, and trust no caller-supplied user/role. Ordinary table RLS remains denied to departed members.
+
+### 17.3 R-03 — Canonical idempotency
+
+Canonical command identity is (workspace_id, operation_name, idempotency_key), with a normalized request fingerprint, actor, command state and result reference. Same identity + same fingerprint replays the original result or returns durable in-progress state. Same identity + different fingerprint returns IDEMPOTENCY_CONFLICT without mutation. Different operations may reuse the same textual key. Concurrent duplicates serialize so only one financial effect occurs. A transaction-level unique key is a secondary guard, not the canonical request ledger. Household pairs use a pair key and distinct per-side command keys.
+
+### 17.4 R-04 — Exchange-rate RLS separation
+
+Global provider/reference rows (workspace_id IS NULL) are authenticated read-only published data; client writes are denied and ingestion is server-controlled. Workspace manual rows (workspace_id IS NOT NULL) are readable only by active members of that exact workspace and writable only through an authorized audited path. No blanket authenticated-read policy. Use separate explicit policies distinguishing NULL-global from matching workspace scope. Referenced rate snapshots are immutable and inherit parent transaction visibility.
+
+### 17.5 R-05 — Contribution-intent posting pair
+
+For a member paying a household expense directly from personal funds with contribution intent: personal side Dr Household Contribution expense / Cr Personal asset; household side Dr Household expense / Cr Member Contribution Funding (equity-style classification remains subject to CoA approval). This is not a cash transfer into a household-owned account. For reimbursable advance: personal Dr Receivable from Household / Cr Personal asset; household Dr Household expense / Cr Payable to Member. Reimbursement clears payable/receivable and creates no second expense. An actual transfer into a household-owned account is a separate event and must not be conflated with direct payment.
+
+### 17.6 R-06 — Category model remains a G2 choice
+
+Select exactly one before G2: (A) categories as dimensions with stable income/expense control accounts, or (B) categories mapped to income/expense ledger accounts with class constraints and historical mapping. The dimension model is the recommended review candidate, not approved. Owner/finance review must approve category rename/archive/reassignment and historical reporting examples. No hybrid implementation.
+
+### 17.7 R-07 — Table-by-table RLS baseline
+
+All policies are deny-by-default. Direct writes are denied unless specifically described; approved commands must validate auth.uid(), active membership, role, record ownership and same-workspace references.
+
+| Table/object | SELECT | INSERT | UPDATE | DELETE / boundary |
+|---|---|---|---|---|
+| profiles | Own row; restricted identity view | Auth/server | Own safe fields | Deny; no finance data |
+| user_settings | Own row | Own row | Own row | Own row only if lifecycle permits |
+| workspaces | Owner/active member metadata | Onboarding command | Owner/admin command | Deny in V1 |
+| workspace_members | Self + minimum active roster | Invite/accept command | Role/lifecycle command | Status transition; last-owner guard |
+| workspace_invitations | Inviter/admin/intended invitee | Owner/admin command | Owner/admin/revoke command | Revoke status; token hash never returned |
+| currencies | Authenticated read | Server seed | Server seed | Deny; global reference |
+| exchange_rates | Global published + own workspace manual only | Controlled ingestion/manual-rate command | Restricted audited command | Deny if referenced |
+| ledger_accounts | Personal owner; visible household accounts only | Provisioning/posting command | Restricted account command | Archive; deny after reference |
+| financial_accounts | Personal owner; active household members for shared accounts | Account command | Authorized role command | Delete only unused; otherwise archive |
+| transactions | Owner or active household members within record visibility; own private drafts | Draft/posting RPC | Draft command only; posted immutable | Unposted draft only |
+| journal_entries / journal_lines | Parent transaction visibility via safe read path | Posting RPC only | Deny | Deny; immutable |
+| transaction_reversals | Original transaction visibility | Reversal RPC only | Deny | Deny; one successful reversal per original |
+| transaction_categories | Workspace members | Authorized command | Authorized command | Archive after use |
+| income_sources | Personal owner; explicit projection only | Personal owner command | Personal owner command | Archive; never exposed by household membership |
+| pockets / pocket_allocations | Workspace members | Allocation RPC | No edits to committed allocation | No delete after commit; D-16 eligibility pending |
+| budgets / budget_categories / budget_adjustments | Workspace members | Owner/editor command | Owner/editor command | Draft/unreferenced only; actuals derived |
+| financial_goals / goal_milestones | Workspace members | Owner/editor command | Owner/editor command | Unreferenced only |
+| debts / installments / payments / allocations | Workspace members | Debt/posting command | Schedule metadata command; posted immutable | Unused draft only |
+| recurring_rules / executions | Workspace members subject to private scope | Rule/scheduler command | Owner/editor rule; scheduler execution | Draft/rule lifecycle only; unique occurrence |
+| import_jobs / rows / mappings | Creator and authorized reviewer | Upload/parser command | Creator/reviewer workflow | Staging cleanup under retention policy |
+| shared_items / events | Active household members see whitelist only | Projection grant command | Owner update/revoke | Revoke/status; never expose source ID/join |
+| shared_contributions / payments / splits | Active members; departed parties only scoped obligation endpoint | Household command | Commitment/draft command; posted immutable | Unposted draft only |
+| household_settlements / allocations | Active members; departed party via scoped endpoint | Settlement command | Locked settlement command | Draft/cancel state only; over-settlement rejected |
+| cross_workspace_links / pair state | No direct client read; initiator gets safe status | Pair orchestrator only | Orchestrator/reconciler only | Deny; opaque IDs, no private payload |
+| audit_logs | Restricted audit view | Server/RPC only | Deny | Deny; append-only and redacted |
+| notifications | Recipient only | Server only | Recipient mark-read only | Recipient/archive policy |
+| files_metadata / Storage | Parent-record scope; private bucket | Signed scoped upload | Metadata command | Retention/owner command; no public financial bucket |
+
+This is a policy inventory, not executable SQL. Before G2/G5, convert each row into exact grants, PostgreSQL policy expressions and positive/negative tests. Every newly introduced table inherits deny-by-default and must be added to this inventory.
+
+### 17.8 R-08 — FX carrying value remains pending
+
+D-18 remains pending. Candidate methods are weighted-average, FIFO lots and transaction-linked basis. Before FX implementation, select one and approve worked examples for multiple acquisition rates, partial/full disposal, refund, cross-currency transfer, insufficient lot history, rounding and base-currency reporting. Never substitute current spot rate for carrying value.
+
+### 17.9 R-09 — Canonical money wire format
+
+All monetary JSON values are decimal integer strings in minor units, regardless of magnitude. Parse validated strings to TypeScript bigint. JSON must not carry monetary floating-point numbers. Currency exponent is metadata-driven. FX rates/ratios use decimal-safe representations and arithmetic. Examples: IDR 125000 is "125000"; USD 100.00 at exponent 2 is "10000". Formatting is presentation-only.
+
+### 17.10 R-10 — Transaction-level reversal
+
+A business transaction may own multiple journal entries. Reverse the complete posted journal-entry set atomically: lock the original transaction and all its posted entries; reject non-posted, already/partially reversed or incomplete sets; create a reversal transaction and one reversing entry per original entry with debit/credit sides swapped and amounts/snapshots traceable; enforce one successful reversal per original; update original lifecycle in the same commit while preserving original rows; optionally link a separate replacement transaction; make retries idempotent and audit actor/reason/time. Reversal-of-reversal is rejected. Refund remains a separate event, not an error-correction substitute.
+
+### 17.11 R-11 — Data dictionary required before migrations
+
+The conceptual ERD is not migration-ready. G2 requires a versioned table-by-table dictionary containing every column's PostgreSQL type, nullability, default, CHECK/unique/FK constraints, composite same-workspace FK, index, RLS classification, write path, lifecycle, retention and tests; plus relationship cardinality and ON DELETE/archive behaviour. Include journal amounts/currencies, idempotency, pair state and reversal records. No migration is approved merely because an entity appears in the ERD.
+
+### 17.12 R-12 — Pocket eligible funds remains pending
+
+D-16 remains pending. Option A (cash/bank/e-wallet balances, excluding card credit and receivables) is the recommended review candidate, not approved. Decide overdrafts/negative balances, FX conversion source and as-of time, archived accounts with balances, spending shortfall, concurrent allocation, household vs member-private funds, and whether Unallocated may be negative. Allocation must be serialized and may never silently over-allocate.
+
+### 17.13 Review disposition
+
+R-01–R-05 and R-09–R-10 now have explicit design-level contracts. R-04 and R-07 have explicit RLS boundaries to turn into SQL/tests at their gates. R-06, R-08 and R-12 remain owner/finance choices; R-11 remains a required G2 deliverable, not falsely marked complete. This document remains non-executable and does not authorize coding, migrations or deployment.
