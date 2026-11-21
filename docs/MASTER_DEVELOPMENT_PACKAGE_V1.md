@@ -183,3 +183,12 @@ Until this package and its dependency plan are approved:
 - [ ] Product owner explicitly authorizes Phase 0B implementation to begin.
 
 Only after these gates are satisfied should implementation work start.
+
+
+## 12. Architecture review remediation and readiness boundary
+
+The 2026-11-21 review findings R-01–R-12 and dispositions are recorded in ARCHITECTURE_REVIEW_REPORT_V1.md and the authoritative design addendum in DATABASE_AND_FINANCE_ARCHITECTURE_DESIGN_PACK_V1.md §17.
+
+The review closes specification gaps where a safe technical contract can be documented (paired-entry recovery, idempotency, FX RLS separation, contribution posting pair, table-level RLS baseline, money wire format and reversal semantics). It does not close owner decisions for category/CoA model, FX carrying-value method/provider, pocket eligible funds, household currency/roles, or deletion/retention. The final column-level data dictionary remains a G2 deliverable.
+
+**Readiness:** G0, G2, G5, G6 and G7 remain separate approval gates. No code, migration, cloud resource or deployment is authorized by this documentation update. Phase 0B begins only after G0 approval and explicit implementation authorization; ledger work begins only after G2 approval.
