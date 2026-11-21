@@ -85,7 +85,7 @@ The review made technical contracts explicit but has not silently approved the f
 
 | Decision | Status | Required outcome |
 |---|---|---|
-| D-09 category model and final CoA | Pending design review | Select category dimension or account mapping; approve CoA and historical category behaviour |
+| D-09 category model | **Approved — Option A (2026-11-21)** | Category-as-dimension selected. Historical category behaviour and final CoA account list/mappings remain G2 review items |
 | D-10 posting/reversal matrix | Pending design review | Approve all V1 postings and transaction-level reversal examples |
 | D-11 RPC-only financial mutations | Proposed (P-01) | Explicit approval at G2; align grants and command contracts |
 | D-12 money wire format | Proposed technical contract for owner ratification | All JSON money values as integer minor-unit decimal strings; ratify API/type contract at G2 |
