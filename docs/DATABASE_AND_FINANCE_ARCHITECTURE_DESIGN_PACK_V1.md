@@ -319,7 +319,7 @@ Error responses must not reveal whether an unauthorized private record exists. U
 ### 7.1 Idempotency
 
 - Enforce uniqueness in the database, not only in the client.
-- Scope keys to workspace + operation/resource; persist a request fingerprint.
+- Scope keys to (workspace_id, operation_name, idempotency_key); persist a normalized request fingerprint.
 - Same key + same fingerprint returns the original result with `replayed=true`.
 - Same key + different fingerprint returns `IDEMPOTENCY_CONFLICT`.
 - The key record, business transaction, journal rows and audit event commit atomically.
