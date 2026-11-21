@@ -97,7 +97,7 @@ src/
 - Only the Supabase **publishable/anon** key in the frontend. The **service-role key never** appears in frontend code, the repo, or logs.
 - Secrets live only in environment variables. `.env.local` stays git-ignored. Commit `.env.example` with placeholder names only.
 - Validate in the database that every referenced ID belongs to the same workspace.
-- Financial mutations go through RPC functions with membership/role checks, atomicity, row locks where needed, and idempotency keys.
+- **Proposed target (D-11; pending G2 approval):** financial mutations should go through constrained RPC functions with membership/role checks, atomicity, row locks where needed, and idempotency keys. This is not an approved implementation decision until the product owner approves D-11.
 - `SECURITY DEFINER` functions: fixed `search_path`, explicit `auth.uid()` checks, least privilege.
 - Never collect or store bank PINs, banking passwords, OTPs, or full card/account numbers.
 - Audit log every posting, reversal, role change, and sharing grant/revoke.
