@@ -730,7 +730,7 @@ All policies are deny-by-default. Direct writes are denied unless specifically d
 | transaction_reversals | Original transaction visibility | Reversal RPC only | Deny | Deny; one successful reversal per original |
 | transaction_categories | Workspace members | Authorized command | Authorized command | Archive after use |
 | income_sources | Personal owner; explicit projection only | Personal owner command | Personal owner command | Archive; never exposed by household membership |
-| pockets / pocket_allocations | Workspace members | Allocation RPC | No edits to committed allocation | No delete after commit; D-16 eligibility pending |
+| pockets / pocket_allocations | Workspace members | Allocation RPC | No edits to committed allocation | No delete after commit; D-16 eligible-funds policy approved |
 | budgets / budget_categories / budget_adjustments | Workspace members | Owner/editor command | Owner/editor command | Draft/unreferenced only; actuals derived |
 | financial_goals / goal_milestones | Workspace members | Owner/editor command | Owner/editor command | Unreferenced only |
 | debts / installments / payments / allocations | Workspace members | Debt/posting command | Schedule metadata command; posted immutable | Unused draft only |
@@ -764,7 +764,7 @@ The conceptual ERD is not migration-ready. G2 requires a versioned table-by-tabl
 
 ### 17.12 R-12 — Pocket eligible funds remains pending
 
-D-16 remains pending. Option A (cash/bank/e-wallet balances, excluding card credit and receivables) is the recommended review candidate, not approved. Decide overdrafts/negative balances, FX conversion source and as-of time, archived accounts with balances, spending shortfall, concurrent allocation, household vs member-private funds, and whether Unallocated may be negative. Allocation must be serialized and may never silently over-allocate.
+D-16 Option A is approved: active cash/bank/e-wallet balances only; positive balances contribute and negative/overdraft balances reduce eligible funds; exclude card credit, receivables and archived accounts. Unallocated may be negative after spending and must show the shortfall; reject new allocations that worsen it. Remaining design gates are FX conversion source/as-of time under D-18/D-19 and household vs member-private funds under G5. Allocation must be serialized and may never silently over-allocate.
 
 ### 17.13 Review disposition
 
