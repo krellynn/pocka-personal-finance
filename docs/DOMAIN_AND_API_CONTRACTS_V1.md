@@ -77,7 +77,7 @@ The conceptual database specification remains authoritative for detailed candida
 ### FX/reporting
 - `exchange_rates`
 - `fx_conversions`
-- database views/read models for balances, cash flow and reporting (exact approach requires design review).
+- SQL views/read models for balances, cash flow and reporting (D-13 Option A approved 2026-11-21); final view definitions and query catalogue remain design deliverables.
 
 ### Household
 - `shared_expenses` or approved transaction representation
@@ -158,7 +158,7 @@ Proposed read interfaces:
 - Import job and row review state.
 - Audit and notification inbox.
 
-Read models may use SQL views initially (proposal P-04). Materialized views/caches require measured performance evidence and reconciliation tests.
+**Approved under D-13 Option A (2026-11-21):** SQL views are the initial read model for balances and reporting. Materialized views/caches are not the default; consider them only after measured performance evidence demonstrates a need and reconciliation tests verify consistency with the authoritative ledger. Final view definitions, query contracts, indexes and any future refresh strategy remain design deliverables.
 
 ## 7. Standard API behaviour
 
