@@ -554,7 +554,7 @@ Never delete posted financial facts to make a failed deployment appear rolled ba
 ### 13.1 Approved baseline
 
 - Posted journals and their lines are immutable.
-- Accounts with posted history are archived, not deleted.
+- Accounts with posted history are archived, not deleted. Under approved D-14, archiving is allowed only at zero balance; archived accounts are excluded from current active-balance and Net Worth views, while historical posted records remain available.
 - Household exit does not delete history or obligations.
 - Shared projection revocation immediately removes projection access but does not erase household ledger facts already posted.
 - Drafts that have never posted may be deleted according to authorization and audit rules.
@@ -626,7 +626,7 @@ This pack intentionally does not silently close any pending decision.
 | D-11 | RPC-only financial mutations | Financial write implementation |
 | D-12 | Money wire format | Shared API/type generation |
 | D-13 | Balance/read model | Dashboard/report implementation using SQL views; materialization only after measured need and reconciliation tests |
-| D-14 | Archive/unarchive with balance | Account lifecycle implementation |
+| D-14 | Account archive and balance inclusion | **Approved Option B (2026-11-21):** zero-balance precondition; exclude archived accounts from active-balance and Net Worth views; preserve history. Unarchive flow remains to be specified |
 | D-15 | Partial refund rules | Refund RPC |
 | D-16 | Pocket eligible funds | Pocket allocation enforcement |
 | D-17 | Debt edge cases | Debt posting/schedule implementation |
