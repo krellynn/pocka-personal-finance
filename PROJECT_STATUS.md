@@ -23,7 +23,7 @@ The Phase 0A documentation and ADR-001 to ADR-013 are merged into `main`. The Cl
 | Component | Status |
 |---|---|
 | Product & architecture documentation | **Phase 0A complete** and merged into `main` via PR #1 |
-| Architecture decisions (ADR-001 to ADR-013) | **Approved and documented** in `docs/DECISION_REGISTER.md` and `docs/decisions/` |
+| Architecture decisions (ADR-001 to ADR-014) | **Approved**; ADR-001 to ADR-013 are merged into `main`, ADR-014 is in this documentation PR |
 | Static design prototype (`index.html`, root) | **Exists** (demo only). Relocation to `prototype/index.html` is **planned** for the Vite foundation phase (ADR-012), **not yet done** |
 | React/Vite application | **Not started** |
 | Dependencies / `package.json` | **Not started** |
@@ -109,7 +109,7 @@ Everything in the target architecture: app scaffold, auth, workspaces, ledger, a
 
 ## 7. Decisions and Open Questions
 
-**Resolved on 2026-11-13** by ADR-001 to ADR-013 (see `docs/DECISION_REGISTER.md`): money storage, pocket model and Unallocated, shared summary (empty), recurring drafts, contribution accounting, FX recognition, credit cards, account archiving, household exit, split methods, UI language, prototype location, privacy invariants.
+**Resolved by approved ADRs** (see `docs/DECISION_REGISTER.md`): ADR-001 to ADR-013 (2026-11-13) and ADR-014 (2026-11-21): money storage, pocket model and Unallocated, shared summary (empty), recurring drafts, contribution accounting, FX recognition, credit cards, account archiving, household exit, split methods, UI language, prototype location, privacy invariants.
 
 **Still pending product-owner decision** (ARCHITECTURE §9.2):
 - Whole-user/workspace data deletion vs. the immutable ledger.
