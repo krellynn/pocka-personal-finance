@@ -9,7 +9,7 @@
 
 | Item | Value |
 |---|---|
-| `main` (origin) | `dc78cb9` — latest verified documentation commit; includes ADR-014 and the post-merge status sync |
+| `main` (origin) | PR #3 merged; ADR-014 and the post-merge documentation status sync are present (verified 2026-11-21) |
 | Completed PR | [PR #1](https://github.com/krellynn/pocka-personal-finance/pull/1), `docs/phase-0-architecture` → `main`, **merged** |
 | Completed PR | [PR #3](https://github.com/krellynn/pocka-personal-finance/pull/3), `docs/cloudflare-workers-deployment` → `main`, **merged** |
 | Remote | `origin` → `https://github.com/krellynn/pocka-personal-finance.git` |
