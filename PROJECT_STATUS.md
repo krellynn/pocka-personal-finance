@@ -14,7 +14,7 @@
 | Current documentation branch | `docs/cloudflare-workers-deployment` — ADR-014 and hosting-documentation updates; pending review |
 | Remote | `origin` → `https://github.com/krellynn/pocka-personal-finance.git` |
 
-The Phase 0A documentation and ADR-001 to ADR-013 are merged into `main`. The Cloudflare hosting decision (ADR-014) and related documentation updates are being prepared separately; they do not change application code.
+The Phase 0A documentation and ADR-001 to ADR-013 are merged into `main`. ADR-014 and its related documentation updates are in [PR #3](https://github.com/krellynn/pocka-personal-finance/pull/3); this branch contains documentation only and does not change application code.
 
 ---
 
@@ -101,7 +101,7 @@ Everything in the target architecture: app scaffold, auth, workspaces, ledger, a
 
 ## 6. Next Milestones
 
-1. **Cloudflare hosting documentation update**: ADR-014 and related documentation are being reviewed in `docs/cloudflare-workers-deployment`; no implementation has started.
+1. **Cloudflare hosting documentation update**: ADR-014 and related documentation are under review in [PR #3](https://github.com/krellynn/pocka-personal-finance/pull/3); no implementation has started.
 2. **Phase 0B — Application Foundation.** Implementation has not started: scaffold, move the prototype to `prototype/index.html` (ADR-012), design tokens, i18n with Bahasa Indonesia default (ADR-011), money/date helpers (ADR-001), Supabase Auth, profiles, personal workspace.
 3. **Design reviews** for the implementation details listed in ARCHITECTURE §9.3, scheduled before the phase that needs each one.
 
@@ -109,7 +109,7 @@ Everything in the target architecture: app scaffold, auth, workspaces, ledger, a
 
 ## 7. Decisions and Open Questions
 
-**Resolved by approved ADRs** (see `docs/DECISION_REGISTER.md`): ADR-001 to ADR-013 (2026-11-13) and ADR-014 (2026-11-21): money storage, pocket model and Unallocated, shared summary (empty), recurring drafts, contribution accounting, FX recognition, credit cards, account archiving, household exit, split methods, UI language, prototype location, privacy invariants.
+**Resolved by approved ADRs** (see `docs/DECISION_REGISTER.md`): ADR-001 to ADR-013 (2026-11-13) cover money storage, pocket model and Unallocated, shared summary (empty), recurring drafts, contribution accounting, FX recognition, credit cards, account archiving, household exit, split methods, UI language, prototype location, and privacy invariants. ADR-014 (2026-11-21) selects Cloudflare Workers + Static Assets and supersedes only the hosting portion of BL-04.
 
 **Still pending product-owner decision** (ARCHITECTURE §9.2):
 - Whole-user/workspace data deletion vs. the immutable ledger.
