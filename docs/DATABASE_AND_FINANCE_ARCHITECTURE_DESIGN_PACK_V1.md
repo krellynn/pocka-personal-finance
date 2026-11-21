@@ -771,4 +771,8 @@ This decision approves the mutation boundary only. Final RPC names/signatures an
 
 ### 17.15 D-13 — SQL views as the initial balance/read model approved
 
+### 17.16 D-14 — Account archive requires zero balance; excluded from totals
+
+**Product-owner decision (2026-11-21): Option B approved.** Archiving represents closing an account. An account with posted history is never hard-deleted; it may be archived only after its balance is zero in its own currency. Before archiving, any remaining balance must be cleared through a valid transfer or another separately approved closing transaction. The archive action itself must not write off, delete, or silently remove a nonzero asset/liability. Once archived, the account is excluded from both Total Active Account Balance and current Net Worth, rejects new postings, and remains available in historical transaction/report records. Unarchive/reactivation permissions and flow remain a separate design detail. This decision does not authorize migrations or implementation.
+
 **Product-owner decision (2026-11-21): Option A approved.** SQL views are the initial read model for account balances and reporting, derived from the authoritative ledger. POCKA V1 does not introduce separately stored balance/cache tables by default. Materialized views or caches may be considered only when measured performance evidence demonstrates a need and reconciliation tests verify consistency with the ledger. This approves the strategy, not the final view definitions, indexes, query catalogue, materialization refresh policy or implementation; those remain design deliverables. No migration or implementation is authorized by this decision alone.
