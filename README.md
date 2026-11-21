@@ -120,6 +120,7 @@ Never commit `.env.local`, and never put the Supabase service-role key in fronte
 5. [Quality & Test Strategy](docs/QUALITY_AND_TEST_STRATEGY_V1.md): financial, privacy, integration and release tests
 6. [Parallel Execution Plan](docs/PARALLEL_EXECUTION_PLAN_V1.md): dependency gates, workstreams and 26-week implementation schedule
 7. [Product Owner Decisions](docs/PRODUCT_OWNER_DECISIONS_V1.md): open decisions and proposed defaults
+8. [Database & Finance Architecture Design Pack](docs/DATABASE_AND_FINANCE_ARCHITECTURE_DESIGN_PACK_V1.md): conceptual ERD, CoA, posting matrix, RPC/RLS, FX, pockets, household and migration design
 
 **AI coding agents:** read `README.md`, `PROJECT_STATUS.md`, and `docs/DECISION_REGISTER.md` first, then follow `docs/DEVELOPMENT_GUIDELINES.md` §10 and `docs/AI_AGENT_PLAYBOOK_V1.md`. Never silently override an APPROVED ADR.
 
