@@ -226,3 +226,25 @@ Blocking before relevant implementation:
 - Role/permission matrix before invitations and household write actions.
 - Whole-user/workspace deletion policy before account closure/deletion functionality.
 - Import format, parser, limits, storage policy and retention before import implementation.
+
+
+---
+
+## 10. Contract clarifications from architecture review (2026-11-21)
+
+### 10.1 Money wire format
+All monetary JSON fields are decimal integer strings in minor units, not JSON numbers, regardless of magnitude. Validate then parse to TypeScript bigint. Currency exponent is metadata-driven. FX rates/ratios use decimal-safe contracts and arithmetic. This supersedes conditional wording in §§1 and 7.
+
+### 10.2 Financial mutation status
+RPC-only financial writes are the proposed default, pending explicit product-owner approval at G2 (D-11). This is not an approved implementation decision or coding authorization. If approved, client roles receive no direct journal-table write grants; RPCs validate auth.uid(), active membership, role, ownership, same-workspace references, idempotency and audit requirements.
+
+### 10.3 Idempotency envelope
+Use (workspace_id, operation_name, idempotency_key) plus canonical request fingerprint. Identical retries replay the original result or durable in-progress state; a different fingerprint returns IDEMPOTENCY_CONFLICT. Concurrent calls serialize so only one posting effect occurs. Household pairs use pair-level and distinct side-level keys.
+
+### 10.4 Reversal command
+Reverse the complete posted journal-entry set for the original business transaction atomically. Only one successful reversal is allowed. Original rows remain unchanged; replacement is a separate linked transaction; reversal-of-reversal is rejected. Retries are idempotent.
+
+### 10.5 Household contracts
+Cross-workspace correlation uses opaque pair ID, per-side authorization/idempotency, durable per-side state, retry/reconciliation and audited compensation. No private source identifiers/rows are exposed through household reads. A departed member may use only an obligation-scoped endpoint bound to auth.uid(); ordinary household RLS remains revoked.
+
+See design pack §§17.1–17.10. Pending product/finance decisions remain gated at G2/G5.
