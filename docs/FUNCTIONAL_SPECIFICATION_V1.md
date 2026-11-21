@@ -92,7 +92,7 @@ Every workspace-scoped operation must validate active membership and relevant ro
 - Concurrent posting cannot produce lost updates or inconsistent balances.
 - Transfers do not affect income/expense totals.
 - Pocket allocations and goal contributions do not create journal entries.
-- Refunds offset the original expense and cannot exceed the permitted refundable amount.
+- One original expense may receive multiple linked partial refunds, or one full refund. Each refund offsets the original expense, is not income, and the cumulative successfully posted refund amount cannot exceed the original refundable amount; the remaining refundable amount is recalculated for every refund.
 - All referenced account/category/source/workspace IDs belong to the same workspace unless a specifically approved cross-workspace workflow applies.
 - Date-only transaction dates are stored as date values and interpreted in workspace timezone.
 - Amount entry rejects zero/negative values where prohibited, malformed values, unsupported precision and configured maximum violations.
