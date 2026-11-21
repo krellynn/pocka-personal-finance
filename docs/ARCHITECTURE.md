@@ -11,17 +11,19 @@ Approved decisions are indexed in [`DECISION_REGISTER.md`](DECISION_REGISTER.md)
 ## 1. System Overview
 
 ```
-┌──────────────────────────┐        HTTPS        ┌───────────────────────────────────────┐
-│  Browser (Cloudflare Workers Static Assets)  │ ─► │ Supabase (region: Singapore, prov.)   │
-│  React + TS + Vite SPA   │  publishable key +  │                                       │
-│  shadcn/ui, Tailwind     │  user JWT only      │  Auth ── issues JWT                   │
-│  React Router, RHF + Zod │                     │  PostgREST ── tables (RLS enforced)   │
-│  Recharts                │                     │  RPC ── SECURITY-checked functions    │
-└──────────────────────────┘                     │         for all financial mutations   │
-                                                 │  Edge Functions ── import, schedulers │
-                                                 │  Storage ── import files, attachments │
-                                                 │  PostgreSQL ── ledger, source of truth│
-                                                 └───────────────────────────────────────┘
+┌──────────────────────────────┐      served by      ┌──────────────────────────────┐
+│ Browser                      │ ◄────────────────── │ Cloudflare Workers           │
+│ React + TypeScript + Vite SPA│                    │ Static Assets                │
+│ shadcn/ui · Tailwind         │                    └──────────────────────────────┘
+│ React Router · RHF + Zod     │
+│ Recharts                     │          HTTPS + publishable key + user JWT
+└──────────────────────────────┘ ─────────────────────────────────────────────►
+                                      ┌────────────────────────────────────────┐
+                                      │ Supabase (Singapore, provisional)     │
+                                      │ Auth · PostgREST (RLS enforced)        │
+                                      │ RPC · Edge Functions · Storage         │
+                                      │ PostgreSQL — financial source of truth │
+                                      └────────────────────────────────────────┘
 ```
 
 - **Approved:** Supabase/PostgreSQL with RLS; React + TypeScript + Vite; Cloudflare Workers + Static Assets for frontend hosting (ADR-014); GitHub.
@@ -189,7 +191,7 @@ Summarised here. Normative rules are in `HOUSEHOLD_PRIVACY.md`, [ADR-013](decisi
 | FX rates | Scheduled fetch from a rate provider into `exchange_rates`; manual entry allowed | Proposed; provider choice requires design review |
 | Notifications | In-app table first; email/push Pending | Proposed |
 | Bank aggregation | Out of V1 scope | Pending (future) |
-| Hosting | Cloudflare Workers + Static Assets (frontend); Workers Builds/GitHub integration is the proposed deployment workflow. Frontend receives public configuration only. | Platform approved: ADR-014; workflow details Proposed |
+| Hosting | Cloudflare Workers + Static Assets (frontend); Cloudflare Vite plugin is the preferred Vite integration. Workers Builds/GitHub integration is proposed. | Platform approved: ADR-014; workflow details Proposed |
 
 ## 7. Security Architecture (Approved)
 
