@@ -67,10 +67,10 @@ src/
 
 ## 5. Financial Calculation Rules (Approved)
 
-1. **Never use JS `number` floating-point arithmetic for money.** Money is **`BIGINT` integer minor units** in the database and `bigint` in TypeScript, with strings at the wire boundary where needed (Approved: [ADR-001](decisions/ADR-001-monetary-storage.md)). `NUMERIC` is used for FX rates, ratios, and percentages.
+1. **Never use JS `number` floating-point arithmetic for money.** Money is **`BIGINT` integer minor units** in the database and `bigint` in TypeScript. **Every monetary JSON value is a base-10 decimal integer string in minor units, regardless of magnitude**; validate at the boundary and parse to `bigint`. Never send monetary JSON numbers (Approved: D-12 Option A, 2026-11-21; [ADR-001](decisions/ADR-001-monetary-storage.md)). `NUMERIC`/decimal-safe representations are used for FX rates, ratios, and percentages.
 2. Precision comes from `currencies.minor_units`. **Never assume 2 decimals.** IDR 0, USD 2, JPY 0. Display value = minor ÷ 10^exponent, formatted by the central helpers.
 3. Parsing user input: accept locale formats (`12.850.000`, `12.850.000,50` for 2-dp currencies) and convert to minor units with strict validation. Reject ambiguous input, and reject more decimals than the currency exponent allows.
-4. **Safe integers:** validate configured maximums. Never pass values above `Number.MAX_SAFE_INTEGER` through JS `number`.
+4. **Safe integers:** validate configured monetary maximums without converting money through JS `number`. Keep monetary values as decimal strings at JSON boundaries and `bigint` in TypeScript; never rely on `Number.MAX_SAFE_INTEGER` as a reason to switch wire formats.
 5. Authoritative arithmetic (balances, conversions, budget actuals, splits) happens **in the database**. The frontend may preview totals using `bigint`.
 6. Splits and allocations: **largest-remainder** method; ties broken by participant order. Σ parts must equal the total (Approved: [ADR-010](decisions/ADR-010-expense-split-methods.md)).
 7. FX conversion: rate × amount in `NUMERIC`, rounded **once** with **half-even** rounding. Store the snapshot. Realized FX gain/loss only on actual conversion or settlement. No unrealized revaluation in V1 (Approved: [ADR-006](decisions/ADR-006-fx-recognition.md)).
@@ -97,7 +97,7 @@ src/
 - Only the Supabase **publishable/anon** key in the frontend. The **service-role key never** appears in frontend code, the repo, or logs.
 - Secrets live only in environment variables. `.env.local` stays git-ignored. Commit `.env.example` with placeholder names only.
 - Validate in the database that every referenced ID belongs to the same workspace.
-- **Proposed target (D-11; pending G2 approval):** financial mutations should go through constrained RPC functions with membership/role checks, atomicity, row locks where needed, and idempotency keys. This is not an approved implementation decision until the product owner approves D-11.
+- **Approved (D-11 Option A, 2026-11-21):** every balance-affecting financial mutation must go through PostgreSQL RPC functions. Client code must not directly mutate ledger/financial fact tables. RPCs enforce actor/workspace authorization, validation, idempotency, concurrency and atomicity as applicable. Final signatures, grants and function hardening remain G2 deliverables.
 - `SECURITY DEFINER` functions: fixed `search_path`, explicit `auth.uid()` checks, least privilege.
 - Never collect or store bank PINs, banking passwords, OTPs, or full card/account numbers.
 - Audit log every posting, reversal, role change, and sharing grant/revoke.
