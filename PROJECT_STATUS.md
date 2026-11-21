@@ -1,7 +1,7 @@
 # POCKA — Project Status
 
-**Last updated:** 2026-11-13
-**Current phase:** Phase 0, Documentation & Architecture Foundation. **In review.** The Phase 0A documentation has been created, and V1 architecture decisions ADR-001 to ADR-013 are **approved** (2026-11-13) and documented. **Phase 0B (Application Foundation) has not started.** It needs explicit product-owner approval after PR #1 is merged.
+**Last updated:** 2026-11-21
+**Current phase:** Phase 0A — Documentation & Architecture Foundation. **Complete and merged into `main`.** ADR-001 to ADR-013 were approved on 2026-11-13. ADR-014 (Cloudflare Workers + Static Assets hosting) was approved on 2026-11-21 and is being added through a documentation-only PR. **Phase 0B — Application Foundation & Authentication has not started.**
 
 ---
 
@@ -9,12 +9,12 @@
 
 | Item | Value |
 |---|---|
-| `main` (origin) | `122b3bb` "Initial POCKA prototype and gitignore". Phase 0 documentation is **not yet merged** into `main` |
-| Documentation branch | `docs/phase-0-architecture`, first documentation commit `11690eb` "docs: add Phase 0 documentation and approved V1 architecture decisions" |
-| Pull request | [krellynn/pocka-personal-finance#1](https://github.com/krellynn/pocka-personal-finance/pull/1), `docs/phase-0-architecture` → `main`, **open for review** |
+| `main` (origin) | `0bea092` — merge commit for PR #1; contains the Phase 0A documentation baseline |
+| Completed PR | [PR #1](https://github.com/krellynn/pocka-personal-finance/pull/1), `docs/phase-0-architecture` → `main`, **merged** |
+| Current documentation branch | `docs/cloudflare-workers-deployment` — ADR-014 and hosting-documentation updates; pending review |
 | Remote | `origin` → `https://github.com/krellynn/pocka-personal-finance.git` |
 
-The Phase 0 documentation (Phase 0A plus the 2026-11-13 decision update) is **committed on `docs/phase-0-architecture`** and reaches `main` only when PR #1 is approved and merged.
+The Phase 0A documentation and ADR-001 to ADR-013 are merged into `main`. The Cloudflare hosting decision (ADR-014) and related documentation updates are being prepared separately; they do not change application code.
 
 ---
 
@@ -22,7 +22,7 @@ The Phase 0 documentation (Phase 0A plus the 2026-11-13 decision update) is **co
 
 | Component | Status |
 |---|---|
-| Product & architecture documentation | **Created** and committed on `docs/phase-0-architecture`. In review via PR #1, not yet merged into `main` |
+| Product & architecture documentation | **Phase 0A complete** and merged into `main` via PR #1 |
 | Architecture decisions (ADR-001 to ADR-013) | **Approved and documented** in `docs/DECISION_REGISTER.md` and `docs/decisions/` |
 | Static design prototype (`index.html`, root) | **Exists** (demo only). Relocation to `prototype/index.html` is **planned** for the Vite foundation phase (ADR-012), **not yet done** |
 | React/Vite application | **Not started** |
@@ -34,7 +34,7 @@ The Phase 0 documentation (Phase 0A plus the 2026-11-13 decision update) is **co
 | Multi-currency | **Not started** (specified only) |
 | Import / reconciliation | **Not started** (specified only) |
 | Tests | **None** |
-| Vercel deployment | **Not started** |
+| Cloudflare Workers hosting/deployment | **Not started**; platform approved by ADR-014, account and deployment configuration not set up |
 | CI | **None** |
 
 Nothing in the target architecture is implemented yet. All financial-engine, privacy, and database content in `docs/` is **specification**, not built behaviour.
@@ -101,8 +101,8 @@ Everything in the target architecture: app scaffold, auth, workspaces, ledger, a
 
 ## 6. Next Milestones
 
-1. **Documentation review**: product owner reviews PR #1 (`docs/`, Decision Register, ADRs), then merges it into `main`.
-2. **Phase 0B — Application Foundation.** It starts only after explicit approval: scaffold, move the prototype to `prototype/index.html` (ADR-012), design tokens, i18n with Bahasa Indonesia default (ADR-011), money/date helpers (ADR-001), Supabase Auth, profiles, personal workspace.
+1. **Cloudflare hosting documentation update**: ADR-014 and related documentation are being reviewed in `docs/cloudflare-workers-deployment`; no implementation has started.
+2. **Phase 0B — Application Foundation.** Implementation has not started: scaffold, move the prototype to `prototype/index.html` (ADR-012), design tokens, i18n with Bahasa Indonesia default (ADR-011), money/date helpers (ADR-001), Supabase Auth, profiles, personal workspace.
 3. **Design reviews** for the implementation details listed in ARCHITECTURE §9.3, scheduled before the phase that needs each one.
 
 ---
@@ -129,3 +129,5 @@ Everything in the target architecture: app scaffold, auth, workspaces, ledger, a
 | 2026-11-13 | 0 (decisions) | Recorded 13 approved ADRs: created `docs/DECISION_REGISTER.md` and `docs/decisions/ADR-001…013`. Updated all docs for consistency. Retired the old `ADR-01…12` labels in favour of `BL-01…09`. Documentation only. `index.html` untouched. |
 | 2026-11-13 | 0 (commit) | Committed all Phase 0 documentation as `11690eb` on `docs/phase-0-architecture` and opened PR #1 to `main`. Application foundation named Phase 0B. |
 | 2026-11-13 | 0 (review) | PR #1 review corrections: Git/PR status brought up to date in PROJECT_STATUS and README. |
+| 2026-11-13 | 0A | Phase 0A documentation merged into `main` via PR #1 (merge commit `0bea092`). |
+| 2026-11-21 | 0 (architecture decision) | Approved ADR-014: Cloudflare Workers + Static Assets supersedes the Vercel hosting portion of BL-04. Documentation-only update; no application or deployment changes. |
