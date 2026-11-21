@@ -10,7 +10,7 @@ POCKA puts **financial correctness, privacy, clarity, and ease of use** ahead of
 
 ## Status
 
-**Phase 0: Documentation & Architecture Foundation (in review).** The V1 architecture decisions (ADR-001 to ADR-013) were approved on 2026-11-13. The documentation is under review in [PR #1](https://github.com/krellynn/pocka-personal-finance/pull/1) and not yet merged into `main`. Phase 0B (Application Foundation) has not started.
+**Phase 0A: Documentation & Architecture Foundation (complete and merged).** ADR-001 to ADR-013 were approved on 2026-11-13 and merged into `main` through PR #1. ADR-014 (Cloudflare Workers + Static Assets hosting) was approved on 2026-11-21 and is recorded in this documentation update. Phase 0B (Application Foundation & Authentication) has not started.
 
 The application itself has **not been built yet**. The repository holds:
 
@@ -52,7 +52,7 @@ Full module descriptions are in [`docs/PRODUCT_OVERVIEW.md`](docs/PRODUCT_OVERVI
 
 **Backend:** Supabase · PostgreSQL · Supabase Auth · Row Level Security · PostgreSQL functions/RPC · Edge Functions and Storage where needed
 
-**Delivery:** Git + GitHub (`krellynn/pocka-personal-finance`) · Vercel (frontend) · Supabase, Singapore region (provisional)
+**Delivery:** Git + GitHub (`krellynn/pocka-personal-finance`) · Cloudflare Workers + Static Assets (frontend hosting; ADR-014) · Supabase, Singapore region (provisional)
 
 ---
 
@@ -67,7 +67,7 @@ pocka-personal-finance/
 ├── PROJECT_STATUS.md
 ├── docs/
 │   ├── DECISION_REGISTER.md    # Authoritative index of approved decisions
-│   ├── decisions/              # ADR-001 … ADR-013
+│   ├── decisions/              # ADR-001 … ADR-014
 │   ├── PRODUCT_OVERVIEW.md
 │   ├── ARCHITECTURE.md
 │   ├── DATABASE_SPECIFICATION.md
@@ -118,7 +118,7 @@ Never commit `.env.local`, and never put the Supabase service-role key in fronte
 Read in this order:
 
 1. [`PROJECT_STATUS.md`](PROJECT_STATUS.md): what exists and what doesn't
-2. [`docs/DECISION_REGISTER.md`](docs/DECISION_REGISTER.md): **approved architecture decisions** (ADR-001 to ADR-013), linking to [`docs/decisions/`](docs/decisions/)
+2. [`docs/DECISION_REGISTER.md`](docs/DECISION_REGISTER.md): **approved architecture decisions** (ADR-001 to ADR-014), linking to [`docs/decisions/`](docs/decisions/)
 3. [`docs/PRODUCT_OVERVIEW.md`](docs/PRODUCT_OVERVIEW.md): vision, modules, UX
 4. [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md): system design
 5. [`docs/DATABASE_SPECIFICATION.md`](docs/DATABASE_SPECIFICATION.md): conceptual data model and ledger
