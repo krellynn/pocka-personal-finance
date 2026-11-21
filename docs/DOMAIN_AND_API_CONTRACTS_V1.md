@@ -252,6 +252,10 @@ See design pack §§17.1–17.10. Pending product/finance decisions remain gated
 
 ## 6. Approved financial mutation boundary — D-11
 
+## 7. Account archive lifecycle — D-14
+
+**Product-owner decision (2026-11-21): Option B approved.** Account archiving represents account closure. The archive operation must reject an account whose ledger-derived balance is nonzero in its own currency; the balance must first be cleared by a valid transfer or another approved closing transaction. Archiving must not create an implicit write-off or make a remaining asset/liability disappear from the ledger. Archived accounts are excluded from Total Active Account Balance and current Net Worth, reject new postings, and retain historical transactions and reports. Unarchive/reactivation permissions and flow remain to be designed. The eventual RPC signature, authorization, locking, audit and tests remain G2 deliverables; this decision does not authorize implementation.
+
 **Approved by the product owner on 2026-11-21 (Option A).** Every balance-affecting financial mutation is invoked through a PostgreSQL RPC. Client-side code must not directly write ledger or other financial fact tables. Read operations remain RLS-protected and may use approved SQL views/read models.
 
 Each RPC contract must specify actor and workspace authorization (`auth.uid()` and active membership), operation-level permission, same-workspace reference validation, validated payload, canonical idempotency identity/fingerprint, concurrency/locking behaviour, atomic write boundary, audit behaviour, return schema and stable error codes. Database grants must deny direct client mutation of financial fact tables and narrowly grant EXECUTE only to the intended authenticated role(s). SECURITY DEFINER is not implied; if selected, it requires fixed `search_path`, strict internal authorization/identifier validation and restricted EXECUTE grants.
