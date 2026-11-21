@@ -65,7 +65,8 @@ Every workspace-scoped operation must validate active membership and relevant ro
 ### Acceptance criteria
 - Opening balances create auditable balanced journal entries.
 - Account balance reconciles to ledger lines, not client-side arithmetic.
-- Archived accounts reject new postings but remain visible in historical reports.
+- Accounts with posted history cannot be hard-deleted. Archiving is blocked while the account has a nonzero balance; the balance must first be settled through a valid transfer or approved closing transaction.
+- Archived accounts reject new postings and are excluded from Total Active Account Balance and current Net Worth, while historical transactions remain visible in historical reports.
 - Accounts with posted history cannot be hard-deleted (ADR-008).
 - Credit-card purchases increase liability and recognize expense once; bill payment reduces liability and bank balance without a second expense.
 - Cross-currency account operations use approved FX posting rules.
