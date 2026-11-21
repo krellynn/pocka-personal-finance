@@ -10,7 +10,7 @@
 3. Database constraints and RLS enforce ownership; UI state is not trusted.
 4. Financial mutations are atomic, idempotent and auditable.
 5. Posted ledger facts are immutable; corrections use reversal/repost.
-6. Amounts are integer minor units in BIGINT; wire values use decimal strings where JavaScript safe integer limits could be exceeded.
+6. Amounts are integer minor units in BIGINT; **all monetary JSON wire values are decimal integer strings in minor units, regardless of magnitude**, validated and parsed to TypeScript `bigint` (D-12 Option A approved 2026-11-21). Monetary JSON numbers are prohibited.
 7. Currency precision is metadata-driven.
 8. Date-only values use ISO `YYYY-MM-DD` strings; instants use RFC 3339 timestamps.
 9. Supabase service-role access is never used by the browser.
@@ -165,7 +165,7 @@ Read models may use SQL views initially (proposal P-04). Materialized views/cach
 ### Input/output
 - Validate external payloads with Zod at the client boundary for UX and again at the trusted database/server boundary.
 - Use explicit discriminated operation types; avoid ambiguous generic transaction payloads.
-- Monetary wire representation: decimal integer strings in minor units (subject to contract approval); never JSON floating-point values for money.
+- Monetary wire representation: every monetary value is a base-10 decimal integer string in minor units, regardless of magnitude; validate and parse to TypeScript `bigint`. Never encode money as a JSON number. Currency exponent is metadata-driven.
 - IDs: UUID strings.
 - Date-only: `YYYY-MM-DD`.
 - Timestamp: RFC 3339 with timezone offset/UTC marker.
@@ -233,10 +233,10 @@ Blocking before relevant implementation:
 ## 10. Contract clarifications from architecture review (2026-11-21)
 
 ### 10.1 Money wire format
-All monetary JSON fields are decimal integer strings in minor units, not JSON numbers, regardless of magnitude. Validate then parse to TypeScript bigint. Currency exponent is metadata-driven. FX rates/ratios use decimal-safe contracts and arithmetic. This supersedes conditional wording in §§1 and 7.
+**Approved by the product owner as D-12 Option A (2026-11-21):** All monetary JSON fields are base-10 decimal integer strings in minor units, not JSON numbers, regardless of magnitude. Validate then parse to TypeScript `bigint`. Currency exponent is metadata-driven and never assumed to be two. FX rates/ratios use decimal-safe contracts and arithmetic. Formatted currency strings are presentation-only.
 
 ### 10.2 Financial mutation status
-RPC-only financial writes are the proposed default, pending explicit product-owner approval at G2 (D-11). This is not an approved implementation decision or coding authorization. If approved, client roles receive no direct journal-table write grants; RPCs validate auth.uid(), active membership, role, ownership, same-workspace references, idempotency and audit requirements.
+RPC-only financial writes are approved under D-11 Option A (2026-11-21). Client roles receive no direct write grants to ledger/financial fact tables; RPCs validate `auth.uid()`, active membership, operation permission, ownership, same-workspace references, idempotency and audit requirements. Final grants, function security mode and executable tests remain G2 deliverables.
 
 ### 10.3 Idempotency envelope
 Use (workspace_id, operation_name, idempotency_key) plus canonical request fingerprint. Identical retries replay the original result or durable in-progress state; a different fingerprint returns IDEMPOTENCY_CONFLICT. Concurrent calls serialize so only one posting effect occurs. Household pairs use pair-level and distinct side-level keys.
