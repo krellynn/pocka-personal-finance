@@ -105,7 +105,7 @@ Workspace selector is a global shell control. Navigation labels and grouping may
 - Date-only picker aware of workspace timezone.
 - Account/category/source selectors.
 - Transaction-type-specific form sections.
-- Confirmation dialog for archive, reverse, leave/remove, and import commit.
+- Confirmation dialog for archive, reverse, leave/remove, and import commit. Account archive must show the current balance and block confirmation while the balance is nonzero, explaining that the user must transfer/settle it first; after archiving, explain that the account is excluded from active-balance and Net Worth totals while history is retained.
 - Toast/inline feedback.
 - Accessible modal/drawer.
 
