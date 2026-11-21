@@ -10,7 +10,7 @@ POCKA puts **financial correctness, privacy, clarity, and ease of use** ahead of
 
 ## Status
 
-**Phase 0A: Documentation & Architecture Foundation (complete and merged).** ADR-001 to ADR-013 were approved on 2026-11-13 and merged into `main` through PR #1. ADR-014 (Cloudflare Workers + Static Assets hosting) was approved on 2026-11-21 and is recorded in this documentation update. Phase 0B (Application Foundation & Authentication) has not started.
+**Phase 0A: Documentation & Architecture Foundation (complete and merged).** ADR-001 to ADR-013 were approved on 2026-11-13 and merged into `main` through PR #1. ADR-014 (Cloudflare Workers + Static Assets hosting) was approved on 2026-11-21 and is documented in [PR #3](https://github.com/krellynn/pocka-personal-finance/pull/3). The PR is documentation-only; Phase 0B has not started. Phase 0B (Application Foundation & Authentication) has not started.
 
 The application itself has **not been built yet**. The repository holds:
 
