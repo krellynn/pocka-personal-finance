@@ -188,3 +188,12 @@ Additionally:
 - Keep `.wrangler/`, `.dev.vars`, and real local Worker variable files out of Git. A deliberately named example such as `.dev.vars.example` may be committed only when it contains placeholders and no real credentials.
 - Do not add Worker API routes or move business logic from Supabase to Workers without a separately approved requirement.
 - Before enabling deployment, verify SPA fallback/routing (including direct loads and refreshes on nested React Router paths), build output, preview/production separation, domain/DNS, observability, rollback, and account/plan requirements.
+
+
+---
+
+## 11. Financial mutation gate clarification (2026-11-21)
+
+The earlier §7 statement that financial mutations “go through RPC functions” describes the recommended target architecture, not an already approved implementation decision. D-11 remains Proposed and requires explicit product-owner approval at G2. No financial write path may be implemented before that gate. If approved, balance-affecting commands use constrained PostgreSQL RPCs (or an explicitly approved equivalent server-side transaction boundary), with identity/membership/role checks, atomic posting, required row locks, canonical idempotency and audit events. Direct client writes to journal tables are not permitted under the proposed target.
+
+Money remains BIGINT minor units in PostgreSQL and bigint in TypeScript. All monetary JSON values use decimal integer strings in minor units, not conditional number/string serialization. This is a future API contract clarification, not a change to ADR-001 storage.
