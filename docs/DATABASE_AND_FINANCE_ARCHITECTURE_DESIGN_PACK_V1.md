@@ -67,7 +67,7 @@ The following names are canonical candidates for design review, not approved fin
 - `transaction_reversals`: immutable link between original, reversal and optional replacement.
 - `idempotency_keys`: optional generalized request ledger if per-entity unique keys prove insufficient.
 - `audit_logs`: append-only security and financial audit events.
-- Account balance read model: begin with a SQL view; no cache table in V1 unless measured need justifies it.
+- **D-13 Option A approved (2026-11-21):** account balance and reporting read models begin with SQL views derived from the authoritative ledger. No separately stored balance/cache table by default; materialization requires measured performance need and reconciliation tests.
 
 **Classification and planning**
 - `transaction_categories`, `income_sources`.
@@ -625,7 +625,7 @@ This pack intentionally does not silently close any pending decision.
 | D-10 | Journal posting matrix | **Approved baseline (2026-11-21); adjustment-specific rules and applicable edge cases remain prerequisites** |
 | D-11 | RPC-only financial mutations | Financial write implementation |
 | D-12 | Money wire format | Shared API/type generation |
-| D-13 | Balance/read model | Dashboard/report implementation |
+| D-13 | Balance/read model | Dashboard/report implementation using SQL views; materialization only after measured need and reconciliation tests |
 | D-14 | Archive/unarchive with balance | Account lifecycle implementation |
 | D-15 | Partial refund rules | Refund RPC |
 | D-16 | Pocket eligible funds | Pocket allocation enforcement |
@@ -768,3 +768,7 @@ R-01–R-05 and R-09–R-10 now have explicit design-level contracts. R-04 and R
 **Product-owner decision (2026-11-21): Option A approved.** Every balance-affecting financial write must execute through PostgreSQL RPC. The browser/client must not directly insert, update or delete ledger/financial facts. RPCs are responsible for validating `auth.uid()`, active workspace membership, operation authorization, same-workspace references, input constraints, canonical idempotency and concurrency controls as applicable. Related business transaction, journal entries/lines, reversal records and audit facts must commit atomically within the command's defined boundary. Grants are deny-by-default; RPC EXECUTE privileges are narrowly scoped. Reads remain available only through RLS-protected queries and approved views/read models.
 
 This decision approves the mutation boundary only. Final RPC names/signatures and payload schemas, per-function grants, SECURITY INVOKER/DEFINER choices and hardening, error catalogue, and executable RLS/grant tests remain G2 deliverables. No SQL migration or implementation is authorized by this decision alone.
+
+### 17.15 D-13 — SQL views as the initial balance/read model approved
+
+**Product-owner decision (2026-11-21): Option A approved.** SQL views are the initial read model for account balances and reporting, derived from the authoritative ledger. POCKA V1 does not introduce separately stored balance/cache tables by default. Materialized views or caches may be considered only when measured performance evidence demonstrates a need and reconciliation tests verify consistency with the ledger. This approves the strategy, not the final view definitions, indexes, query catalogue, materialization refresh policy or implementation; those remain design deliverables. No migration or implementation is authorized by this decision alone.
