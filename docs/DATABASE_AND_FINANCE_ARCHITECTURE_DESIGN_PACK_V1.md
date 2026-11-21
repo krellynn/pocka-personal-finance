@@ -1,4 +1,4 @@
-#### 17.17 D-15 — Multiple partial refunds approved\n\n**Product-owner decision (2026-11-21): Option A approved.** An eligible original expense may receive multiple linked partial refunds over time, or one full refund. Each refund is a separate posted business event that offsets the original expense; it is not income and is not an error-correction reversal. Before posting, calculate the remaining refundable amount as the original refundable amount less all successful prior refunds linked to that original. The cumulative successful refund amount must never exceed the original refundable amount. The refund RPC must lock the original transaction before checking the remainder, enforce canonical idempotency and concurrency controls, and commit the refund transaction and journal atomically. Detailed multi-currency carrying-value treatment, fees/return adjustments, and refunds paid to a different account remain G2 design deliverables. This decision does not approve final RPC signatures or authorize migrations/implementation.
+#### 17.18 D-16 — Cash-like pocket eligibility and shortfall approved\n\n**Product-owner decision (2026-11-21): Option A approved.** Eligible funds include active cash, bank and e-wallet balances only. Positive balances contribute; negative/overdraft balances reduce the aggregate eligible funds. Exclude credit-card available credit/limits, receivables and archived accounts. Pocket allocations are virtual and create no journal entries. `Unallocated = eligible funds − total allocated` is derived and may become negative after spending or another balance change; the UI must clearly show the shortfall. New allocations must be rejected if they would increase an existing shortfall or cause total allocations to exceed eligible funds. Deallocation remains allowed during a shortfall, and a pocket-to-pocket transfer must preserve total allocations. Allocation validation and writes must be serialized atomically to prevent concurrent over-allocation. Foreign-currency conversion basis, rate source and as-of timestamp remain dependent on D-18/D-19; do not invent a rate or valuation method. Household/private-fund eligibility remains subject to G5. This decision does not authorize migrations or implementation.\n\n### 17.17 D-15 — Multiple partial refunds approved\n\n**Product-owner decision (2026-11-21): Option A approved.** An eligible original expense may receive multiple linked partial refunds over time, or one full refund. Each refund is a separate posted business event that offsets the original expense; it is not income and is not an error-correction reversal. Before posting, calculate the remaining refundable amount as the original refundable amount less all successful prior refunds linked to that original. The cumulative successful refund amount must never exceed the original refundable amount. The refund RPC must lock the original transaction before checking the remainder, enforce canonical idempotency and concurrency controls, and commit the refund transaction and journal atomically. Detailed multi-currency carrying-value treatment, fees/return adjustments, and refunds paid to a different account remain G2 design deliverables. This decision does not approve final RPC signatures or authorize migrations/implementation.
 
  POCKA V1 — Database & Finance Architecture Design Pack
 
@@ -418,7 +418,7 @@ Legend: **R** read shared workspace data; **C** create shared data; **U** update
 
 ## 9. Pocket eligible-funds policy — unresolved design decision
 
-ADR-002 requires total allocations not to exceed eligible funds but does not finalize which accounts count. D-16 remains **Pending design review**.
+**D-16 approved (2026-11-21): Option A — Cash-like Positive Assets.** Eligible funds include active cash, bank and e-wallet account balances only. Positive balances contribute; negative/overdraft balances reduce the aggregate eligible amount. Exclude credit-card limits/available credit, receivables and archived accounts. Unallocated is derived as eligible funds less total pocket allocations and may be negative after spending or other balance changes; show the shortfall explicitly. Reject new allocations that would increase a shortfall or make total allocations exceed eligible funds; deallocation remains permitted. Pockets remain virtual allocations and never create journal entries. FX conversion details for foreign-currency accounts remain dependent on D-18/D-19.
 
 ### 9.1 Options to review
 
@@ -428,20 +428,20 @@ ADR-002 requires total allocations not to exceed eligible funds but does not fin
 | B — Net liquid position | Cash-like assets less selected overdrafts/negative balances | Reflects spendable net position more conservatively | Cross-currency netting and negative-account rules are complex |
 | C — All eligible asset accounts | All configured eligible asset accounts, with explicit inclusion flag | Flexible per-account control | More setup complexity and user confusion |
 
-**Recommended starting point for owner review:** Option A, with no allocation against credit-card available credit or receivables. Negative eligible balances reduce workspace eligible funds according to a separately approved deficit rule; they must never be silently floored to zero if that would permit over-allocation.
+**Approved D-16 behaviour:** Option A is selected. Negative/overdraft balances in otherwise eligible active cash-like accounts reduce the aggregate eligible funds; do not silently floor negative balances to zero. The shortfall policy is approved: Unallocated may be negative and must be visibly labelled; new allocations that increase the shortfall are rejected.
 
 ### 9.2 Required acceptance cases
 
 Before implementation, specify outcomes for:
-- Negative bank balance/overdraft.
-- Cash-like account with zero balance.
-- Credit-card liability and available credit.
-- Foreign-currency eligible accounts and base-currency conversion date/rate.
-- Archived account with remaining balance.
-- Spending after prior allocations causes eligible funds to fall below allocated.
-- Concurrent allocation requests that together exceed eligibility.
-- Deallocation and pocket-to-pocket transfer.
-- Household shared funds versus member personal funds.
+- Negative bank balance/overdraft reduces aggregate eligible funds.
+- Cash-like account with zero balance contributes zero.
+- Credit-card liability and available credit are excluded.
+- Foreign-currency eligible accounts: conversion basis, rate source and as-of timestamp remain gated by D-18/D-19.
+- Archived accounts are excluded under D-14.
+- Spending after prior allocations may make Unallocated negative; display shortfall and reject new allocations that worsen it.
+- Concurrent allocation requests that together exceed eligibility are serialized and only valid requests succeed.
+- Deallocation is allowed even during a shortfall; pocket-to-pocket transfer must preserve total allocation.
+- Household shared funds versus member personal funds remains subject to household design gates.
 
 Allocation check and insert must be serialized atomically. Unallocated is a derived number and may be negative only if the approved shortfall policy explicitly permits and labels it; never represent it as an asset.
 
@@ -630,7 +630,7 @@ This pack intentionally does not silently close any pending decision.
 | D-13 | Balance/read model | Dashboard/report implementation using SQL views; materialization only after measured need and reconciliation tests |
 | D-14 | Account archive and balance inclusion | **Approved Option B (2026-11-21):** zero-balance precondition; exclude archived accounts from active-balance and Net Worth views; preserve history. Unarchive flow remains to be specified |
 | D-15 | Partial refund rules | **Approved Option A (2026-11-21):** multiple linked partial refunds allowed; cumulative posted refunds capped at original refundable amount; validate remaining amount under lock and idempotency |
-| D-16 | Pocket eligible funds | Pocket allocation enforcement |
+| D-16 | Pocket eligible funds | **Approved Option A (2026-11-21):** active cash/bank/e-wallet balances only; negatives reduce eligible funds; exclude card credit, receivables and archived accounts; Unallocated may be negative; reject allocations that worsen shortfall; FX remains D-18/D-19 gated |
 | D-17 | Debt edge cases | Debt posting/schedule implementation |
 | D-18 | FX carrying-value method | FX posting implementation |
 | D-19 | FX rate provider | Automated FX rate fetching |
