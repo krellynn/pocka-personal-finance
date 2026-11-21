@@ -277,3 +277,7 @@ This decision approves the architectural boundary, not the final RPC catalogue, 
 
 ### 10.7 Early settlement — D-17.2
 **Product-owner decision (2026-11-22): Option A approved.** Use the lender-provided/quoted payoff amount for early settlement. The user supplies the total and its components (remaining principal, interest, and applicable fee/penalty); component values must reconcile exactly to the total. POCKA must not independently invent an interest discount, penalty or payoff calculation without an approved rule and authoritative lender data. On successful posting of the full settlement, mark the debt settled and stop future installments. Preserve prior payment history. Schedule edits and detailed interest/fee rules remain pending. This is a product rule, not a final RPC signature or implementation authorization.
+
+
+### 10.8 Debt schedule edits — D-17.3
+**Product-owner decision (2026-11-22): Option A approved.** A schedule edit may change future unpaid installments only. Paid installments, posted payments, journal entries and historical records remain immutable and unchanged. Do not rewrite, delete, reverse or silently reclassify posted financial facts as a consequence of editing a schedule. Preserve an auditable schedule version/change history and effective date. Exact editable fields and detailed interest/fee recalculation rules remain pending under D-17. This records the product rule, not final RPC signatures or implementation authorization.
