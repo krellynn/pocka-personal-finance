@@ -18,9 +18,13 @@
 
 ## 2. Blocking before financial core / G2
 
+**D-09 decision record (2026-11-21):** The product owner selected **Option A — Category as Dimension**. `transaction_categories` classify income/expense transactions and support category-level budgets/reports; they do not create, represent, or map 1:1 to `ledger_accounts`. The CoA remains a separate, stable accounting structure. Category rename/archive/reassignment must preserve historical reporting semantics and be specified before ledger migrations. This approves the category model only; it does not approve every CoA account, posting rule, or RPC contract.
+
+
+
 | ID | Decision | Current status | Recommended direction | Why it matters |
 |---|---|---|---|---|
-| D-09 | Final chart of accounts | Pending design review | Define account classes and system mappings with worked examples before posting RPCs | Every posting depends on it |
+| D-09 | Category model and CoA boundary | **Approved — Option A (2026-11-21): categories are dimensions** | Keep categories separate from ledger accounts; CoA contains stable accounting/control accounts. Final account classes, system mappings and posting examples remain part of D-10/G2 review | Every posting depends on it |
 | D-10 | Journal posting matrix | Pending design review | Document debit/credit lines for every V1 transaction type, including reversals | Financial correctness |
 | D-11 | RPC-only financial mutation | Proposed (P-01) | Approve all balance-affecting writes through PostgreSQL RPC; no direct client writes to ledger tables | Atomicity and authorization |
 | D-12 | Money wire format | Proposed technical contract for owner ratification | Integer minor-unit decimal strings in JSON; parse to bigint in TypeScript | Avoid precision loss |
