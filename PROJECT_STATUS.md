@@ -84,3 +84,12 @@ Implementation design reviews remain listed in `docs/ARCHITECTURE.md` §9.3 and 
 | 2026-11-21 | 0A | Approved and merged ADR-014 for Cloudflare Workers + Static Assets. |
 | 2026-11-21 | Planning | Prepared proposed V1 Master Development Package on `docs/master-development-package-v1`; documentation only; no app code, dependencies, migrations, cloud resources or deployment. |
 | 2026-11-21 | Planning | Added Database & Finance Architecture Design Pack (conceptual ERD, CoA, posting, RPC, RLS, FX, household and migration plan) to the same draft PR; all unresolved decisions remain pending and no implementation is authorized. |
+
+
+## 7. Architecture review remediation (2026-11-21)
+
+PR #4 remains an open draft documentation PR. The 12 review findings have been addressed at design level and recorded in docs/ARCHITECTURE_REVIEW_REPORT_V1.md. No application code, dependencies, migrations, Supabase/Cloudflare resources, secrets or deployments were created.
+
+This does not mean every design decision is approved. Category-vs-ledger mapping, FX carrying-value method/provider, pocket eligible funds, household base currency/role matrix, final column-level data dictionary, retention/deletion and operational objectives remain gated decisions/deliverables. D-11 RPC-only financial mutations remains Proposed pending G2; all documents now state this consistently. All JSON monetary values are specified as integer minor-unit decimal strings as the proposed API contract.
+
+Phase 0B remains not started. Phase 2 ledger implementation and household work remain unauthorized until their respective gates and explicit approval.
