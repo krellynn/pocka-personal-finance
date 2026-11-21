@@ -3,7 +3,7 @@
 **Last updated:** 2026-11-21  
 **Current phase:** Phase 0A — Documentation & Architecture Foundation. **Complete and merged into `main`.** ADR-001 to ADR-013 were approved on 2026-11-13; ADR-014 (Cloudflare Workers + Static Assets hosting) was approved on 2026-11-21 and merged through PR #3. **Phase 0B — Application Foundation & Authentication has not started.**
 
-**Planning update:** A proposed V1 Master Development Package (functional specification, domain/API contract plan, UX/design system, quality strategy, parallel execution plan, AI agent playbook and product-owner decision backlog) is prepared on branch `docs/master-development-package-v1` for review. This is documentation only. It does not mean the application or Phase 0B has started.
+**Planning update:** A proposed V1 Master Development Package (functional specification, domain/API contract plan, UX/design system, quality strategy, parallel execution plan, AI agent playbook, product-owner decision backlog and Database & Finance Architecture Design Pack) is prepared on branch `docs/master-development-package-v1` for review. This is documentation only. It does not mean the application or Phase 0B has started.
 
 ---
 
@@ -57,7 +57,7 @@ ADR-012 requires moving it with `git mv` to `prototype/index.html`, unchanged, w
 
 1. Review and approve the proposed Master Development Package on `docs/master-development-package-v1`.
 2. Resolve or formally defer the product-owner decisions that block the next dependency gate.
-3. Complete the final chart of accounts, journal posting matrix, ERD, RPC contracts and RLS matrix before financial migrations.
+3. Review and approve the Database & Finance Architecture Design Pack; resolve G0/G2 decisions including final CoA, posting matrix, ERD, RPC contracts, RLS matrix, pocket eligibility and FX method before financial migrations.
 4. Obtain explicit product-owner authorization to start Phase 0B implementation.
 5. Only then begin application foundation, Supabase local setup and Cloudflare configuration.
 
@@ -83,3 +83,4 @@ Implementation design reviews remain listed in `docs/ARCHITECTURE.md` §9.3 and 
 | 2026-11-13 | 0A | Approved and merged ADR-001 to ADR-013. |
 | 2026-11-21 | 0A | Approved and merged ADR-014 for Cloudflare Workers + Static Assets. |
 | 2026-11-21 | Planning | Prepared proposed V1 Master Development Package on `docs/master-development-package-v1`; documentation only; no app code, dependencies, migrations, cloud resources or deployment. |
+| 2026-11-21 | Planning | Added Database & Finance Architecture Design Pack (conceptual ERD, CoA, posting, RPC, RLS, FX, household and migration plan) to the same draft PR; all unresolved decisions remain pending and no implementation is authorized. |
