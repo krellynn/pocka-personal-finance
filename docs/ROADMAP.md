@@ -8,11 +8,11 @@ The phase sequence is **Approved** (from the Phase 0A brief). Approved architect
 
 ## Phase 0 — Foundation & Documentation
 
-**0A: Documentation & Architecture Foundation** *(done, awaiting review)*
+**0A: Documentation & Architecture Foundation** *(complete; merged into `main` via PR #1)*
 - README, PROJECT_STATUS, `docs/` (product, architecture, database, privacy, guidelines, roadmap).
 - Prototype documented and preserved.
 
-**V1 architecture decisions** *(done 2026-11-13, awaiting review)*
+**V1 architecture decisions** *(ADR-001 to ADR-013 approved 2026-11-13 and merged into `main`)*
 - ADR-001 to ADR-013 approved and recorded in `DECISION_REGISTER.md` and `docs/decisions/`. These cover money storage, pockets, shared summary, recurring drafts, contributions, FX, credit cards, archiving, household exit, splits, localisation, prototype relocation, and privacy invariants.
 
 **Design review items** *(scheduled before the phase that needs them; see ARCHITECTURE §9.3)*
@@ -33,7 +33,7 @@ The phase sequence is **Approved** (from the Phase 0A brief). Approved architect
 - Supabase project (Singapore, provisional), local dev setup, `.env.example`.
 - Migrations: `profiles`, `workspaces`, `workspace_members`, `user_settings`, `currencies` with RLS.
 - Supabase Auth: sign-up, sign-in, sign-out, password reset. Personal workspace auto-created on sign-up (Proposed).
-- Vercel preview deployments (Proposed; deployment needs approval).
+- Cloudflare Workers + Static Assets hosting (platform approved by ADR-014). Workers Builds/GitHub integration for preview deployments is Proposed; configure and verify during Phase 0B. Do not deploy until the product owner approves the deployment setup.
 - Exit: a user can sign up and land in an empty personal workspace. RLS tests for identity tables pass.
 
 ## Phase 2 — Financial Core & Ledger
@@ -81,7 +81,7 @@ The phase sequence is **Approved** (from the Phase 0A brief). Approved architect
 - Reconciliation matching.
 - Full QA pass: E2E, accessibility, performance, security review (RLS audit, secrets scan).
 - Backup and recovery plan, monitoring, error tracking.
-- Production Supabase and Vercel configuration, region re-evaluation.
+- Production Supabase and Cloudflare Workers configuration, region re-evaluation.
 - Exit: production launch approved by the product owner.
 
 ---
