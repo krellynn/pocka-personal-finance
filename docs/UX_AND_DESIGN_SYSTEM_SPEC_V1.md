@@ -205,3 +205,11 @@ Do not treat the current static prototype's palette, labels, hard-coded values o
 - Show a payment-success confirmation after posting, including any unpaid remainder and current installment status.
 - Provide simple controls to adjust or disable debt reminders. Keep V1 in-app; do not imply email or push support.
 - Notifications are reminders/status information only, never automatic payment actions. Apply timezone-aware scheduling and prevent duplicate reminders.
+
+
+### Long-term overdue aging UX — D-17.15
+- Show an aging label for each outstanding installment: **1–30 days**, **31–60 days**, **61–90 days**, or **Long-term Overdue (>90 days)**.
+- Treat these labels as informational duration groups only; do not imply legal default, lender classification or credit-bureau status.
+- Do not add a separate escalation flow or additional alerts under D-17.15; retain the existing D-17.14 reminder policy.
+- Keep the unpaid remainder visible for partially paid installments and remove the outstanding-aging label after full payment or approved resolution.
+- Avoid changing balances, lender terms or repayment schedules based on the aging label.
