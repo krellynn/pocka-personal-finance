@@ -334,3 +334,12 @@ Do not invent unresolved behaviour. Refer to PRODUCT_OWNER_DECISIONS_V1.md and t
 - If the lender has not confirmed a late-fee amount, show **Not Confirmed** rather than Rp0/zero.
 - Record a lender-confirmed late fee separately from principal and scheduled interest, retaining its source/provenance. Preserve fee revision history; do not rewrite posted payments or historical journal entries.
 - Exact evidence requirements, accounting mapping, due-date/timezone boundary, grace-period rules, notification behaviour and RPC/audit details remain G2 design deliverables (D-17.13 Option A approved 2026-11-22).
+
+
+### Debt notification requirements — D-17.14
+- Default in-app reminders: H-3 (three days before due date), H-1 (one day before) and H (on the due date).
+- If an installment remains unpaid after its due date, notify when it becomes **Overdue** and repeat every three days while an amount remains outstanding. Stop overdue reminders when it is fully paid or otherwise no longer due under an approved resolution.
+- Notify when a lender confirms a new late fee. Do not present an unconfirmed fee as an existing amount; retain the D-17.13 **Not Confirmed** state until confirmed.
+- After successful payment posting, provide an in-app confirmation and show any remaining unpaid amount/status.
+- Users may adjust or disable debt reminders. V1 notification channel is in-app only; email/push/other channels need separate approval.
+- Notifications are informational and must never initiate a payment or financial posting. Timezone scheduling, deduplication, delivery/retry and event integration remain implementation design deliverables (D-17.14 Option A approved 2026-11-22).
