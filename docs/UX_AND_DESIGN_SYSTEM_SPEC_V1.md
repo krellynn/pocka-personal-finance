@@ -84,6 +84,17 @@ Workspace selector is a global shell control. Navigation labels and grouping may
 | Import | Upload, mapping, preview, review, results | invalid file, duplicates, partial commit |
 | Settings | Profile, theme, locale, default workspace | save, validation, permission |
 
+
+### Debt UX principle — Simple by default, advanced when needed (D-37)
+- Make the common debt journey feel straightforward: show the next useful action, a clear total amount, due date/status and remaining amount due; avoid exposing debit/credit, ledger accounts, journal entries or unnecessary accounting terminology.
+- Ask only for information needed at the current step. Keep advanced lender terms, amortization/schedule details, component breakdowns, schedule revisions and reconciliation controls in progressive-disclosure sections or focused follow-up steps.
+- During debt setup, guide the user to provide or enter the lender-backed repayment schedule required by D-17.6. Do not make the interface imply that POCKA can reliably allocate payments without sufficient source data.
+- For a normal scheduled payment, keep the primary action to entering the total amount paid and selecting/confirming the funding account where applicable. Apply the approved lender-backed allocation in the background.
+- If lender component data is missing and an estimate is permitted, show the estimate in a focused review step, label it clearly, allow editing only of estimated components, and require explicit confirmation before posting (D-17.9–D-17.11).
+- Handle partial payments, revised schedules and partially paid installment reconciliation through contextual explanations and targeted steps only when those situations occur. Preserve posted history and show the unpaid remainder clearly.
+- If data is insufficient or inconsistent, explain what is missing and offer a guided exception/manual-reconciliation path. Never guess, silently post, or overwhelm the ordinary journey with every possible edge case.
+- Keep the UI simple without weakening validation, idempotency, authorization, auditability or the RPC-only financial mutation boundary.
+
 ## 6. Reusable component inventory
 
 ### Shell and navigation
