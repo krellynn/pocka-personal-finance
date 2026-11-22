@@ -21,7 +21,7 @@ It covers:
 8. Household paired entries and settlement access.
 9. Migration sequence, testing, rollback and data lifecycle.
 
-**No financial-core implementation authorization is implied.** The initial Phase 0B React/Vite foundation scaffold is being developed separately on draft PR #5 under the previously authorized foundation scope; it is not part of this documentation PR and remains subject to local verification/review. Financial mutations, ledger schema, migrations and Supabase resources remain blocked by their respective approval gates.
+**No financial-core implementation authorization is implied.** The initial Phase 0B React/Vite foundation scaffold has since merged via PR #5 (`a930ad7`) and passed local typecheck/lint/test/build. It remains outside this documentation package. Financial mutations, ledger schema, migrations and Supabase resources remain blocked by their respective approval gates.
 
 ## 2. Binding invariants
 
@@ -643,7 +643,7 @@ This pack intentionally does not silently close any pending decision.
 | D-34 | Backup/restore objectives | Production |
 | D-36 | Monitoring and error tracking | Production |
 
-**G0 — foundation approval:** product owner reviews the foundation dependencies, confirms package manager/i18n/query strategy/preview workflow and cost plan. The initial React/Vite scaffold on draft PR #5 has separate explicit authorization; expansion beyond that scaffold remains subject to G0 review and scope authorization.
+**G0 — foundation approval:** product owner reviews the foundation dependencies, confirms package manager/i18n/query strategy/preview workflow and cost plan. The initial React/Vite scaffold merged via PR #5 under separate explicit authorization; expansion beyond that scaffold remains subject to G0 review and scope authorization.
 
 **G2 — finance-core approval:** final ERD/data dictionary, CoA, posting matrix, RPC signatures, money wire format, idempotency/concurrency strategy, RLS matrix and migration plan are approved. No ledger migration before this gate.
 
@@ -667,7 +667,7 @@ This pack intentionally does not silently close any pending decision.
 - [ ] Resolve household currency, paired-entry and departed-member access.
 - [ ] Approve migration ordering and forward-fix strategy.
 - [ ] Define D-31 data lifecycle before production.
-- [x] Initial Phase 0B React/Vite scaffold separately authorized on draft PR #5. [ ] Complete G0 before expanding foundation scope; explicitly authorize ledger work only after G2.
+- [x] Initial Phase 0B React/Vite scaffold separately authorized and merged via PR #5. [ ] Complete G0 before expanding foundation scope; explicitly authorize ledger work only after G2.
 
 **Completion statement:** this document provides a consolidated review baseline. It does not claim that any pending design decision has been approved, that the final executable schema exists, or that implementation may begin.
 

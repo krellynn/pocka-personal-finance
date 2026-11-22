@@ -114,7 +114,7 @@ The review made technical contracts explicit but has not silently approved the f
 | D-23 settlement access after exit | Pending design review | Approve obligation-only access bound to departed member |
 | D-24 household account ownership/visibility | Pending design review | Define shared account types and visibility |
 
-Keep D-11/D-12 synchronized across DEVELOPMENT_GUIDELINES.md, DOMAIN_AND_API_CONTRACTS_V1.md and the Database & Finance Design Pack. G0 is independent of G2/G5: unresolved finance or household decisions block their respective implementation, not the application foundation. The initial Phase 0B scaffold is separately authorized on draft PR #5; further foundation work must satisfy G0 and its explicit scope.
+Keep D-11/D-12 synchronized across DEVELOPMENT_GUIDELINES.md, DOMAIN_AND_API_CONTRACTS_V1.md and the Database & Finance Design Pack. G0 is independent of G2/G5: unresolved finance or household decisions block their respective implementation, not the application foundation. The initial Phase 0B scaffold is separately authorized and merged via PR #5; further foundation work must satisfy G0 and its explicit scope.
 
 
 **D-17.1 decision record (2026-11-21):** The product owner approved **Option A — Reject Overpayment**. A debt payment must be rejected when its total exceeds the remaining amount due under the debt obligation. For example, if the remaining obligation is Rp5,000,000, an attempted Rp6,000,000 payment is rejected and the user must enter a valid amount. The excess is not accepted as lender credit, a receivable/refundable balance, or an additional expense. This decision resolves overpayment handling only; early settlement, schedule changes and interest/fee treatment remain pending under D-17. It does not authorize migrations or implementation.
@@ -186,4 +186,4 @@ Keep D-11/D-12 synchronized across DEVELOPMENT_GUIDELINES.md, DOMAIN_AND_API_CON
 
 **D-07 — preview workflow:** Use GitHub-linked Cloudflare preview deployments for PRs/branches, with preview credentials and data isolated from production. Production deployment from main remains manually gated and requires separate release authorization. No deployment is authorized by this decision set.
 
-These decisions resolve G0 defaults only. They do not by themselves approve additional Phase 0B scope, cloud-resource creation, secrets configuration, migrations or deployment. The initial React/Vite foundation scaffold has separate explicit authorization on draft PR #5; hosted resources, financial migrations and deployment remain separately gated.
+These decisions resolve G0 defaults only. They do not by themselves approve additional Phase 0B scope, cloud-resource creation, secrets configuration, migrations or deployment. The initial React/Vite foundation scaffold has separate explicit authorization and merged via PR #5; hosted resources, financial migrations and deployment remain separately gated.

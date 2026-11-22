@@ -162,9 +162,9 @@ A feature is done only when all applicable items are true:
 
 ## 11. Current state and explicit no-code boundary
 
-Repository status updated 2026-11-22: Phase 0A docs and ADR-001…ADR-014 are merged. The initial Phase 0B React/Vite scaffold is on separate draft PR #5; local lockfile generation and typecheck/lint/test/build verification remain outstanding. The original prototype is moved unchanged on that feature branch. No Supabase project, financial schema, migrations, CI, Cloudflare account setup or deployment has been created.
+Repository status updated 2026-11-22: Phase 0A docs and ADR-001…ADR-014 are merged. The initial Phase 0B React/Vite scaffold merged via PR #5 (`a930ad7`); the lockfile is committed and local typecheck/lint/test/build passed. The original prototype was moved unchanged. No Supabase project, financial schema, migrations, CI, Cloudflare account setup or deployment has been created.
 
-Until this package and its dependency plan are approved, do not expand implementation beyond the separately scoped Phase 0B foundation already recorded in draft PR #5. Complete its lockfile and local verification first. Do not begin financial-core, household or import implementation before the relevant gates.
+Until this package and its dependency plan are approved, do not expand implementation beyond the Phase 0B foundation merged via PR #5. Do not begin financial-core, household or import implementation before the relevant gates.
 
 - Do not create additional application features outside the authorized foundation scope.
 - Do not modify the preserved prototype.
@@ -180,7 +180,7 @@ Until this package and its dependency plan are approved, do not expand implement
 - [ ] Product owner approves the consolidated domain/API contract plan.
 - [ ] Product owner approves the database/RLS design-review outputs before migrations.
 - [ ] Product owner approves the 24–26-week implementation target and parallel workstream model.
-- [x] Product owner separately authorized the initial Phase 0B React/Vite foundation scaffold, tracked on draft PR #5.
+- [x] Product owner separately authorized the initial Phase 0B React/Vite foundation scaffold, merged via PR #5.
 - [ ] Complete G0 review and obtain any required authorization before expanding the foundation scope beyond that initial scaffold.
 
 The initial scaffold is limited pre-work; broader foundation implementation follows the G0 gate.
@@ -192,7 +192,7 @@ The 2026-11-21 review findings R-01–R-12 and dispositions are recorded in ARCH
 
 The review closes specification gaps where a safe technical contract can be documented (paired-entry recovery, idempotency, FX RLS separation, contribution posting pair, table-level RLS baseline, money wire format and reversal semantics). It does not close owner decisions for category/CoA model, FX carrying-value method/provider, pocket eligible funds, household currency/roles, or deletion/retention. The final column-level data dictionary remains a G2 deliverable.
 
-**Readiness:** G0, G2, G5, G6 and G7 remain separate approval gates. The initial Phase 0B scaffold is separately authorized on draft PR #5; this documentation update does not authorize additional implementation, migrations, cloud resources or deployment. Further foundation work must satisfy G0; ledger work begins only after G2 approval.
+**Readiness:** G0, G2, G5, G6 and G7 remain separate approval gates. The initial Phase 0B scaffold is separately authorized and merged via PR #5; this documentation update does not authorize additional implementation, migrations, cloud resources or deployment. Further foundation work must satisfy G0; ledger work begins only after G2 approval.
 
 
 ## G0 decisions recorded (2026-11-22)

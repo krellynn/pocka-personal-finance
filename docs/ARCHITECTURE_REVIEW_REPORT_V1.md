@@ -54,7 +54,7 @@ The column-level data dictionary and exact SQL RLS policy expressions are requir
 
 ## 5. Readiness assessment
 
-- **G0 — Foundation:** foundational choices D-01–D-07 are recorded as approved in the decision register. Phase 0B scaffold work exists on draft PR #5; lockfile generation and local typecheck/lint/test/build plus integration/preview checks remain outstanding. This report does not approve or merge PR #5.
+- **G0 — Foundation:** foundational choices D-01–D-07 are recorded as approved in the decision register. The Phase 0B scaffold merged via PR #5 (`a930ad7`); local typecheck/lint/test/build passed. Cloudflare plugin/preview and visual/accessibility checks remain before deployment or expanded scope.
 - **G2 — Finance core:** approved decisions D-09–D-16 provide the product/architecture baseline. G2 is still not ready for financial implementation until remaining choices (including D-18/D-19), final data dictionary, exact RLS expressions, RPC contracts/grants/security hardening and worked tests are completed and reviewed.
 - **G5 — Household:** not ready until D-20–D-25 are resolved and pair/exit/privacy acceptance tests pass.
 - **G6 — Import:** format, limits, dedupe, retention and partial-commit decisions remain open.
@@ -64,5 +64,5 @@ G0 may be approved independently of G2 if its own scope and dependencies are com
 
 ## 6. Scope and verification
 
-This was a documentation review and remediation. No application code or infrastructure was changed by PR #4. The Phase 0B scaffold is being developed separately on draft PR #5; it has not been merged and remains pending local verification. PR #4 remains open and draft; it has not been merged. The reviewed documents distinguish approved product decisions from remaining G2/G5/G6/G7 implementation deliverables.
+This was a documentation review and remediation. No application code or infrastructure was changed by PR #4. The Phase 0B scaffold has since merged via PR #5 and passed local verification. PR #4 remains open and draft pending product-owner review; the reviewed documents distinguish recorded decisions from remaining G2/G5/G6/G7 implementation deliverables.
 

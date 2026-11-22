@@ -111,4 +111,4 @@ The approved phase sequence and each phase's exit criteria above remain authorit
 | Weeks 23–24 | Phase 6 import/reconciliation | Parser, staging, preview, duplicate and partial-commit tests |
 | Weeks 25–26 | Stabilization/release candidate | Full E2E, accessibility, security, backup and deployment rehearsal |
 
-This overlay does not authorize work beyond the separately authorized initial Phase 0B React/Vite scaffold on draft PR #5. Further foundation work follows Master Development Package review, Gate G0 and explicit scope authorization. Parallel work is limited to independent tasks with stable contracts; migrations, ledger semantics and privacy boundaries remain gated and reviewed.
+This overlay does not authorize work beyond the separately authorized initial Phase 0B React/Vite scaffold merged via PR #5. Further foundation work follows Master Development Package review, Gate G0 and explicit scope authorization. Parallel work is limited to independent tasks with stable contracts; migrations, ledger semantics and privacy boundaries remain gated and reviewed.
