@@ -158,6 +158,6 @@ evidence.
 - Integrate at least weekly; run cross-feature tests after integration.
 - If conflicts arise, pause dependent tasks; do not resolve by silently choosing one implementation.
 
-## 9. No-code boundary before approval
+## 9. Implementation authorization boundary
 
-This playbook does not authorize implementation. Coding starts only after G0 in `PARALLEL_EXECUTION_PLAN_V1.md` is approved and the product owner explicitly authorizes Phase 0B. Until then, only documentation review and planning changes are in scope.
+The initial Phase 0B React/Vite foundation scaffold is separately authorized and is tracked on draft PR #5. That authorization is limited to the foundation scope already described there; it does not authorize financial-core work, household features, migrations, hosted resources, secrets or deployment. Complete local verification and review of the scaffold before expanding scope. Further work must satisfy G0 and the relevant explicit product-owner authorization. G2, G5, G6 and G7 remain independent hard gates for finance, household, import and production work respectively.
