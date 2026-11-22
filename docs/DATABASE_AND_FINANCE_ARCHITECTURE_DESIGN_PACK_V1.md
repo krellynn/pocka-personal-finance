@@ -21,7 +21,7 @@ It covers:
 8. Household paired entries and settlement access.
 9. Migration sequence, testing, rollback and data lifecycle.
 
-**No implementation authorization is implied.** Phase 0B remains unstarted until the product owner approves the relevant gates and explicitly authorizes coding.
+**No financial-core implementation authorization is implied.** The initial Phase 0B React/Vite foundation scaffold is being developed separately on draft PR #5 under the previously authorized foundation scope; it is not part of this documentation PR and remains subject to local verification/review. Financial mutations, ledger schema, migrations and Supabase resources remain blocked by their respective approval gates.
 
 ## 2. Binding invariants
 
@@ -388,14 +388,14 @@ Legend: **R** read shared workspace data; **C** create shared data; **U** update
 | profiles | Own profile; restricted public member fields via view | Own safe fields | No financial data |
 | user_settings | Own row | Own row | No household access |
 | workspaces/members | Active member sees household metadata; personal owner sees own | Role-specific RPC | Last-owner protection |
-| ledger/accounts/transactions | Personal owner; household active member only for shared rows | RPC-only proposed; role + scope | Private household drafts owner-only |
+| ledger/accounts/transactions | Personal owner; household active member only for shared rows | RPC-only (approved D-11); role + scope | Private household drafts owner-only |
 | journal entries/lines | Same as parent transaction, through safe read path | No direct client writes | Immutable after post |
 | categories/sources | Workspace-scoped; private income sources remain private | Role-specific | Source ≠ category |
 | pockets/budgets/goals/debts | Workspace + scope + role | Role-specific RPC | Derived figures reconcile |
 | recurring | Workspace member; owner restrictions for private templates | Owner/editor rules | Draft-only generation |
 | FX | Authenticated read of approved global rates; workspace manual rates scoped | Controlled server/RPC | Posted snapshots immutable |
 | shared items/events | Active household members see allowed projection only | Owner grant/revoke | Never expose source_id join |
-| contributions/splits/settlements | Household members and obligation parties per rules | RPC-only proposed | Exit-safe scoped obligations |
+| contributions/splits/settlements | Household members and obligation parties per rules | RPC-only (approved D-11) | Exit-safe scoped obligations |
 | import jobs/rows | Creator or permitted workspace role | Creator/reviewer workflow | Staging is not ledger |
 | audit logs | Restricted authorized viewers | Append-only server/RPC | Redact sensitive payload |
 | notifications | Recipient only | Server-side insert | No private data leakage |
