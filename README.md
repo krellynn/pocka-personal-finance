@@ -43,7 +43,7 @@ Full module descriptions are in [PRODUCT_OVERVIEW.md](docs/PRODUCT_OVERVIEW.md).
 
 ---
 
-## Technology Stack (approved, not yet installed)
+## Technology Stack (approved; initial frontend scaffold on draft PR #5)
 
 **Frontend:** React · TypeScript · Vite · Tailwind CSS · shadcn/ui · Lucide icons · Recharts · React Router · React Hook Form · Zod
 
