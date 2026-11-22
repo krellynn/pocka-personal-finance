@@ -182,3 +182,10 @@ Do not treat the current static prototype's palette, labels, hard-coded values o
 - If spending or another balance change makes Unallocated negative, show the negative amount as a clear shortfall state; do not hide or clamp it to zero.
 - Disable/reject new allocations that would increase the shortfall. Keep deallocation available; pocket-to-pocket transfers must not increase total allocations.
 - For foreign-currency accounts, do not present an unapproved conversion basis/rate; FX behaviour remains gated by D-18/D-19.
+
+
+### Partial debt payment exception UX — D-17.12
+- If lender data does not define how a partial payment is allocated, do not guess or auto-split it.
+- Ask the user to reconcile the principal, interest and fee components using authoritative lender information in a focused exception step.
+- Do not post until the allocation is complete, valid and reconciles exactly to the actual payment amount.
+- If the user cannot substantiate the split, keep the payment unposted and explain what information is needed; do not make the normal repayment flow more complex for users whose lender schedule already defines the allocation.
