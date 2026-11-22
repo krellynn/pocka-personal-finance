@@ -12,7 +12,7 @@ POCKA puts **financial correctness, privacy, clarity, and ease of use** ahead of
 
 **Phase 0A: Documentation & Architecture Foundation (complete and merged).** ADR-001 to ADR-013 were approved on 2026-11-13 and merged into `main` through PR #1. ADR-014 (Cloudflare Workers + Static Assets hosting) was approved on 2026-11-21 and merged into `main` through [PR #3](https://github.com/krellynn/pocka-personal-finance/pull/3).
 
-The application itself has **not been built yet**. The repository holds the static HTML/CSS/JS design prototype and the official product/architecture documentation. **Phase 0B has not started.** A proposed V1 Master Development Package is being prepared for product-owner review on branch `docs/master-development-package-v1`; it is documentation only and does not authorize coding.
+The initial Phase 0B React/Vite application foundation is scaffolded on `feat/phase-0b-application-foundation` in [draft PR #5](https://github.com/krellynn/pocka-personal-finance/pull/5). Local lockfile generation and typecheck/lint/test/build verification remain outstanding; the PR is not merged. The original static prototype is preserved at `prototype/index.html` on that feature branch. The V1 Master Development Package is under review on `docs/master-development-package-v1` in [draft PR #4](https://github.com/krellynn/pocka-personal-finance/pull/4).
 
 See [PROJECT_STATUS.md](PROJECT_STATUS.md) for the verified implementation state.
 
@@ -55,10 +55,10 @@ Full module descriptions are in [PRODUCT_OVERVIEW.md](docs/PRODUCT_OVERVIEW.md).
 
 ## Repository Structure
 
-Current:
+Current on `main`:
 ```
 pocka-personal-finance/
-├── index.html                  # Static design prototype (preserved; do not modify)
+├── index.html                  # Static design prototype (main branch baseline; do not modify)
 ├── README.md
 ├── PROJECT_STATUS.md
 ├── docs/
@@ -74,12 +74,12 @@ pocka-personal-finance/
 └── .gitattributes
 ```
 
-Planned application structure (not created):
+Phase 0B feature branch (`feat/phase-0b-application-foundation`, draft PR #5):
 ```
-index.html           # Vite app entry (replaces prototype at root)
+index.html           # Vite app entry
 prototype/
   index.html         # Original prototype, moved unchanged (ADR-012)
-src/                 # React application
+src/                 # Initial React application scaffold
 supabase/
   migrations/        # Version-controlled SQL migrations
   functions/         # Edge Functions where approved
@@ -90,9 +90,9 @@ tests/               # Unit, integration, RLS/privacy tests
 
 ## Setup
 
-> **Not yet implemented.** No application, dependencies, or Supabase project are configured.
+**Foundation scaffold only; draft PR #5 is not merged.** Generate `package-lock.json`, install dependencies, and run typecheck, lint, tests and build before merge. Supabase is not configured.
 
-**View the prototype:** open `index.html` in a browser. It uses browser `localStorage` demo data and is a UX reference only.
+**View the original prototype:** open `prototype/index.html` on the Phase 0B feature branch. It uses browser `localStorage` demo data and is a UX reference only.
 
 Never commit `.env.local`, and never put the Supabase service-role key in frontend code.
 
