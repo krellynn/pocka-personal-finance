@@ -12,9 +12,10 @@ POCKA puts **financial correctness, privacy, clarity, and ease of use** ahead of
 
 **Phase 0A: Documentation & Architecture Foundation (complete and merged).** ADR-001 to ADR-013 were approved on 2026-11-13 and merged into `main` through PR #1. ADR-014 (Cloudflare Workers + Static Assets hosting) was approved on 2026-11-21 and merged into `main` through [PR #3](https://github.com/krellynn/pocka-personal-finance/pull/3). The PR was documentation-only; Phase 0B (Application Foundation & Authentication) has not started.
 
-The application itself has **not been built yet**. The repository holds:
+The Phase 0B application foundation is scaffolded on the feature branch `feat/phase-0b-application-foundation` and is under review. The repository holds:
 
-- `index.html`: a static HTML/CSS/JS **design prototype** that runs on local demo data. It is a UX reference, not the production architecture. It will move to `prototype/index.html` when the Vite app is introduced ([ADR-012](docs/decisions/ADR-012-prototype-preservation.md)).
+- `prototype/index.html`: the original static HTML/CSS/JS **design prototype**, relocated unchanged per [ADR-012](docs/decisions/ADR-012-prototype-preservation.md). It remains a UX reference, not production code.
+- `index.html` and `src/`: the new Vite/React application shell, with no financial data integration yet.
 - `docs/`: the official product and architecture documentation, including the [Decision Register](docs/DECISION_REGISTER.md).
 
 See [`PROJECT_STATUS.md`](PROJECT_STATUS.md) for the verified, current state.
@@ -48,7 +49,7 @@ Full module descriptions are in [`docs/PRODUCT_OVERVIEW.md`](docs/PRODUCT_OVERVI
 
 ## Technology Stack (approved, not yet installed)
 
-**Frontend:** React · TypeScript · Vite · Tailwind CSS · shadcn/ui · Lucide icons · Recharts · React Router · React Hook Form · Zod
+**Frontend:** React · TypeScript · Vite · Tailwind CSS · Lucide icons · Recharts · React Router · React Hook Form · Zod · TanStack Query · i18next
 
 **Backend:** Supabase · PostgreSQL · Supabase Auth · Row Level Security · PostgreSQL functions/RPC · Edge Functions and Storage where needed
 
@@ -58,13 +59,17 @@ Full module descriptions are in [`docs/PRODUCT_OVERVIEW.md`](docs/PRODUCT_OVERVI
 
 ## Repository Structure
 
-Current:
+Current on main:
 
 ```
 pocka-personal-finance/
-├── index.html                  # Static design prototype (preserved; do not modify)
+├── index.html                  # Vite application entry
 ├── README.md
 ├── PROJECT_STATUS.md
+├── prototype/
+│   └── index.html              # Original prototype, unchanged
+├── src/                        # React application foundation
+├── package.json
 ├── docs/
 │   ├── DECISION_REGISTER.md    # Authoritative index of approved decisions
 │   ├── decisions/              # ADR-001 … ADR-014
@@ -78,36 +83,36 @@ pocka-personal-finance/
 └── .gitattributes
 ```
 
-Planned (created in the application foundation phase):
+Phase 0B feature branch (feat/phase-0b-application-foundation, draft PR #5):
 
 ```
-index.html           # Vite app entry (replaces the prototype at root)
+index.html           # Vite app entry
 prototype/
   index.html         # Original prototype, moved unchanged (Approved: ADR-012)
-src/                 # React application (Proposed layout)
+src/                 # Initial React application scaffold
 supabase/
   migrations/        # Version-controlled SQL migrations
   functions/         # Edge Functions (import, scheduled jobs)
 tests/               # Unit, integration, RLS/privacy tests
 ```
 
-The prototype move is a **future action**. It has not been performed yet.
+The prototype move is complete on the Phase 0B feature branch. Its Git blob is unchanged.
 
 ---
 
 ## Setup
 
-> ⚠️ **Not yet implemented.** No application, dependencies, or Supabase project are configured. The steps below are the *intended* setup and will be confirmed in Phase 0B (Application Foundation).
+> **Foundation scaffold only.** Run the commands below from the feature branch. Supabase is not configured and no financial features are connected yet.
 
-**View the prototype (works today):** open `index.html` in a browser (later: `prototype/index.html`). Data is stored only in the browser's `localStorage`.
+**View the original prototype:** open `prototype/index.html` on the Phase 0B feature branch. Data is stored only in the browser's `localStorage`.
 
-**Application setup (planned, not yet implemented):**
+**Application setup (foundation scaffold only; PR #5 is not merged):**
 
 1. `git clone https://github.com/krellynn/pocka-personal-finance.git`
-2. Install dependencies (package manager: implementation detail requiring design review). *Not yet available.*
-3. Copy `.env.example` to `.env.local` and fill in the Supabase URL and the **publishable/anon** key only. *Not yet available.*
-4. Apply migrations to a **local/dev** Supabase instance. *Not yet available.*
-5. Start the dev server. *Not yet available.*
+2. Run `npm install` (then use `npm ci` for reproducible clean installs).
+3. Supabase environment variables are blank and optional until a development project is separately configured.
+4. Run `npm run dev`. No migrations are included in this foundation.
+5. Run `npm run typecheck`, `npm test`, `npm run lint`, and `npm run build` before proposing a merge.
 
 Never commit `.env.local`, and never put the Supabase service-role key in frontend code.
 
@@ -125,6 +130,24 @@ Read in this order:
 6. [`docs/HOUSEHOLD_PRIVACY.md`](docs/HOUSEHOLD_PRIVACY.md): privacy and sharing rules (non-negotiable)
 7. [`docs/DEVELOPMENT_GUIDELINES.md`](docs/DEVELOPMENT_GUIDELINES.md): coding, testing, and AI agent rules
 8. [`docs/ROADMAP.md`](docs/ROADMAP.md): phased delivery plan
+
+
+### V1 Master Development Package — draft PR #4
+
+The documentation package is maintained on a separate branch and reviewed independently:
+
+1. [Master Development Package](docs/MASTER_DEVELOPMENT_PACKAGE_V1.md)
+2. [Functional Specification](docs/FUNCTIONAL_SPECIFICATION_V1.md)
+3. [Domain & API Contracts](docs/DOMAIN_AND_API_CONTRACTS_V1.md)
+4. [UX & Design System](docs/UX_AND_DESIGN_SYSTEM_SPEC_V1.md)
+5. [Quality & Test Strategy](docs/QUALITY_AND_TEST_STRATEGY_V1.md)
+6. [Parallel Execution Plan](docs/PARALLEL_EXECUTION_PLAN_V1.md)
+7. [AI Agent Playbook](docs/AI_AGENT_PLAYBOOK_V1.md)
+8. [Product Owner Decisions](docs/PRODUCT_OWNER_DECISIONS_V1.md)
+9. [Database & Finance Architecture Design Pack](docs/DATABASE_AND_FINANCE_ARCHITECTURE_DESIGN_PACK_V1.md)
+10. [Architecture Review Report](docs/ARCHITECTURE_REVIEW_REPORT_V1.md)
+
+See [draft PR #4](https://github.com/krellynn/pocka-personal-finance/pull/4). These links become available on the feature branch after PR #4 is merged into main.
 
 **AI coding agents:** read `README.md`, `PROJECT_STATUS.md`, and `docs/DECISION_REGISTER.md` first, then follow `docs/DEVELOPMENT_GUIDELINES.md` §10. Never silently override an APPROVED ADR.
 

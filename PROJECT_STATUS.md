@@ -1,7 +1,7 @@
 # POCKA — Project Status
 
-**Last updated:** 2026-11-21
-**Current phase:** Phase 0A — Documentation & Architecture Foundation. **Complete and merged into `main`.** ADR-001 to ADR-013 were approved on 2026-11-13; ADR-014 (Cloudflare Workers + Static Assets hosting) was approved on 2026-11-21 and merged through PR #3. **Phase 0B — Application Foundation & Authentication has not started.**
+**Last updated:** 2026-11-22
+**Current phase:** Phase 0B — Application Foundation. Initial React/Vite scaffold is on `feat/phase-0b-application-foundation` and draft PR #5; local verification and lockfile generation remain outstanding. Phase 0A remains complete on `main`.
 
 ---
 
@@ -9,12 +9,12 @@
 
 | Item | Value |
 |---|---|
-| `main` (origin) | PR #3 merged; ADR-014 and the post-merge documentation status sync are present (verified 2026-11-21) |
+| `main` (origin) | Phase 0A documentation baseline; no application code merged |
 | Completed PR | [PR #1](https://github.com/krellynn/pocka-personal-finance/pull/1), `docs/phase-0-architecture` → `main`, **merged** |
 | Completed PR | [PR #3](https://github.com/krellynn/pocka-personal-finance/pull/3), `docs/cloudflare-workers-deployment` → `main`, **merged** |
 | Remote | `origin` → `https://github.com/krellynn/pocka-personal-finance.git` |
 
-The Phase 0A documentation and ADR-001 to ADR-014 are merged into `main`. PR #3 merged the Cloudflare hosting decision and related documentation only; no application code was changed.
+The Phase 0A documentation and ADR-001 to ADR-014 are merged into `main`. Phase 0B work is isolated in draft PR #5; draft documentation PR #4 remains separate.
 
 ---
 
@@ -24,18 +24,18 @@ The Phase 0A documentation and ADR-001 to ADR-014 are merged into `main`. PR #3 
 |---|---|
 | Product & architecture documentation | **Phase 0A complete** and merged into `main` via PR #1 |
 | Architecture decisions (ADR-001 to ADR-014) | **Approved and merged** into `main` via PR #1 and PR #3 |
-| Static design prototype (`index.html`, root) | **Exists** (demo only). Relocation to `prototype/index.html` is **planned** for the Vite foundation phase (ADR-012), **not yet done** |
-| React/Vite application | **Not started** |
-| Dependencies / `package.json` | **Not started** |
+| Static design prototype (`prototype/index.html`) | **Moved unchanged** on Phase 0B feature branch (ADR-012) |
+| React/Vite application | **Initial scaffold created; pending local verification** |
+| Dependencies / `package.json` | **Manifest created; lockfile not yet generated** |
 | Supabase project, Auth, database | **Not started** |
 | SQL migrations / RLS policies | **Not started** |
 | Double-entry ledger | **Not started** (specified only) |
 | Household workspace & privacy | **Not started** (specified only) |
 | Multi-currency | **Not started** (specified only) |
 | Import / reconciliation | **Not started** (specified only) |
-| Tests | **None** |
-| Cloudflare Workers hosting/deployment | **Not started**; platform approved by ADR-014, account and deployment configuration not set up |
-| CI | **None** |
+| Tests | **Initial unit tests added; not yet executed** |
+| Cloudflare Workers hosting/deployment | **Static Assets config scaffolded; no account/deployment configured** |
+| CI | **Not configured** |
 
 Nothing in the target architecture is implemented yet. All financial-engine, privacy, and database content in `docs/` is **specification**, not built behaviour.
 
@@ -101,9 +101,9 @@ Everything in the target architecture: app scaffold, auth, workspaces, ledger, a
 
 ## 6. Next Milestones
 
-1. **Cloudflare hosting documentation update**: ADR-014 and related documentation are merged into `main` via [PR #3](https://github.com/krellynn/pocka-personal-finance/pull/3). No implementation has started.
-2. **Phase 0B — Application Foundation.** Implementation has not started: scaffold, move the prototype to `prototype/index.html` (ADR-012), design tokens, i18n with Bahasa Indonesia default (ADR-011), money/date helpers (ADR-001), Supabase Auth, profiles, personal workspace.
-3. **Design reviews** for the implementation details listed in ARCHITECTURE §9.3, scheduled before the phase that needs each one.
+1. **Phase 0B foundation scaffold**: see [draft PR #5](https://github.com/krellynn/pocka-personal-finance/pull/5). Remaining: npm lockfile, dependency/toolchain verification, tests/build/lint, visual/accessibility review, then Auth/profile/personal-workspace provisioning in an isolated development environment.
+2. **G2 finance design**: complete CoA, posting rules, FX and debt calculations, RPC contracts, RLS, grants, data dictionary and migration plan before any ledger migrations or financial implementation.
+3. **G5/G6/G7**: retain separate gates for household, import and production readiness.
 
 ---
 
@@ -131,4 +131,21 @@ Everything in the target architecture: app scaffold, auth, workspaces, ledger, a
 | 2026-11-13 | 0 (review) | PR #1 review corrections: Git/PR status brought up to date in PROJECT_STATUS and README. |
 | 2026-11-13 | 0A | Phase 0A documentation merged into `main` via PR #1 (merge commit `0bea092`). |
 | 2026-11-21 | 0 (architecture decision) | Approved ADR-014: Cloudflare Workers + Static Assets supersedes the Vercel hosting portion of BL-04. Documentation-only update; no application or deployment changes. |
-| 2026-11-21 | 0 (documentation merge) | Merged PR #3 into `main` (squash commit `c804e33`); synchronized README, PROJECT_STATUS, and ROADMAP after merge. Phase 0B remains unstarted. |
+| 2026-11-21 | 0 (documentation merge) | Merged PR #3 into `main` (squash commit `c804e33`); synchronized README, PROJECT_STATUS, and ROADMAP after merge. The initial Phase 0B scaffold is tracked separately in draft PR #5. |
+
+
+## 9. Phase 0B foundation update (2026-11-22)
+
+- Created the initial React + TypeScript + Vite app shell, Tailwind tokens, React Router, TanStack Query provider and Indonesian i18n catalogue on a separate feature branch.
+- Added empty-state dashboard and module placeholders; no fake balances, transactions or demo financial records.
+- Added bigint minor-unit currency formatter and Asia/Jakarta date helper with unit tests.
+- Moved the original prototype to `prototype/index.html` unchanged (blob SHA `cedf21040191bb93c4cfa4ddcdce4d9c6c8e0f07`).
+- Added Wrangler Static Assets SPA fallback configuration. No Cloudflare resources or deployment were created.
+- Local install/test/build/lint were not completed in this execution. Generate package-lock.json and run all checks before merge. Draft PR #4 separately carries the V1 planning package and architecture review.
+- No Supabase resources, Auth, schema, migrations, RLS, ledger or RPCs were created. G2 remains a hard gate.
+
+## 10. V1 planning package status
+
+- Draft PR #4 (docs/master-development-package-v1) contains the V1 Master Development Package, finance architecture design pack, product-owner decisions and architecture review remediation.
+- The package records D-09 to D-16 approved decisions separately from remaining G2/G5/G6/G7 implementation deliverables.
+- PR #4 and PR #5 remain separate draft pull requests. Neither is merged.
