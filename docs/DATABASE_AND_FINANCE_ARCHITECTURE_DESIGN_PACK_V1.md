@@ -643,7 +643,7 @@ This pack intentionally does not silently close any pending decision.
 | D-34 | Backup/restore objectives | Production |
 | D-36 | Monitoring and error tracking | Production |
 
-**G0 — foundation approval:** product owner reviews this pack, confirms Phase 0B dependencies, approves package manager/i18n/query strategy/preview workflow and cost plan. No coding before explicit authorization.
+**G0 — foundation approval:** product owner reviews the foundation dependencies, confirms package manager/i18n/query strategy/preview workflow and cost plan. The initial React/Vite scaffold on draft PR #5 has separate explicit authorization; expansion beyond that scaffold remains subject to G0 review and scope authorization.
 
 **G2 — finance-core approval:** final ERD/data dictionary, CoA, posting matrix, RPC signatures, money wire format, idempotency/concurrency strategy, RLS matrix and migration plan are approved. No ledger migration before this gate.
 
@@ -656,10 +656,10 @@ This pack intentionally does not silently close any pending decision.
 ## 16. Review checklist
 
 - [ ] Confirm the conceptual ERD and final table inventory.
-- [ ] Approve whether categories are dimensions or ledger-account mappings.
+- [x] D-09 approved: categories are dimensions, separate from ledger accounts; final CoA mappings remain G2 work.
 - [ ] Approve final CoA and system-account provisioning.
 - [x] Approve the journal posting matrix baseline (D-10, 2026-11-21); [ ] complete reason-specific adjustment rules and any remaining edge-case worked examples before implementing those paths.
-- [ ] Approve RPC-only mutations or explicitly choose another safe model.
+- [x] D-11 approved: all balance-affecting financial mutations use PostgreSQL RPC; final signatures, grants, function security hardening and tests remain G2 work.
 - [ ] Approve command signatures, error codes, idempotency and lock strategy.
 - [ ] Approve table-by-table RLS and role/visibility matrix.
 - [x] D-16 pocket eligible-funds policy approved; FX valuation and household/private-fund scope remain gated by D-18/D-19 and G5.
@@ -667,7 +667,7 @@ This pack intentionally does not silently close any pending decision.
 - [ ] Resolve household currency, paired-entry and departed-member access.
 - [ ] Approve migration ordering and forward-fix strategy.
 - [ ] Define D-31 data lifecycle before production.
-- [ ] Explicitly authorize Phase 0B only after G0; explicitly authorize ledger work only after G2.
+- [x] Initial Phase 0B React/Vite scaffold separately authorized on draft PR #5. [ ] Complete G0 before expanding foundation scope; explicitly authorize ledger work only after G2.
 
 **Completion statement:** this document provides a consolidated review baseline. It does not claim that any pending design decision has been approved, that the final executable schema exists, or that implementation may begin.
 
