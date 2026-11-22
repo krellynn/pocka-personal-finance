@@ -10,9 +10,9 @@ POCKA puts **financial correctness, privacy, clarity, and ease of use** ahead of
 
 ## Status
 
-**Phase 0A: Documentation & Architecture Foundation (complete and merged).** ADR-001 to ADR-013 were approved on 2026-11-13 and merged into `main` through PR #1. ADR-014 (Cloudflare Workers + Static Assets hosting) was approved on 2026-11-21 and merged into `main` through [PR #3](https://github.com/krellynn/pocka-personal-finance/pull/3). The PR was documentation-only; Phase 0B (Application Foundation & Authentication) has not started.
+**Phase 0A: Documentation & Architecture Foundation (complete and merged).** ADR-001 to ADR-013 were approved on 2026-11-13 and merged into `main` through PR #1. ADR-014 (Cloudflare Workers + Static Assets hosting) was approved on 2026-11-21 and merged into `main` through [PR #3](https://github.com/krellynn/pocka-personal-finance/pull/3). PR #3 was documentation-only. The initial Phase 0B foundation has since merged into `main` via [PR #5](https://github.com/krellynn/pocka-personal-finance/pull/5), squash commit `a930ad7`; authentication and financial-data features have not started.
 
-The Phase 0B application foundation is scaffolded on the feature branch `feat/phase-0b-application-foundation` and is under review. The repository holds:
+The initial Phase 0B application foundation is now on `main`. It is an application shell only and has no financial-data integration. The repository holds:
 
 - `prototype/index.html`: the original static HTML/CSS/JS **design prototype**, relocated unchanged per [ADR-012](docs/decisions/ADR-012-prototype-preservation.md). It remains a UX reference, not production code.
 - `index.html` and `src/`: the new Vite/React application shell, with no financial data integration yet.
@@ -47,9 +47,9 @@ Full module descriptions are in [`docs/PRODUCT_OVERVIEW.md`](docs/PRODUCT_OVERVI
 
 ---
 
-## Technology Stack (approved, not yet installed)
+## Approved Technology Stack (foundation dependencies installed)
 
-**Frontend:** React · TypeScript · Vite · Tailwind CSS · Lucide icons · Recharts · React Router · React Hook Form · Zod · TanStack Query · i18next
+**Frontend target:** React · TypeScript · Vite · Tailwind CSS · Lucide icons · Recharts · React Router · React Hook Form · Zod · TanStack Query · i18next. The initial React/Vite dependencies are installed; remaining integrations are planned.
 
 **Backend:** Supabase · PostgreSQL · Supabase Auth · Row Level Security · PostgreSQL functions/RPC · Edge Functions and Storage where needed
 
@@ -70,6 +70,7 @@ pocka-personal-finance/
 │   └── index.html              # Original prototype, unchanged
 ├── src/                        # React application foundation
 ├── package.json
+├── package-lock.json
 ├── docs/
 │   ├── DECISION_REGISTER.md    # Authoritative index of approved decisions
 │   ├── decisions/              # ADR-001 … ADR-014
@@ -83,33 +84,30 @@ pocka-personal-finance/
 └── .gitattributes
 ```
 
-Phase 0B feature branch (feat/phase-0b-application-foundation, draft PR #5):
+Planned later (not present in the Phase 0B foundation):
 
 ```
-index.html           # Vite app entry
-prototype/
-  index.html         # Original prototype, moved unchanged (Approved: ADR-012)
-src/                 # Initial React application scaffold
 supabase/
-  migrations/        # Version-controlled SQL migrations
-  functions/         # Edge Functions (import, scheduled jobs)
-tests/               # Unit, integration, RLS/privacy tests
+  migrations/        # Database schema and policies (future work)
+  functions/         # Edge Functions (future work)
+tests/
+  integration/       # Database and privacy tests (future work)
 ```
 
-The prototype move is complete on the Phase 0B feature branch. Its Git blob is unchanged.
+The prototype move is complete and merged via PR #5. Its Git blob is unchanged.
 
 ---
 
 ## Setup
 
-> **Foundation scaffold only.** Run the commands below from the feature branch. Supabase is not configured and no financial features are connected yet.
+> **Foundation scaffold only.** Run these commands from `main`. Supabase is not configured and no financial features are connected yet.
 
-**View the original prototype:** open `prototype/index.html` on the Phase 0B feature branch. Data is stored only in the browser's `localStorage`.
+**View the original prototype:** open `prototype/index.html` on `main`. Data is stored only in the browser's `localStorage`.
 
-**Application setup (foundation scaffold only; PR #5 is not merged):**
+**Application setup (foundation scaffold only; PR #5 is merged):**
 
 1. `git clone https://github.com/krellynn/pocka-personal-finance.git`
-2. Run `npm install` (then use `npm ci` for reproducible clean installs).
+2. Run `npm ci` for a reproducible install. Use `npm install` only when changing dependencies and regenerating the lockfile.
 3. Supabase environment variables are blank and optional until a development project is separately configured.
 4. Run `npm run dev`. No migrations are included in this foundation.
 5. Run `npm run typecheck`, `npm test`, `npm run lint`, and `npm run build` before proposing a merge.
@@ -132,9 +130,9 @@ Read in this order:
 8. [`docs/ROADMAP.md`](docs/ROADMAP.md): phased delivery plan
 
 
-### V1 Master Development Package — draft PR #4
+### V1 Master Development Package — PR #4
 
-The documentation package is maintained on a separate branch and reviewed independently:
+The V1 planning package covers:
 
 1. [Master Development Package](docs/MASTER_DEVELOPMENT_PACKAGE_V1.md)
 2. [Functional Specification](docs/FUNCTIONAL_SPECIFICATION_V1.md)
@@ -147,7 +145,7 @@ The documentation package is maintained on a separate branch and reviewed indepe
 9. [Database & Finance Architecture Design Pack](docs/DATABASE_AND_FINANCE_ARCHITECTURE_DESIGN_PACK_V1.md)
 10. [Architecture Review Report](docs/ARCHITECTURE_REVIEW_REPORT_V1.md)
 
-See [draft PR #4](https://github.com/krellynn/pocka-personal-finance/pull/4). These links become available on the feature branch after PR #4 is merged into main.
+See [PR #4](https://github.com/krellynn/pocka-personal-finance/pull/4) for review history. The planning package files are included under `docs/`.
 
 **AI coding agents:** read `README.md`, `PROJECT_STATUS.md`, and `docs/DECISION_REGISTER.md` first, then follow `docs/DEVELOPMENT_GUIDELINES.md` §10. Never silently override an APPROVED ADR.
 

@@ -25,7 +25,7 @@ auth.users ─1:1─ profiles
      │
      └─< workspace_members >─ workspaces ─┬─< financial_accounts ─1:1─ ledger_accounts
                                           ├─< ledger_accounts (income/expense/equity/liability)
-                                          ├─< transaction_categories ─> ledger_accounts
+                                          ├─< transaction_categories (classification dimension; independent of ledger_accounts)
                                           ├─< income_sources
                                           ├─< transactions ─1:1─ journal_entries ─< journal_lines ─> ledger_accounts
                                           ├─< pockets ─< pocket_allocations
@@ -87,13 +87,13 @@ For conversions and settlements, the posting also records **carrying value** and
 **financial_accounts** (user-facing wallets)
 - `id`, `workspace_id`, `ledger_account_id` UNIQUE, `kind` (`bank`|`ewallet`|`cash`|`credit_card`), `name`, `institution_name`, `masked_number` (last 4 digits only, optional), `currency_code`, `owner_user_id`, `visibility` (`private` default in personal; `shared` in household), `archived_at`.
 - `credit_card` accounts are backed by a **liability** ledger account (subtype `credit_card`). Bill payment is an asset → liability transfer, **never an expense** (Approved: [ADR-007](decisions/ADR-007-credit-card-liability.md)). Statement cycles and rewards are out of V1.
-- **Lifecycle (Approved: [ADR-008](decisions/ADR-008-account-archiving.md)):** an account with any journal lines is **never hard-deleted**, only archived (`archived_at`). Posting functions reject archived accounts. Archived accounts stay in historical reports. Delete is allowed only for accounts with no journal lines. FK `ON DELETE RESTRICT` plus a guard trigger backs this.
+- **Lifecycle (Approved: [ADR-008](decisions/ADR-008-account-archiving.md), D-14):** an account with any journal lines is **never hard-deleted**, only archived (`archived_at`). Archiving is permitted only when the account balance is zero in its own currency; a nonzero balance must first be settled through a valid transfer or approved closing transaction. Posting functions reject archived accounts. Archived accounts are excluded from current Total Active Account Balance and Net Worth calculations, but their historical posted records remain available in historical transaction/report views. Delete is allowed only for accounts with no journal lines. FK `ON DELETE RESTRICT` plus a guard trigger backs this.
 - **Never** stores credentials, full account numbers, PINs, or passwords.
 - *Consolidation note:* `financial_accounts` is the UX layer over asset `ledger_accounts`. Keep both (Proposed) so categories, equity, and payables don't pollute the wallet list.
 
 **transactions** (business event header)
 - `id`, `workspace_id`, `type` (`income`|`expense`|`transfer`|`refund`|`adjustment`|`opening_balance`|`debt_disbursement`|`debt_payment`|`credit_card_payment`|`fx_conversion`|`household_contribution`|`household_advance`|`settlement`|`contribution_transfer`), `status` (`draft`|`posted`|`reversed`; **drafts have no journal lines and affect no balances or reports**, ADR-004; never-posted drafts may be deleted, ADR-008), `transaction_date date`, `description`, `category_id`, `income_source_id`, `counterparty`, `original_amount_minor`, `original_currency`, `fx_conversion_id`, `base_amount_minor`, `refund_of_transaction_id`, `recurring_execution_id`, `import_row_id`, `created_by`, `owner_user_id`, `visibility`, `idempotency_key`, `posted_at`.
-- Unique `(workspace_id, idempotency_key)`.
+- Secondary transaction-level uniqueness may use `(workspace_id, idempotency_key)`; canonical command idempotency is `(workspace_id, operation_name, idempotency_key)` plus request fingerprint (see §16).
 - Indexes: `(workspace_id, transaction_date DESC)`, `(workspace_id, category_id, transaction_date)`, `(refund_of_transaction_id)`.
 - Posted rows are immutable (trigger blocks updates to financial columns once `status = posted`, except `status → reversed` by the reversal function).
 
@@ -114,8 +114,7 @@ For conversions and settlements, the posting also records **carrying value** and
 
 ### 3.4 Categories & Income
 
-**transaction_categories**: `id`, `workspace_id`, `kind` (`income`|`expense`), `name`, `icon` (Lucide name), `color`, `parent_id`, `ledger_account_id`, `is_system`, `archived_at`. Unique `(workspace_id, kind, lower(name), parent_id)`.
-*Consolidation note:* each category maps to one income/expense ledger account. Categories may be implemented *as* ledger accounts with presentation fields (implementation detail requiring design review before Phase 2).
+**transaction_categories**: `id`, `workspace_id`, `kind` (`income`|`expense`), `name`, `icon` (Lucide name), `color`, `parent_id`, `is_system`, `archived_at`. Unique `(workspace_id, kind, lower(name), parent_id)`. **Approved D-09: categories are dimensions, not ledger accounts.** There is no `ledger_account_id` mapping. Categories classify transactions and support category-level budgets/reports; posting RPCs select stable ledger control accounts independently. Category lifecycle and historical reporting semantics must be finalized before ledger migrations.
 
 System expense category **Household Contribution** (localised name, e.g. *Kontribusi Rumah Tangga*) exists in every personal workspace for contribution-intent payments (ADR-005).
 
@@ -203,7 +202,7 @@ Full semantics are in `HOUSEHOLD_PRIVACY.md`.
 | `recurring_skips` | Merge into `recurring_executions.status` |
 | `record_permissions` | Defer; use `visibility` + `shared_items` |
 | `idempotency_keys` | Prefer unique columns; table for composite ops |
-| `transaction_categories` vs `ledger_accounts` | Design review before Phase 2: 1:1 link (current proposal) or merge |
+| `transaction_categories` vs `ledger_accounts` | **Approved D-09: separate models; no 1:1 mapping and no merge.** Final CoA and category history semantics remain G2 design items |
 
 All consolidations require product-owner/architect sign-off in a design review before the first ledger migrations (Phase 2).
 
@@ -273,3 +272,17 @@ All consolidations require product-owner/architect sign-off in a design review b
 7. pgTAP (or equivalent) tests for constraints, invariants, and RLS run in CI before merge.
 
 **No migrations are created in Phase 0A.**
+
+
+---
+
+## 16. Architecture review clarifications (2026-11-21)
+
+1. **Idempotency:** the earlier unique (workspace_id, idempotency_key) is not the complete command identity. Use (workspace_id, operation_name, idempotency_key) with a normalized request fingerprint. Identical retries replay the original result/in-progress state; a different fingerprint returns IDEMPOTENCY_CONFLICT; concurrent duplicates serialize. A transaction-level unique key is only a secondary guard.
+2. **Money wire format:** every JSON monetary amount is a decimal integer string in minor units, regardless of JavaScript safe-integer size. Parse to TypeScript bigint; never send monetary JSON numbers. Currency exponent comes from currencies.minor_units.
+3. **Exchange-rate RLS:** global rows (workspace_id IS NULL) are authenticated read-only published data; client writes are denied and ingestion is server-controlled. Workspace manual rows are visible only to active members of that exact workspace and writable only through an authorized audited path. Use separate policies; no blanket authenticated-read policy.
+4. **Category model (D-09 approved 2026-11-21):** categories are dimensions and are not mapped 1:1 to ledger accounts. Finalize historical rename/archive/reassignment behaviour before migrations; no hybrid model.
+5. **Reversal:** reversal is transaction-scoped and reverses the complete posted journal-entry set atomically, with one successful reversal per original. Preserve original rows; replacement is a separate linked transaction; reversal-of-reversal is rejected.
+6. **Data dictionary:** the entity list remains conceptual. G2 requires a complete table-by-table column/type/nullability/default/constraint/index/FK/RLS/write-path/lifecycle/retention/test dictionary before ledger migration.
+
+See DATABASE_AND_FINANCE_ARCHITECTURE_DESIGN_PACK_V1.md §§17.1–17.13 for the table-level policy inventory, paired-entry recovery, contribution posting pair, and pocket/FX decision gates. This document is conceptual, not executable SQL.

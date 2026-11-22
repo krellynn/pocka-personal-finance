@@ -23,6 +23,8 @@ These apply from the application foundation phase onward. Where tooling is named
 
 ## 2. Coding Conventions (Proposed)
 
+- Package manager: **npm** (Approved: D-01, 2026-11-22). Commit one package-lock.json; use npm ci in CI.
+
 - Formatter: Prettier. Linter: ESLint (typescript-eslint, react-hooks). Both run in CI.
 - Files: `PascalCase.tsx` for components, `camelCase.ts` for modules, `kebab-case` for route folders.
 - Code identifiers and comments in English. **All user-facing copy goes through the central i18n layer. Never hardcode user-facing strings in components.** The default UI language is **Bahasa Indonesia**, and English is a planned additional language (Approved: [ADR-011](decisions/ADR-011-ui-localization.md)).
@@ -30,6 +32,8 @@ These apply from the application foundation phase onward. Where tooling is named
 - No magic numbers for money or dates. Use named helpers and constants.
 
 ## 3. TypeScript Standards (Proposed)
+
+- Localization library: **i18next + react-i18next** (Approved: D-02, 2026-11-22). Default locale id; all user-facing strings live in central catalogues.
 
 - `strict: true`, `noUncheckedIndexedAccess: true`, `exactOptionalPropertyTypes: true`.
 - No `any`. Use `unknown` and narrow it. No non-null `!` without a comment explaining why.
@@ -60,17 +64,17 @@ src/
 ```
 
 - Components never call Supabase directly. They go through `features/*/api`.
-- Server state is managed by a query cache library (**Pending**: TanStack Query proposed). Avoid global client stores for server data.
+- Server state is managed by **TanStack Query** (Approved: D-03, 2026-11-22). Keep transient UI state local; avoid a global client store for server data.
 - Forms use React Hook Form with the Zod resolver.
 - Design tokens follow the approved palette as CSS variables with light and dark themes. Icons come from **Lucide** only.
 - Accessibility: keyboard navigable, visible focus, labelled inputs, WCAG AA contrast, and colour is never the only signal for positive/negative amounts (also use `+`/`−`).
 
 ## 5. Financial Calculation Rules (Approved)
 
-1. **Never use JS `number` floating-point arithmetic for money.** Money is **`BIGINT` integer minor units** in the database and `bigint` in TypeScript, with strings at the wire boundary where needed (Approved: [ADR-001](decisions/ADR-001-monetary-storage.md)). `NUMERIC` is used for FX rates, ratios, and percentages.
+1. **Never use JS `number` floating-point arithmetic for money.** Money is **`BIGINT` integer minor units** in the database and `bigint` in TypeScript. **Every monetary JSON value is a base-10 decimal integer string in minor units, regardless of magnitude**; validate at the boundary and parse to `bigint`. Never send monetary JSON numbers (Approved: D-12 Option A, 2026-11-21; [ADR-001](decisions/ADR-001-monetary-storage.md)). `NUMERIC`/decimal-safe representations are used for FX rates, ratios, and percentages.
 2. Precision comes from `currencies.minor_units`. **Never assume 2 decimals.** IDR 0, USD 2, JPY 0. Display value = minor ÷ 10^exponent, formatted by the central helpers.
 3. Parsing user input: accept locale formats (`12.850.000`, `12.850.000,50` for 2-dp currencies) and convert to minor units with strict validation. Reject ambiguous input, and reject more decimals than the currency exponent allows.
-4. **Safe integers:** validate configured maximums. Never pass values above `Number.MAX_SAFE_INTEGER` through JS `number`.
+4. **Safe integers:** validate configured monetary maximums without converting money through JS `number`. Keep monetary values as decimal strings at JSON boundaries and `bigint` in TypeScript; never rely on `Number.MAX_SAFE_INTEGER` as a reason to switch wire formats.
 5. Authoritative arithmetic (balances, conversions, budget actuals, splits) happens **in the database**. The frontend may preview totals using `bigint`.
 6. Splits and allocations: **largest-remainder** method; ties broken by participant order. Σ parts must equal the total (Approved: [ADR-010](decisions/ADR-010-expense-split-methods.md)).
 7. FX conversion: rate × amount in `NUMERIC`, rounded **once** with **half-even** rounding. Store the snapshot. Realized FX gain/loss only on actual conversion or settlement. No unrealized revaluation in V1 (Approved: [ADR-006](decisions/ADR-006-fx-recognition.md)).
@@ -97,7 +101,7 @@ src/
 - Only the Supabase **publishable/anon** key in the frontend. The **service-role key never** appears in frontend code, the repo, or logs.
 - Secrets live only in environment variables. `.env.local` stays git-ignored. Commit `.env.example` with placeholder names only.
 - Validate in the database that every referenced ID belongs to the same workspace.
-- Financial mutations go through RPC functions with membership/role checks, atomicity, row locks where needed, and idempotency keys.
+- **Approved (D-11 Option A, 2026-11-21):** every balance-affecting financial mutation must go through PostgreSQL RPC functions. Client code must not directly mutate ledger/financial fact tables. RPCs enforce actor/workspace authorization, validation, idempotency, concurrency and atomicity as applicable. Final signatures, grants and function hardening remain G2 deliverables.
 - `SECURITY DEFINER` functions: fixed `search_path`, explicit `auth.uid()` checks, least privilege.
 - Never collect or store bank PINs, banking passwords, OTPs, or full card/account numbers.
 - Audit log every posting, reversal, role change, and sharing grant/revoke.
@@ -176,7 +180,10 @@ Additionally:
 - When two requirements conflict, document the conflict and ask. Don't resolve it silently.
 
 
-## 11. Cloudflare Deployment (Platform Approved; Workflow Proposed)
+## 11. Cloudflare Deployment (Platform Approved; Preview Workflow Approved)
+
+- Initial preview plan: Cloudflare Workers Free, subject to a current limits check; reassess before production based on measured usage (D-06, 2026-11-22).
+- Preview workflow: GitHub-linked PR/branch previews with isolated preview credentials/data. Production deploys from main remain manually gated (D-07, 2026-11-22).
 
 - Frontend hosting uses **Cloudflare Workers + Static Assets** (Approved: [ADR-014](decisions/ADR-014-cloudflare-workers-hosting.md)); Vercel is not the approved hosting platform.
 - For the Vite application, use the stable Cloudflare Vite plugin as the preferred integration direction; re-check supported versions before implementation. The plugin automatically includes the built client assets, so do not add a duplicate `assets.directory` setting without a specific need.
@@ -188,3 +195,16 @@ Additionally:
 - Keep `.wrangler/`, `.dev.vars`, and real local Worker variable files out of Git. A deliberately named example such as `.dev.vars.example` may be committed only when it contains placeholders and no real credentials.
 - Do not add Worker API routes or move business logic from Supabase to Workers without a separately approved requirement.
 - Before enabling deployment, verify SPA fallback/routing (including direct loads and refreshes on nested React Router paths), build output, preview/production separation, domain/DNS, observability, rollback, and account/plan requirements.
+
+
+---
+
+## 6. Financial Mutation Boundary (Approved — D-11, 2026-11-21)
+
+- Every balance-affecting financial write must go through a PostgreSQL RPC.
+- Browser/client code must never directly insert, update or delete ledger/financial facts.
+- RPCs validate authenticated actor (`auth.uid()`), active workspace membership, operation permission, same-workspace references, input constraints, idempotency and concurrency as applicable.
+- A financial command commits its related transaction, journal entries/lines, reversal state and audit facts atomically within its defined boundary.
+- Table grants and RPC EXECUTE grants are deny-by-default and narrowly scoped. Do not assume `SECURITY DEFINER`; choose and harden function security mode during G2 design review.
+- Reads use RLS-protected queries and approved views/read models; D-11 does not require all reads to use RPC.
+- This is a binding architecture boundary, not permission to create migrations or start implementation before the relevant gate is approved.

@@ -214,3 +214,24 @@ Each test runs against the database with RLS active, authenticated as the given 
 | P20 | B's advance of Rp300.000, partially reimbursed Rp100.000 | Household payable to B = 200.000; B's personal receivable = 200.000; no expense from reimbursement |
 
 All P-tests must pass in CI before any household feature is released.
+
+
+---
+
+## 10. Paired financial events and departed-member access — design clarification (2026-11-21)
+
+### 10.1 Paired personal/household posting lifecycle
+
+Direct payment from personal funds creates distinct personal and household ledger facts. They are separately balanced and authorized, correlated only by an opaque server-generated pair ID. Household queries never traverse to personal transaction IDs, account IDs, journal lines, descriptions or balances. Persist pair intent and request fingerprint; track per-side status and idempotency; mark complete only after both sides post. If one side fails, retain pending/partial-failure state and retry only the missing side. If cancellation follows a successful side, use audited reversal/compensation, never delete posted facts. Reconcile stale pairs. A single DB transaction is acceptable only if both authorization checks and writes are proven atomic without weakening RLS; otherwise use a durable recoverable workflow. See design pack §17.1.
+
+### 10.2 Contribution-intent accounting pair
+
+For a member paying a household expense directly from personal funds with contribution intent: personal Dr Household Contribution expense / Cr Personal asset; household Dr Household expense / Cr Member Contribution Funding (classification pending CoA approval). No household cash account is involved. For reimbursable advance, personal Dr Receivable from Household / Cr Personal asset; household Dr Household expense / Cr Payable to Member. Reimbursement clears the balances without a second expense. See design pack §17.5.
+
+### 10.3 Departed-member obligation-only endpoint
+
+A left/removed member loses ordinary household RLS access immediately. The member may use only an obligation-scoped view/RPC bound internally to auth.uid() and a specific obligation. It returns only their own amount, currency, status and minimum settlement details; it cannot enumerate household data or restore membership. Settlement revalidates under lock and is audited. SECURITY DEFINER requires fixed search_path, restricted execute grants and explicit identity/obligation checks. Ordinary table SELECT remains denied.
+
+### 10.4 Required tests
+
+Before G5 test either side failing, duplicate retry, same key/different payload, stale pair reconciliation, cancellation after one side posted, member exit during pending pair, departed member denied household lists but allowed only their own obligation, unrelated member denied, and no household response containing personal identifiers or private values.
