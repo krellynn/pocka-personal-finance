@@ -162,12 +162,12 @@ A feature is done only when all applicable items are true:
 
 ## 11. Current state and explicit no-code boundary
 
-Verified repository status on 2026-11-21: Phase 0A docs and ADR-001…ADR-014 are merged; Phase 0B has not started; the root `index.html` is a static prototype; no React app, dependencies, Supabase project, migrations, tests, CI, Cloudflare project or deployment exists.
+Repository status updated 2026-11-22: Phase 0A docs and ADR-001…ADR-014 are merged. The initial Phase 0B React/Vite scaffold is on separate draft PR #5; local lockfile generation and typecheck/lint/test/build verification remain outstanding. The original prototype is moved unchanged on that feature branch. No Supabase project, financial schema, migrations, CI, Cloudflare account setup or deployment has been created.
 
-Until this package and its dependency plan are approved:
+Until this package and its dependency plan are approved, do not expand implementation beyond the separately scoped Phase 0B foundation already recorded in draft PR #5. Complete its lockfile and local verification first. Do not begin financial-core, household or import implementation before the relevant gates.
 
-- Do not create application source code or install application dependencies.
-- Do not move or modify the prototype.
+- Do not create additional application features outside the authorized foundation scope.
+- Do not modify the preserved prototype.
 - Do not create or run SQL migrations.
 - Do not create Supabase or Cloudflare resources or configure secrets.
 - Do not deploy.
