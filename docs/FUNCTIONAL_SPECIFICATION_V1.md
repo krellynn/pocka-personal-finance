@@ -326,3 +326,11 @@ Do not invent unresolved behaviour. Refer to PRODUCT_OWNER_DECISIONS_V1.md and t
 
 
 - If the lender's schedule/terms do not specify the component allocation for a partial installment payment, POCKA must not guess a proportional split or assume a component-priority order. Require the user to reconcile principal, interest and applicable fee amounts using authoritative lender information before posting; the components must be non-negative and sum exactly to the actual payment amount. If the allocation cannot be substantiated, keep the payment unposted and show a clear exception/manual-reconciliation state. Apply D-11 RPC-only posting, D-12 money wire format and concurrency-safe remaining-obligation checks (D-17.12 Option A approved 2026-11-22).
+
+
+### Debt overdue and late-fee requirements — D-17.13
+- Mark an unpaid installment **Overdue** after its due date has passed. If it is partially paid and a remainder is still due after the due date, show **Partially Paid — Overdue**.
+- Do not invent or independently calculate lender late fees without an approved rule and authoritative lender information.
+- If the lender has not confirmed a late-fee amount, show **Not Confirmed** rather than Rp0/zero.
+- Record a lender-confirmed late fee separately from principal and scheduled interest, retaining its source/provenance. Preserve fee revision history; do not rewrite posted payments or historical journal entries.
+- Exact evidence requirements, accounting mapping, due-date/timezone boundary, grace-period rules, notification behaviour and RPC/audit details remain G2 design deliverables (D-17.13 Option A approved 2026-11-22).
