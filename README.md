@@ -59,7 +59,7 @@ Full module descriptions are in [`docs/PRODUCT_OVERVIEW.md`](docs/PRODUCT_OVERVI
 
 ## Repository Structure
 
-Current:
+Current on main:
 
 ```
 pocka-personal-finance/
@@ -83,13 +83,13 @@ pocka-personal-finance/
 └── .gitattributes
 ```
 
-Planned (created in the application foundation phase):
+Phase 0B feature branch (feat/phase-0b-application-foundation, draft PR #5):
 
 ```
-index.html           # Vite app entry (replaces the prototype at root)
+index.html           # Vite app entry
 prototype/
   index.html         # Original prototype, moved unchanged (Approved: ADR-012)
-src/                 # React application (Proposed layout)
+src/                 # Initial React application scaffold
 supabase/
   migrations/        # Version-controlled SQL migrations
   functions/         # Edge Functions (import, scheduled jobs)
@@ -104,9 +104,9 @@ The prototype move is complete on the Phase 0B feature branch. Its Git blob is u
 
 > **Foundation scaffold only.** Run the commands below from the feature branch. Supabase is not configured and no financial features are connected yet.
 
-**View the prototype (works today):** open `index.html` in a browser (later: `prototype/index.html`). Data is stored only in the browser's `localStorage`.
+**View the original prototype:** open `prototype/index.html` on the Phase 0B feature branch. Data is stored only in the browser's `localStorage`.
 
-**Application setup (planned, not yet implemented):**
+**Application setup (foundation scaffold only; PR #5 is not merged):**
 
 1. `git clone https://github.com/krellynn/pocka-personal-finance.git`
 2. Run `npm install` (then use `npm ci` for reproducible clean installs).
@@ -130,6 +130,24 @@ Read in this order:
 6. [`docs/HOUSEHOLD_PRIVACY.md`](docs/HOUSEHOLD_PRIVACY.md): privacy and sharing rules (non-negotiable)
 7. [`docs/DEVELOPMENT_GUIDELINES.md`](docs/DEVELOPMENT_GUIDELINES.md): coding, testing, and AI agent rules
 8. [`docs/ROADMAP.md`](docs/ROADMAP.md): phased delivery plan
+
+
+### V1 Master Development Package — draft PR #4
+
+The documentation package is maintained on a separate branch and reviewed independently:
+
+1. [Master Development Package](docs/MASTER_DEVELOPMENT_PACKAGE_V1.md)
+2. [Functional Specification](docs/FUNCTIONAL_SPECIFICATION_V1.md)
+3. [Domain & API Contracts](docs/DOMAIN_AND_API_CONTRACTS_V1.md)
+4. [UX & Design System](docs/UX_AND_DESIGN_SYSTEM_SPEC_V1.md)
+5. [Quality & Test Strategy](docs/QUALITY_AND_TEST_STRATEGY_V1.md)
+6. [Parallel Execution Plan](docs/PARALLEL_EXECUTION_PLAN_V1.md)
+7. [AI Agent Playbook](docs/AI_AGENT_PLAYBOOK_V1.md)
+8. [Product Owner Decisions](docs/PRODUCT_OWNER_DECISIONS_V1.md)
+9. [Database & Finance Architecture Design Pack](docs/DATABASE_AND_FINANCE_ARCHITECTURE_DESIGN_PACK_V1.md)
+10. [Architecture Review Report](docs/ARCHITECTURE_REVIEW_REPORT_V1.md)
+
+See [draft PR #4](https://github.com/krellynn/pocka-personal-finance/pull/4). These links become available on the feature branch after PR #4 is merged into main.
 
 **AI coding agents:** read `README.md`, `PROJECT_STATUS.md`, and `docs/DECISION_REGISTER.md` first, then follow `docs/DEVELOPMENT_GUIDELINES.md` §10. Never silently override an APPROVED ADR.
 
