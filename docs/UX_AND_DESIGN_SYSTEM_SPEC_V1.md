@@ -196,3 +196,12 @@ Do not treat the current static prototype's palette, labels, hard-coded values o
 - Show late-fee status separately: a lender-confirmed amount may be displayed as confirmed; an unconfirmed amount must read **Not Confirmed**, never imply zero.
 - Keep the late-fee amount separate from principal and scheduled interest, and retain clear lender/source provenance. Show revisions as history rather than silently changing previously posted payments.
 - Do not estimate or invent late fees in the ordinary repayment journey. Detailed evidence, grace-period and notification UX remain subject to G2 design.
+
+
+### Debt reminder UX — D-17.14
+- Use the default in-app schedule H-3, H-1 and H for upcoming installments; explain the due date and amount due in the reminder.
+- For overdue installments, notify at the overdue transition and repeat every three days while a balance remains outstanding; stop after full payment or approved resolution.
+- Notify about a late fee only when the lender confirms it. Keep **Not Confirmed** distinct from a confirmed amount.
+- Show a payment-success confirmation after posting, including any unpaid remainder and current installment status.
+- Provide simple controls to adjust or disable debt reminders. Keep V1 in-app; do not imply email or push support.
+- Notifications are reminders/status information only, never automatic payment actions. Apply timezone-aware scheduling and prevent duplicate reminders.
