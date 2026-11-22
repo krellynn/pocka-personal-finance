@@ -192,3 +192,17 @@ The 2026-11-21 review findings R-01–R-12 and dispositions are recorded in ARCH
 The review closes specification gaps where a safe technical contract can be documented (paired-entry recovery, idempotency, FX RLS separation, contribution posting pair, table-level RLS baseline, money wire format and reversal semantics). It does not close owner decisions for category/CoA model, FX carrying-value method/provider, pocket eligible funds, household currency/roles, or deletion/retention. The final column-level data dictionary remains a G2 deliverable.
 
 **Readiness:** G0, G2, G5, G6 and G7 remain separate approval gates. No code, migration, cloud resource or deployment is authorized by this documentation update. Phase 0B begins only after G0 approval and explicit implementation authorization; ledger work begins only after G2 approval.
+
+
+## G0 decisions recorded (2026-11-22)
+
+The delegated G0 defaults are recorded in PRODUCT_OWNER_DECISIONS_V1.md:
+- npm with one committed lockfile; npm ci in CI (D-01).
+- i18next + react-i18next, Indonesian default (D-02).
+- TanStack Query for server state (D-03).
+- Transactional/idempotent creation of one personal workspace at signup (D-04).
+- Local-first Supabase; hosted Free only for isolated development/preview after limits check; production plan deferred until measured needs (D-05).
+- Cloudflare Workers Free for initial preview after limits check (D-06).
+- GitHub-linked PR previews with isolated preview environment; production deployment remains manually gated (D-07).
+
+These defaults do not authorize Phase 0B implementation, cloud-resource creation, secrets configuration, migrations or deployment. G0 approval checklist items concerning product scope, consolidated domain/API contracts and database/RLS design remain separate gates.
