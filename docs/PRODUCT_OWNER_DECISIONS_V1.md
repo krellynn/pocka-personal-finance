@@ -7,13 +7,13 @@
 
 | ID | Decision | Current status | Recommended direction | Why it matters |
 |---|---|---|---|---|
-| D-01 | Package manager | Pending design review | npm initially (already present in earlier local audit); use one committed lockfile | Reproducible installs and CI |
-| D-02 | i18n library | Pending design review | Select a maintained React i18n library after a short compatibility review | Centralized Indonesian copy and future locale support |
-| D-03 | Server-state/query library | Pending design review | TanStack Query is proposed, not mandatory | Cache invalidation and server-state consistency |
-| D-04 | Personal workspace creation | Proposed | Auto-create one personal workspace after successful sign-up, transactionally/idempotently | Defines onboarding and identity invariants |
-| D-05 | Supabase plan and project setup | Pending owner review | Start with local development; select hosted plan only after usage/billing review | Avoid unexpected cost and plan limits |
-| D-06 | Cloudflare account/plan | Pending owner review | Start with Workers Free for static-first development/preview, recheck current limits; production choice subject to usage | Hosting cost and deployment limits |
-| D-07 | Cloudflare preview workflow | Proposed | GitHub-linked preview deployments with explicit preview/production separation | Safe release workflow |
+| D-01 | Package manager | **Approved — npm (2026-11-22)** | Use npm with one committed package-lock.json; enforce reproducible installs with npm ci in CI | Reproducible installs and CI |
+| D-02 | i18n library | **Approved — i18next + react-i18next (2026-11-22)** | Use i18next with react-i18next; Indonesian (id) is default, English (en) may be added later; all UI strings use central catalogues | Centralized Indonesian copy and future locale support |
+| D-03 | Server-state/query library | **Approved — TanStack Query (2026-11-22)** | Use TanStack Query for remote/server state; keep local UI state local and do not add a global client store for server data | Cache invalidation and server-state consistency |
+| D-04 | Personal workspace creation | **Approved — auto-create personal workspace (2026-11-22)** | Create exactly one initial personal workspace as part of a trusted, transactional/idempotent sign-up provisioning flow; retries must not create duplicates | Defines onboarding and identity invariants |
+| D-05 | Supabase plan and project setup | **Approved — local-first, hosted dev on Free tier (2026-11-22)** | Use local Supabase for development; hosted Free may be used for isolated development/preview only after checking current limits. No paid production plan until usage, backup, support and billing needs are reviewed | Avoid unexpected cost and plan limits |
+| D-06 | Cloudflare account/plan | **Approved — Workers Free for initial preview (2026-11-22)** | Use Workers Free for initial static preview after verifying current limits; review production plan against measured traffic, build and observability needs before launch | Hosting cost and deployment limits |
+| D-07 | Cloudflare preview workflow | **Approved — GitHub PR previews with environment separation (2026-11-22)** | Use GitHub-linked PR/branch previews; isolate preview from production Supabase credentials/data. Production deploys from main remain manually gated and require explicit release authorization | Safe release workflow |
 | D-08 | Supabase region | Approved provisional | Singapore; re-evaluate before production as required by BL-08 | Data location and migration implications |
 
 ## 2. Blocking before financial core / G2
@@ -168,3 +168,22 @@ Keep D-11/D-12 synchronized across DEVELOPMENT_GUIDELINES.md, DOMAIN_AND_API_CON
 
 
 **D-17.16 decision record (2026-11-22):** The product owner approved **Option B — Automatic Principal Reduction for Extra Repayments**. Because POCKA V1 is not integrated with lenders, a user-recorded extra repayment outside the scheduled installment is treated by POCKA as a principal-reducing payment by default. Once the payment is successfully posted, reduce the outstanding principal by the extra amount and recalculate the remaining repayment schedule within POCKA. Record the extra repayment as a separate financial event linked to the debt; do not misclassify it as an ordinary scheduled installment. This is POCKA's internal debt model and must not be represented as lender-confirmed treatment or a guarantee that the lender's own balance/schedule has changed. Preserve the original schedule and posted history; retain an auditable schedule version/change record for the recalculated future installments. The exact recalculation method, treatment of accrued interest/fees, effective date, rounding, partial extra repayments and lender-specific differences remain G2 design deliverables. This decision does not authorize migrations or implementation.
+
+
+### G0 decision records (2026-11-22)
+
+**D-01 — npm:** Use npm and commit exactly one package-lock.json. CI and clean environments install with npm ci; do not mix package managers or commit competing lockfiles.
+
+**D-02 — i18n:** Use i18next with react-i18next. Bahasa Indonesia (id) is the default locale. Keep all user-facing strings in central message catalogues; English may be added as a later locale without changing the default.
+
+**D-03 — server state:** Use TanStack Query for remote/server state, query caching and invalidation. Keep transient UI state local; do not introduce Redux or another global server-state store without measured need.
+
+**D-04 — personal workspace provisioning:** Create exactly one personal workspace for each new user through a trusted server/database-side provisioning flow that is transactional and idempotent. Signup retries must not create duplicates. Household workspaces are created/joined separately.
+
+**D-05 — Supabase plan:** Develop locally with Supabase CLI/local services first. A hosted Free project may be used for isolated development/preview only after current limits are checked. No paid production plan is selected in advance; choose it only after measuring usage and reviewing backups, support, limits and expected cost. Never use production data in preview.
+
+**D-06 — Cloudflare plan:** Use Workers Free for initial static preview after verifying current platform limits. Reassess before production using measured traffic, build/deployment and observability needs. This does not authorize account creation or plan upgrades.
+
+**D-07 — preview workflow:** Use GitHub-linked Cloudflare preview deployments for PRs/branches, with preview credentials and data isolated from production. Production deployment from main remains manually gated and requires separate release authorization. No deployment is authorized by this decision set.
+
+These decisions resolve G0 defaults only. They do not approve Phase 0B implementation, cloud-resource creation, secrets configuration, migrations or deployment.
