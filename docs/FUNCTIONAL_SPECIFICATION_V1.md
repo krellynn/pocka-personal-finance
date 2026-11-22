@@ -352,3 +352,12 @@ Do not invent unresolved behaviour. Refer to PRODUCT_OWNER_DECISIONS_V1.md and t
 - A partially paid installment remains in its aging band while an unpaid remainder is outstanding. Stop aging it as outstanding after full payment or another approved resolution.
 - Calculate from the installment due date using elapsed days overdue, not calendar-month labels. Existing D-17.14 reminders remain unchanged; D-17.15 adds no extra escalation alerts.
 - Exact due-date/timezone boundary and lender-approved deferment/restructuring treatment remain implementation design details (D-17.15 Option A approved 2026-11-22).
+
+
+### Extra debt repayment requirements — D-17.16
+- Allow the user to record a payment made outside the scheduled installment as a separate **Extra Repayment** event linked to the debt.
+- Under POCKA's internal V1 debt model, a successfully posted extra repayment reduces outstanding principal by the recorded extra amount.
+- Recalculate the remaining future repayment schedule within POCKA after posting; preserve the prior schedule version and all posted payment/journal history.
+- Do not classify an extra repayment as an ordinary scheduled installment.
+- Clearly communicate that this is POCKA's internal treatment because there is no lender integration; do not claim that the lender has confirmed or updated its own balance or schedule.
+- Exact recalculation method, accrued interest/fee treatment, effective date, rounding, partial extra repayments and lender-specific differences remain G2 design deliverables (D-17.16 Option B approved 2026-11-22).
