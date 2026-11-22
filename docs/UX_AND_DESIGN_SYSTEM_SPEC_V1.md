@@ -189,3 +189,10 @@ Do not treat the current static prototype's palette, labels, hard-coded values o
 - Ask the user to reconcile the principal, interest and fee components using authoritative lender information in a focused exception step.
 - Do not post until the allocation is complete, valid and reconciles exactly to the actual payment amount.
 - If the user cannot substantiate the split, keep the payment unposted and explain what information is needed; do not make the normal repayment flow more complex for users whose lender schedule already defines the allocation.
+
+
+### Debt overdue and late-fee UX — D-17.13
+- Display **Overdue** when an unpaid installment has passed its due date; display **Partially Paid — Overdue** when a partial payment exists but an amount remains unpaid after the due date.
+- Show late-fee status separately: a lender-confirmed amount may be displayed as confirmed; an unconfirmed amount must read **Not Confirmed**, never imply zero.
+- Keep the late-fee amount separate from principal and scheduled interest, and retain clear lender/source provenance. Show revisions as history rather than silently changing previously posted payments.
+- Do not estimate or invent late fees in the ordinary repayment journey. Detailed evidence, grace-period and notification UX remain subject to G2 design.
