@@ -38,18 +38,17 @@ The planning documents have been updated to make technical contracts explicit an
 - Household exit privacy and surviving obligations are explicitly separated.
 - The report is indexed from README, PROJECT_STATUS and the Master Development Package.
 
-## 4. Decisions still requiring owner/finance approval
+## 4. Decisions and deliverables still open
 
-1. **D-09:** category dimension vs category-to-ledger-account mapping; final CoA.
-2. **D-10:** final posting matrix and worked examples.
-3. **D-11:** approve RPC-only financial mutations at G2.
-4. **D-12:** ratify the integer-minor-unit decimal-string JSON contract.
-5. **D-16:** pocket eligible funds and shortfall rules.
-6. **D-18/D-19:** FX carrying-value method and rate provider/manual fallback.
-7. **D-20/D-21:** household base currency and operation-specific role matrix.
-8. **D-22/D-23:** paired-entry orchestration and obligation-only departed-member access.
-9. **D-24:** household account ownership and visibility.
-10. **D-31 and operational decisions:** deletion/retention, backup/restore objectives, monitoring and production operations.
+Approved decisions are not reopened by this report. Remaining choices and implementation deliverables are:
+
+1. **D-18/D-19:** FX carrying-value method and rate provider/manual fallback.
+2. **D-20/D-21:** household base currency and operation-specific role matrix.
+3. **D-22/D-23:** paired-entry orchestration and obligation-only departed-member access; validate documented contracts with G5 acceptance tests.
+4. **D-24:** household account ownership and visibility.
+5. **D-31 and operational decisions:** deletion/retention, backup/restore objectives, monitoring and production operations.
+6. **G2 deliverables:** final CoA/system mappings and worked posting examples under approved D-09/D-10; exact RPC names/signatures, grants and function hardening under approved D-11; column-level data dictionary, exact RLS SQL and executable tests.
+7. **D-17:** partially approved edge-case decisions; calculation, schedule-recalculation and exception details remain G2 deliverables.
 
 The column-level data dictionary and exact SQL RLS policy expressions are required design artifacts, not claims of completion.
 
