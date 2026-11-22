@@ -323,3 +323,6 @@ At minimum, E2E coverage must include:
 ## 18. Open details
 
 Do not invent unresolved behaviour. Refer to PRODUCT_OWNER_DECISIONS_V1.md and the implementation design reviews in ARCHITECTURE.md §9.2–9.3. A module may be scaffolded in isolation, but any unresolved decision that changes financial semantics, schema, privacy or user-visible promises blocks final integration.
+
+
+- If the lender's schedule/terms do not specify the component allocation for a partial installment payment, POCKA must not guess a proportional split or assume a component-priority order. Require the user to reconcile principal, interest and applicable fee amounts using authoritative lender information before posting; the components must be non-negative and sum exactly to the actual payment amount. If the allocation cannot be substantiated, keep the payment unposted and show a clear exception/manual-reconciliation state. Apply D-11 RPC-only posting, D-12 money wire format and concurrency-safe remaining-obligation checks (D-17.12 Option A approved 2026-11-22).
