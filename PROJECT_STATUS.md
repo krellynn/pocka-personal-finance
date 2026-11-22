@@ -1,9 +1,9 @@
 # POCKA — Project Status
 
-**Last updated:** 2026-11-21  
-**Current phase:** Phase 0A — Documentation & Architecture Foundation. **Complete and merged into `main`.** ADR-001 to ADR-013 were approved on 2026-11-13; ADR-014 (Cloudflare Workers + Static Assets hosting) was approved on 2026-11-21 and merged through PR #3. **Phase 0B — Application Foundation & Authentication has not started.**
+**Last updated:** 2026-11-22  
+**Current phase:** Phase 0B — Application Foundation. Phase 0A is complete and merged into `main`. The initial React/Vite scaffold is on `feat/phase-0b-application-foundation` in draft [PR #5](https://github.com/krellynn/pocka-personal-finance/pull/5); lockfile generation and local verification remain outstanding. PR #4 is the separate draft documentation package and is not merged.
 
-**Planning update:** A proposed V1 Master Development Package (functional specification, domain/API contract plan, UX/design system, quality strategy, parallel execution plan, AI agent playbook, product-owner decision backlog and Database & Finance Architecture Design Pack) is prepared on branch `docs/master-development-package-v1` for review. This is documentation only. It does not mean the application or Phase 0B has started.
+**Planning update:** The V1 Master Development Package and Database & Finance Architecture Design Pack are prepared on `docs/master-development-package-v1` for review in draft PR #4. This branch is documentation-only. Approved decisions are recorded as such; detailed G2/G5/G6/G7 contracts and implementation gates remain in force.
 
 ---
 
@@ -15,9 +15,9 @@
 | Completed PR | [PR #1](https://github.com/krellynn/pocka-personal-finance/pull/1), Phase 0A docs, merged |
 | Completed PR | [PR #3](https://github.com/krellynn/pocka-personal-finance/pull/3), Cloudflare hosting ADR, merged |
 | Remote | `origin` → `https://github.com/krellynn/pocka-personal-finance.git` |
-| Planning branch | `docs/master-development-package-v1` — proposed documentation package, pending review |
+| Planning branch | `docs/master-development-package-v1` — documentation package in draft PR #4, pending review |
 
-The Phase 0A documentation and ADR-001 to ADR-014 are merged into `main`. No application code was changed by those documentation PRs.
+The Phase 0A documentation and ADR-001 to ADR-014 are merged into `main`. The initial Phase 0B application scaffold is isolated on draft PR #5; neither PR #4 nor PR #5 is merged.
 
 ---
 
@@ -27,21 +27,21 @@ The Phase 0A documentation and ADR-001 to ADR-014 are merged into `main`. No app
 |---|---|
 | Product & architecture documentation | **Phase 0A complete** |
 | Architecture decisions (ADR-001 to ADR-014) | **Approved and merged** |
-| Static design prototype (`index.html`, root) | **Exists**; relocation to `prototype/index.html` planned, not done |
-| React/Vite application | **Not started** |
-| Dependencies / `package.json` | **Not started** |
+| Static design prototype (`prototype/index.html`) | **Moved unchanged** on PR #5 feature branch; not yet merged |
+| React/Vite application | **Initial scaffold created on draft PR #5; local verification pending** |
+| Dependencies / `package.json` | **Manifest created on PR #5; package-lock.json still required** |
 | Supabase project, Auth, database | **Not started** |
 | SQL migrations / RLS policies | **Not started** |
 | Double-entry ledger | **Not started** (specified only) |
 | Household workspace & privacy | **Not started** (specified only) |
 | Multi-currency | **Not started** (specified only) |
 | Import / reconciliation | **Not started** (specified only) |
-| Tests | **None** |
-| Cloudflare Workers hosting/deployment | **Not started**; platform approved by ADR-014 |
+| Tests | **Initial unit tests added on PR #5; execution pending** |
+| Cloudflare Workers hosting/deployment | **Wrangler Static Assets config scaffolded on PR #5; no account setup or deployment** |
 | CI | **None** |
 | Master Development Package | **Prepared as proposed documentation on planning branch; pending product-owner review** |
 
-Nothing in the target architecture is implemented yet. All financial-engine, privacy, database and Master Package content is specification/planning, not built behaviour.
+Only the initial frontend foundation is scaffolded on PR #5 and remains unmerged/unverified locally. Financial-engine, privacy, database and Master Package content remains specification/planning, not built behaviour.
 
 ---
 
@@ -49,17 +49,17 @@ Nothing in the target architecture is implemented yet. All financial-engine, pri
 
 The root `index.html` is a static HTML/CSS/vanilla-JS prototype using localStorage demo data. It is a UX reference only. Its known limitations and bugs are documented in the original Phase 0A status history and must not be carried into the real app.
 
-ADR-012 requires moving it with `git mv` to `prototype/index.html`, unchanged, when the Vite foundation is introduced. It has not been moved.
+ADR-012 requires preserving the prototype byte-for-byte at `prototype/index.html`. This relocation is complete on PR #5's feature branch (blob SHA `cedf21040191bb93c4cfa4ddcdce4d9c6c8e0f07`) and is not yet merged.
 
 ---
 
 ## 4. Next Milestones
 
-1. Review and approve the proposed Master Development Package on `docs/master-development-package-v1`.
-2. Resolve or formally defer the product-owner decisions that block the next dependency gate.
-3. Review and approve the Database & Finance Architecture Design Pack; resolve G0/G2 decisions including final CoA, posting matrix, ERD, RPC contracts, RLS matrix, pocket eligibility and FX method before financial migrations.
-4. Obtain explicit product-owner authorization to start Phase 0B implementation.
-5. Only then begin application foundation, Supabase local setup and Cloudflare configuration.
+1. Complete review of draft PR #4 documentation and verify cross-document decision/status consistency.
+2. Complete PR #5 foundation validation: generate and commit `package-lock.json`, run install/typecheck/lint/tests/build, and resolve any failures.
+3. Review the PR #5 app shell, responsive/accessibility behaviour and Cloudflare preview configuration before any deployment.
+4. Complete G2 design deliverables before financial migrations or ledger implementation; keep G5/G6/G7 gates separate.
+5. Do not merge or deploy either PR without the required review and explicit release approval.
 
 ---
 
@@ -83,13 +83,14 @@ Implementation design reviews remain listed in `docs/ARCHITECTURE.md` §9.3 and 
 | 2026-11-13 | 0A | Approved and merged ADR-001 to ADR-013. |
 | 2026-11-21 | 0A | Approved and merged ADR-014 for Cloudflare Workers + Static Assets. |
 | 2026-11-21 | Planning | Prepared proposed V1 Master Development Package on `docs/master-development-package-v1`; documentation only; no app code, dependencies, migrations, cloud resources or deployment. |
-| 2026-11-21 | Planning | Added Database & Finance Architecture Design Pack (conceptual ERD, CoA, posting, RPC, RLS, FX, household and migration plan) to the same draft PR; all unresolved decisions remain pending and no implementation is authorized. |
+| 2026-11-21 | Planning | Added Database & Finance Architecture Design Pack (conceptual ERD, CoA, posting, RPC, RLS, FX, household and migration plan) to draft PR #4; approved decisions and remaining gate deliverables are distinguished. |
+| 2026-11-22 | 0B | Initial React/Vite foundation scaffold created on feature branch and draft PR #5; local lockfile/toolchain checks remain outstanding. |
 
 
 ## 7. Architecture review remediation (2026-11-21)
 
 PR #4 remains an open draft documentation PR. The 12 review findings have been addressed at design level and recorded in docs/ARCHITECTURE_REVIEW_REPORT_V1.md. No application code, dependencies, migrations, Supabase/Cloudflare resources, secrets or deployments were created.
 
-This does not mean every design decision is approved. Category-vs-ledger mapping, FX carrying-value method/provider, pocket eligible funds, household base currency/role matrix, final column-level data dictionary, retention/deletion and operational objectives remain gated decisions/deliverables. D-11 RPC-only financial mutations remains Proposed pending G2; all documents now state this consistently. All JSON monetary values are specified as integer minor-unit decimal strings as the proposed API contract.
+This does not mean every design decision is approved. Category-vs-ledger mapping, FX carrying-value method/provider, pocket eligible funds, household base currency/role matrix, final column-level data dictionary, retention/deletion and operational objectives remain gated decisions/deliverables. D-09 category-as-dimension, D-10 baseline posting matrix, D-11 RPC-only financial mutation boundary, D-12 money wire format, D-13 SQL-view read model, D-14 archive policy, D-15 partial refunds, and D-16 pocket eligible-funds policy are recorded as approved in the decision register. Exact G2 implementation contracts and remaining FX/household decisions are still gated.
 
-Phase 0B remains not started. Phase 2 ledger implementation and household work remain unauthorized until their respective gates and explicit approval.
+Phase 0B scaffold is on draft PR #5 and awaits local verification/review; it is not merged. Ledger implementation remains blocked by G2, household implementation by G5, and production by G7.
