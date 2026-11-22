@@ -47,7 +47,7 @@ Only the initial frontend foundation is scaffolded on PR #5 and remains unmerged
 
 ## 3. Existing Prototype
 
-The root `index.html` is a static HTML/CSS/vanilla-JS prototype using localStorage demo data. It is a UX reference only. Its known limitations and bugs are documented in the original Phase 0A status history and must not be carried into the real app.
+On `main`, `index.html` is the static HTML/CSS/vanilla-JS prototype using localStorage demo data. On the PR #5 feature branch it has been moved unchanged to `prototype/index.html`. It is a UX reference only. Its known limitations and bugs are documented in the original Phase 0A status history and must not be carried into the real app.
 
 ADR-012 requires preserving the prototype byte-for-byte at `prototype/index.html`. This relocation is complete on PR #5's feature branch (blob SHA `cedf21040191bb93c4cfa4ddcdce4d9c6c8e0f07`) and is not yet merged.
 
@@ -82,7 +82,7 @@ Implementation design reviews remain listed in `docs/ARCHITECTURE.md` §9.3 and 
 | 2026-11-13 | 0A | Created README, PROJECT_STATUS and Phase 0A documentation. |
 | 2026-11-13 | 0A | Approved and merged ADR-001 to ADR-013. |
 | 2026-11-21 | 0A | Approved and merged ADR-014 for Cloudflare Workers + Static Assets. |
-| 2026-11-21 | Planning | Prepared proposed V1 Master Development Package on `docs/master-development-package-v1`; documentation only; no app code, dependencies, migrations, cloud resources or deployment. |
+| 2026-11-21 | Planning | Prepared V1 Master Development Package on `docs/master-development-package-v1` in draft PR #4; documentation only. |
 | 2026-11-21 | Planning | Added Database & Finance Architecture Design Pack (conceptual ERD, CoA, posting, RPC, RLS, FX, household and migration plan) to draft PR #4; approved decisions and remaining gate deliverables are distinguished. |
 | 2026-11-22 | 0B | Initial React/Vite foundation scaffold created on feature branch and draft PR #5; local lockfile/toolchain checks remain outstanding. |
 
