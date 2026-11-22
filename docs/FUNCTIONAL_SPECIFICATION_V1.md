@@ -343,3 +343,12 @@ Do not invent unresolved behaviour. Refer to PRODUCT_OWNER_DECISIONS_V1.md and t
 - After successful payment posting, provide an in-app confirmation and show any remaining unpaid amount/status.
 - Users may adjust or disable debt reminders. V1 notification channel is in-app only; email/push/other channels need separate approval.
 - Notifications are informational and must never initiate a payment or financial posting. Timezone scheduling, deduplication, delivery/retry and event integration remain implementation design deliverables (D-17.14 Option A approved 2026-11-22).
+
+
+### Long-term overdue aging requirements — D-17.15
+- Classify each outstanding installment by elapsed overdue duration: **1–30 days**, **31–60 days**, **61–90 days**, and **more than 90 days** (**Long-term Overdue**).
+- This is an informational aging classification only. Do not create a separate escalation workflow or infer legal default, credit-bureau status or lender classification.
+- Aging must not alter lender terms, amount owed, repayment schedule, or waive/write off debt.
+- A partially paid installment remains in its aging band while an unpaid remainder is outstanding. Stop aging it as outstanding after full payment or another approved resolution.
+- Calculate from the installment due date using elapsed days overdue, not calendar-month labels. Existing D-17.14 reminders remain unchanged; D-17.15 adds no extra escalation alerts.
+- Exact due-date/timezone boundary and lender-approved deferment/restructuring treatment remain implementation design details (D-17.15 Option A approved 2026-11-22).
