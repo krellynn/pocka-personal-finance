@@ -180,9 +180,10 @@ Until this package and its dependency plan are approved, do not expand implement
 - [ ] Product owner approves the consolidated domain/API contract plan.
 - [ ] Product owner approves the database/RLS design-review outputs before migrations.
 - [ ] Product owner approves the 24–26-week implementation target and parallel workstream model.
-- [ ] Product owner explicitly authorizes Phase 0B implementation to begin.
+- [x] Product owner separately authorized the initial Phase 0B React/Vite foundation scaffold, tracked on draft PR #5.
+- [ ] Complete G0 review and obtain any required authorization before expanding the foundation scope beyond that initial scaffold.
 
-Only after these gates are satisfied should implementation work start.
+The initial scaffold is limited pre-work; broader foundation implementation follows the G0 gate.
 
 
 ## 12. Architecture review remediation and readiness boundary
@@ -191,7 +192,7 @@ The 2026-11-21 review findings R-01–R-12 and dispositions are recorded in ARCH
 
 The review closes specification gaps where a safe technical contract can be documented (paired-entry recovery, idempotency, FX RLS separation, contribution posting pair, table-level RLS baseline, money wire format and reversal semantics). It does not close owner decisions for category/CoA model, FX carrying-value method/provider, pocket eligible funds, household currency/roles, or deletion/retention. The final column-level data dictionary remains a G2 deliverable.
 
-**Readiness:** G0, G2, G5, G6 and G7 remain separate approval gates. No code, migration, cloud resource or deployment is authorized by this documentation update. Phase 0B begins only after G0 approval and explicit implementation authorization; ledger work begins only after G2 approval.
+**Readiness:** G0, G2, G5, G6 and G7 remain separate approval gates. The initial Phase 0B scaffold is separately authorized on draft PR #5; this documentation update does not authorize additional implementation, migrations, cloud resources or deployment. Further foundation work must satisfy G0; ledger work begins only after G2 approval.
 
 
 ## G0 decisions recorded (2026-11-22)
