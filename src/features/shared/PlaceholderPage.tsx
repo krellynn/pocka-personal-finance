@@ -1,0 +1,3 @@
+import { Construction } from "lucide-react";
+import { useTranslation } from "react-i18next";
+export function PlaceholderPage({titleKey}:{titleKey:string}){const {t}=useTranslation();return <section className="space-y-5"><div><p className="eyebrow">{t("shell.preview")}</p><h1 className="mt-2 text-3xl font-bold tracking-tight">{t(titleKey)}</h1></div><div className="surface-card grid min-h-[340px] place-items-center text-center"><div className="max-w-sm"><div className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-yellow/40"><Construction size={24}/></div><h2 className="mt-4 text-base font-semibold">{t("shared.comingSoon")}</h2><p className="mt-2 text-sm leading-6 text-muted">{t("shared.foundationOnly")}</p></div></div></section>;}

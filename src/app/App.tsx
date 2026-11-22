@@ -1,0 +1,5 @@
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { AppShell } from "./AppShell";
+import { DashboardPage } from "../features/dashboard/DashboardPage";
+import { PlaceholderPage } from "../features/shared/PlaceholderPage";
+export function App() { return <BrowserRouter><Routes><Route element={<AppShell/>}><Route index element={<DashboardPage/>}/><Route path="transactions" element={<PlaceholderPage titleKey="nav.transactions"/>}/><Route path="accounts" element={<PlaceholderPage titleKey="nav.accounts"/>}/><Route path="pockets" element={<PlaceholderPage titleKey="nav.pockets"/>}/><Route path="budgets" element={<PlaceholderPage titleKey="nav.budgets"/>}/><Route path="goals" element={<PlaceholderPage titleKey="nav.goals"/>}/><Route path="debts" element={<PlaceholderPage titleKey="nav.debts"/>}/><Route path="reports" element={<PlaceholderPage titleKey="nav.reports"/>}/><Route path="settings" element={<PlaceholderPage titleKey="nav.settings"/>}/><Route path="*" element={<Navigate to="/" replace/>}/></Route></Routes></BrowserRouter>; }
