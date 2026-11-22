@@ -131,7 +131,7 @@ Everything in the target architecture: app scaffold, auth, workspaces, ledger, a
 | 2026-11-13 | 0 (review) | PR #1 review corrections: Git/PR status brought up to date in PROJECT_STATUS and README. |
 | 2026-11-13 | 0A | Phase 0A documentation merged into `main` via PR #1 (merge commit `0bea092`). |
 | 2026-11-21 | 0 (architecture decision) | Approved ADR-014: Cloudflare Workers + Static Assets supersedes the Vercel hosting portion of BL-04. Documentation-only update; no application or deployment changes. |
-| 2026-11-21 | 0 (documentation merge) | Merged PR #3 into `main` (squash commit `c804e33`); synchronized README, PROJECT_STATUS, and ROADMAP after merge. Phase 0B remains unstarted. |
+| 2026-11-21 | 0 (documentation merge) | Merged PR #3 into `main` (squash commit `c804e33`); synchronized README, PROJECT_STATUS, and ROADMAP after merge. The initial Phase 0B scaffold is tracked separately in draft PR #5. |
 
 
 ## 9. Phase 0B foundation update (2026-11-22)
@@ -141,5 +141,11 @@ Everything in the target architecture: app scaffold, auth, workspaces, ledger, a
 - Added bigint minor-unit currency formatter and Asia/Jakarta date helper with unit tests.
 - Moved the original prototype to `prototype/index.html` unchanged (blob SHA `cedf21040191bb93c4cfa4ddcdce4d9c6c8e0f07`).
 - Added Wrangler Static Assets SPA fallback configuration. No Cloudflare resources or deployment were created.
-- Local install/test/build/lint were not completed in this execution. Generate package-lock.json and run all checks before merge.
+- Local install/test/build/lint were not completed in this execution. Generate package-lock.json and run all checks before merge. Draft PR #4 separately carries the V1 planning package and architecture review.
 - No Supabase resources, Auth, schema, migrations, RLS, ledger or RPCs were created. G2 remains a hard gate.
+
+## 10. V1 planning package status
+
+- Draft PR #4 (docs/master-development-package-v1) contains the V1 Master Development Package, finance architecture design pack, product-owner decisions and architecture review remediation.
+- The package records D-09 to D-16 approved decisions separately from remaining G2/G5/G6/G7 implementation deliverables.
+- PR #4 and PR #5 remain separate draft pull requests. Neither is merged.
