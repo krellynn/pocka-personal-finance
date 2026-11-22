@@ -23,6 +23,8 @@ These apply from the application foundation phase onward. Where tooling is named
 
 ## 2. Coding Conventions (Proposed)
 
+- Package manager: **npm** (Approved: D-01, 2026-11-22). Commit one package-lock.json; use npm ci in CI.
+
 - Formatter: Prettier. Linter: ESLint (typescript-eslint, react-hooks). Both run in CI.
 - Files: `PascalCase.tsx` for components, `camelCase.ts` for modules, `kebab-case` for route folders.
 - Code identifiers and comments in English. **All user-facing copy goes through the central i18n layer. Never hardcode user-facing strings in components.** The default UI language is **Bahasa Indonesia**, and English is a planned additional language (Approved: [ADR-011](decisions/ADR-011-ui-localization.md)).
@@ -30,6 +32,8 @@ These apply from the application foundation phase onward. Where tooling is named
 - No magic numbers for money or dates. Use named helpers and constants.
 
 ## 3. TypeScript Standards (Proposed)
+
+- Localization library: **i18next + react-i18next** (Approved: D-02, 2026-11-22). Default locale id; all user-facing strings live in central catalogues.
 
 - `strict: true`, `noUncheckedIndexedAccess: true`, `exactOptionalPropertyTypes: true`.
 - No `any`. Use `unknown` and narrow it. No non-null `!` without a comment explaining why.
@@ -60,7 +64,7 @@ src/
 ```
 
 - Components never call Supabase directly. They go through `features/*/api`.
-- Server state is managed by a query cache library (**Pending**: TanStack Query proposed). Avoid global client stores for server data.
+- Server state is managed by **TanStack Query** (Approved: D-03, 2026-11-22). Keep transient UI state local; avoid a global client store for server data.
 - Forms use React Hook Form with the Zod resolver.
 - Design tokens follow the approved palette as CSS variables with light and dark themes. Icons come from **Lucide** only.
 - Accessibility: keyboard navigable, visible focus, labelled inputs, WCAG AA contrast, and colour is never the only signal for positive/negative amounts (also use `+`/`−`).
@@ -176,7 +180,10 @@ Additionally:
 - When two requirements conflict, document the conflict and ask. Don't resolve it silently.
 
 
-## 11. Cloudflare Deployment (Platform Approved; Workflow Proposed)
+## 11. Cloudflare Deployment (Platform Approved; Preview Workflow Approved)
+
+- Initial preview plan: Cloudflare Workers Free, subject to a current limits check; reassess before production based on measured usage (D-06, 2026-11-22).
+- Preview workflow: GitHub-linked PR/branch previews with isolated preview credentials/data. Production deploys from main remain manually gated (D-07, 2026-11-22).
 
 - Frontend hosting uses **Cloudflare Workers + Static Assets** (Approved: [ADR-014](decisions/ADR-014-cloudflare-workers-hosting.md)); Vercel is not the approved hosting platform.
 - For the Vite application, use the stable Cloudflare Vite plugin as the preferred integration direction; re-check supported versions before implementation. The plugin automatically includes the built client assets, so do not add a duplicate `assets.directory` setting without a specific need.
@@ -191,13 +198,6 @@ Additionally:
 
 
 ---
-
-## 11. Financial mutation gate clarification (2026-11-21)
-
-The earlier §7 statement that financial mutations “go through RPC functions” describes the recommended target architecture, not an already approved implementation decision. D-11 remains Proposed and requires explicit product-owner approval at G2. No financial write path may be implemented before that gate. If approved, balance-affecting commands use constrained PostgreSQL RPCs (or an explicitly approved equivalent server-side transaction boundary), with identity/membership/role checks, atomic posting, required row locks, canonical idempotency and audit events. Direct client writes to journal tables are not permitted under the proposed target.
-
-Money remains BIGINT minor units in PostgreSQL and bigint in TypeScript. All monetary JSON values use decimal integer strings in minor units, not conditional number/string serialization. This is a future API contract clarification, not a change to ADR-001 storage.
-
 
 ## 6. Financial Mutation Boundary (Approved — D-11, 2026-11-21)
 
