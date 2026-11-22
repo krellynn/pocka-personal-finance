@@ -184,6 +184,15 @@ Every workspace-scoped operation must validate active membership and relevant ro
 - The lender-provided repayment/amortization schedule is the source of truth for scheduled installment amounts and principal/interest/fee components where supplied. Users provide or import it during debt setup. POCKA follows lender figures rather than independently calculating interest. If the schedule is missing or insufficient to determine a split, do not guess; route the payment through a defined exception/manual reconciliation flow. Schedule import/validation, revisions and partial-payment allocation gaps remain G2 deliverables (D-17.6 Option A approved 2026-11-22).
 - For regular scheduled debt installments, users enter one total payment amount only. Debt terms and lender-provided repayment schedule/details are configured during initial debt setup; POCKA automatically allocates each posted payment to principal, interest and fees from that lender-backed configuration. Principal reduces outstanding debt; interest and fees are recorded as expenses. The component split must reconcile exactly to the total. Do not invent a split if the setup/schedule data is insufficient; use a defined exception flow. Early settlement continues to follow the lender-quoted payoff process (D-17.4 Option A approved 2026-11-22; D-17.2 remains applicable to early settlement).
 
+
+### Debt interaction requirements — D-37
+- The default debt journey must be concise and task-oriented; progressive disclosure is used for advanced lender data, schedule changes, estimates, partial-payment reconciliation and exceptions.
+- A regular installment payment uses one total payment amount as the primary user input. POCKA applies the approved lender-backed allocation without requiring the user to manually split principal, interest and fees in the ordinary path.
+- Debt setup still requires sufficient lender-backed schedule/term information to support correct allocation. If data is unavailable or incomplete, explain the gap and use the approved exception or estimate-review path; do not fabricate a split.
+- Estimates, user-adjusted estimates and revised/partially paid schedule handling must follow D-17.6 and D-17.8–D-17.11, including clear provenance and explicit confirmation before posting an estimate.
+- Show the installment's total due, amount paid, unpaid remainder and status in plain language. A partial payment remains visibly **Partially Paid** until resolved.
+- Advanced details must be available when needed, but must not burden every user with accounting terminology or edge-case controls. Simplicity is a presentation rule, not permission to bypass financial validation or approved accounting behaviour.
+
 ## 11. Recurring transactions
 
 ### Capabilities
