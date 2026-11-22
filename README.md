@@ -130,9 +130,9 @@ Read in this order:
 8. [`docs/ROADMAP.md`](docs/ROADMAP.md): phased delivery plan
 
 
-### V1 Master Development Package — draft PR #4
+### V1 Master Development Package — PR #4
 
-The documentation package is maintained on a separate branch and reviewed independently:
+The V1 planning package covers:
 
 1. [Master Development Package](docs/MASTER_DEVELOPMENT_PACKAGE_V1.md)
 2. [Functional Specification](docs/FUNCTIONAL_SPECIFICATION_V1.md)
@@ -145,7 +145,7 @@ The documentation package is maintained on a separate branch and reviewed indepe
 9. [Database & Finance Architecture Design Pack](docs/DATABASE_AND_FINANCE_ARCHITECTURE_DESIGN_PACK_V1.md)
 10. [Architecture Review Report](docs/ARCHITECTURE_REVIEW_REPORT_V1.md)
 
-See [draft PR #4](https://github.com/krellynn/pocka-personal-finance/pull/4). These files become available on `main` after PR #4 is merged.
+See [PR #4](https://github.com/krellynn/pocka-personal-finance/pull/4) for review history. The planning package files are included under `docs/`.
 
 **AI coding agents:** read `README.md`, `PROJECT_STATUS.md`, and `docs/DECISION_REGISTER.md` first, then follow `docs/DEVELOPMENT_GUIDELINES.md` §10. Never silently override an APPROVED ADR.
 

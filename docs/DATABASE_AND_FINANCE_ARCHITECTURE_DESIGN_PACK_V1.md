@@ -1,6 +1,6 @@
  POCKA V1 — Database & Finance Architecture Design Pack
 
-**Status:** Proposed design baseline — pending product-owner and architecture review  
+**Status:** Product-owner approved planning baseline — detailed implementation contracts and gate-specific decisions remain open
 **Prepared:** 2026-11-21  
 **Scope:** Documentation only. This is not executable SQL, generated types, migrations, or authorization policy code.
 
@@ -8,7 +8,7 @@
 
 ## 1. Purpose and design status
 
-This pack converts the conceptual `DATABASE_SPECIFICATION.md`, `ARCHITECTURE.md`, `HOUSEHOLD_PRIVACY.md`, ADR-001…ADR-014 and the V1 decision backlog into a reviewable implementation design.
+This pack converts the conceptual `DATABASE_SPECIFICATION.md`, `ARCHITECTURE.md`, `HOUSEHOLD_PRIVACY.md`, ADR-001…ADR-014 and the V1 decision backlog into an approved planning baseline for future implementation design.
 
 It covers:
 1. Canonical entity relationships and data ownership.

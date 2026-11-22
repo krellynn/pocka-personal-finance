@@ -186,4 +186,10 @@ Keep D-11/D-12 synchronized across DEVELOPMENT_GUIDELINES.md, DOMAIN_AND_API_CON
 
 **D-07 — preview workflow:** Use GitHub-linked Cloudflare preview deployments for PRs/branches, with preview credentials and data isolated from production. Production deployment from main remains manually gated and requires separate release authorization. No deployment is authorized by this decision set.
 
-These decisions resolve G0 defaults only. They do not by themselves approve additional Phase 0B scope, cloud-resource creation, secrets configuration, migrations or deployment. The initial React/Vite foundation scaffold has separate explicit authorization and merged via PR #5; hosted resources, financial migrations and deployment remain separately gated.
+These decisions resolve G0 defaults only. They do not by themselves authorize additional implementation, cloud-resource creation, secrets configuration, migrations or deployment. The initial React/Vite foundation scaffold has separate explicit authorization and merged via PR #5; hosted resources, financial migrations and deployment remain separately gated.
+
+## 4. Product-owner review record
+
+**Approved 2026-11-22:** The product owner confirmed the PR #4 planning checklist: V1 scope and exclusions, the decision register as recorded (including deferrals), the domain/API plan, the conceptual database/RLS baseline, the delivery target and parallel model, and G0 foundation defaults.
+
+Decisions explicitly marked pending remain deferred to their gates: D-18/D-19 to G2, D-20–D-25 to G5, D-26–D-30 to G6, and production lifecycle/operations decisions to G7. This approval accepts planning baselines; it does not authorize financial implementation, migrations, credentials, cloud resources or deployment.

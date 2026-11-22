@@ -1,6 +1,6 @@
 # POCKA V1 — Master Development Package
 
-**Status:** Proposed execution baseline — pending product-owner review  
+**Status:** Product-owner approved planning baseline; implementation remains gated
 **Prepared:** 2026-11-21  
 **Strategy:** Complete planning + controlled parallel workstreams  
 **Target capacity:** 15–20 focused hours/week (3–4 hours/day, 5 days/week)  
@@ -164,7 +164,7 @@ A feature is done only when all applicable items are true:
 
 Repository status updated 2026-11-22: Phase 0A docs and ADR-001…ADR-014 are merged. The initial Phase 0B React/Vite scaffold merged via PR #5 (`a930ad7`); the lockfile is committed and local typecheck/lint/test/build passed. The original prototype was moved unchanged. No Supabase project, financial schema, migrations, CI, Cloudflare account setup or deployment has been created.
 
-Until this package and its dependency plan are approved, do not expand implementation beyond the Phase 0B foundation merged via PR #5. Do not begin financial-core, household or import implementation before the relevant gates.
+This package is approved as a planning baseline. Keep work within the separately authorized Phase 0B foundation scope; any additional implementation needs a scoped task authorization. Do not begin financial-core, household or import implementation before the relevant gates.
 
 - Do not create additional application features outside the authorized foundation scope.
 - Do not modify the preserved prototype.
@@ -175,15 +175,15 @@ Until this package and its dependency plan are approved, do not expand implement
 
 ## 12. Approval checklist
 
-- [ ] Product owner confirms V1 scope and exclusions.
-- [ ] Product owner resolves or explicitly defers blocking decisions in `PRODUCT_OWNER_DECISIONS_V1.md`.
-- [ ] Product owner approves the consolidated domain/API contract plan.
-- [ ] Product owner approves the database/RLS design-review outputs before migrations.
-- [ ] Product owner approves the 24–26-week implementation target and parallel workstream model.
+- [x] Product owner confirms V1 scope and exclusions (approved 2026-11-22).
+- [x] Product owner approves the decisions and deferrals recorded in `PRODUCT_OWNER_DECISIONS_V1.md` (2026-11-22); D-18/D-19 remain for G2, D-20–D-25 for G5, D-26–D-30 for G6, and production decisions for G7.
+- [x] Product owner approves the consolidated domain/API contract plan as a planning baseline (2026-11-22); exact RPC names, signatures and grants remain G2 deliverables.
+- [x] Product owner approves the database/RLS design-review outputs as a conceptual baseline (2026-11-22); executable schema, final CoA, exact RLS SQL and migration plan remain G2 deliverables before migrations.
+- [x] Product owner approves the 24–26-week implementation target and parallel workstream model (2026-11-22).
 - [x] Product owner separately authorized the initial Phase 0B React/Vite foundation scaffold, merged via PR #5.
-- [ ] Complete G0 review and obtain any required authorization before expanding the foundation scope beyond that initial scaffold.
+- [x] Product owner reviewed and approved G0 foundation defaults D-01–D-07 (2026-11-22). Further work still requires a scoped task authorization; G2, G5, G6 and G7 gates remain unchanged.
 
-The initial scaffold is limited pre-work; broader foundation implementation follows the G0 gate.
+**Approval record (2026-11-22):** The product owner confirmed the checklist items above in the referenced conversation. Approval confirms the documented V1 planning baseline and deferrals; it does not turn deferred decisions into approved ones or authorize migrations, credentials, cloud resources, or production deployment.
 
 
 ## 12. Architecture review remediation and readiness boundary
@@ -192,7 +192,7 @@ The 2026-11-21 review findings R-01–R-12 and dispositions are recorded in ARCH
 
 The review closes specification gaps where a safe technical contract can be documented (paired-entry recovery, idempotency, FX RLS separation, contribution posting pair, table-level RLS baseline, money wire format and reversal semantics). It does not close owner decisions for category/CoA model, FX carrying-value method/provider, pocket eligible funds, household currency/roles, or deletion/retention. The final column-level data dictionary remains a G2 deliverable.
 
-**Readiness:** G0, G2, G5, G6 and G7 remain separate approval gates. The initial Phase 0B scaffold is separately authorized and merged via PR #5; this documentation update does not authorize additional implementation, migrations, cloud resources or deployment. Further foundation work must satisfy G0; ledger work begins only after G2 approval.
+**Readiness:** The G0 foundation defaults and planning baseline were approved on 2026-11-22. G2, G5, G6 and G7 remain separate approval gates. The initial Phase 0B scaffold is merged via PR #5; this documentation approval does not authorize new implementation, migrations, cloud resources or deployment. Further foundation work needs a scoped task authorization; ledger work begins only after G2 approval.
 
 
 ## G0 decisions recorded (2026-11-22)
@@ -206,4 +206,4 @@ The delegated G0 defaults are recorded in PRODUCT_OWNER_DECISIONS_V1.md:
 - Cloudflare Workers Free for initial preview after limits check (D-06).
 - GitHub-linked PR previews with isolated preview environment; production deployment remains manually gated (D-07).
 
-These defaults do not authorize Phase 0B implementation, cloud-resource creation, secrets configuration, migrations or deployment. G0 approval checklist items concerning product scope, consolidated domain/API contracts and database/RLS design remain separate gates.
+The G0 planning defaults are approved as a baseline. They do not authorize additional Phase 0B implementation, cloud-resource creation, secrets configuration, migrations or deployment. Final domain/API details, executable database/RLS specifications and migrations remain subject to G2 and scoped task approval.

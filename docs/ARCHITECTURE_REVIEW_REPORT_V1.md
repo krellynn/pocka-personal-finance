@@ -64,5 +64,5 @@ G0 may be approved independently of G2 if its own scope and dependencies are com
 
 ## 6. Scope and verification
 
-This was a documentation review and remediation. No application code or infrastructure was changed by PR #4. The Phase 0B scaffold has since merged via PR #5 and passed local verification. PR #4 remains open and draft pending product-owner review; the reviewed documents distinguish recorded decisions from remaining G2/G5/G6/G7 implementation deliverables.
+This was a documentation review and remediation. No application code or infrastructure was changed by PR #4. The Phase 0B scaffold has since merged via PR #5 and passed local verification. The product owner approved the planning checklist on 2026-11-22; the reviewed documents distinguish recorded decisions from remaining G2/G5/G6/G7 implementation deliverables.
 

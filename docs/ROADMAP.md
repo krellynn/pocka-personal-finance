@@ -93,9 +93,9 @@ Bank aggregation, investment tracking, unrealized FX revaluation (ADR-006), opti
 
 ---
 
-## Accelerated V1 Execution Overlay (Proposed; pending package approval)
+## Accelerated V1 Execution Overlay (Planning target approved; detailed sequence proposed)
 
-The approved phase sequence and each phase's exit criteria above remain authoritative. To shorten calendar time without bypassing financial/security gates, use controlled parallel workstreams as specified in [PARALLEL_EXECUTION_PLAN_V1.md](PARALLEL_EXECUTION_PLAN_V1.md).
+The approved phase sequence and each phase's exit criteria above remain authoritative. The product owner approved the planning target and controlled parallel-workstream model on 2026-11-22. The week-by-week sequence below remains proposed. To shorten calendar time without bypassing financial/security gates, use controlled parallel workstreams as specified in [PARALLEL_EXECUTION_PLAN_V1.md](PARALLEL_EXECUTION_PLAN_V1.md).
 
 **Planning target:** 26–28 calendar weeks from approval of the complete planning package, including approximately 2 weeks for planning/design lock and 24–26 weeks for implementation and release work, assuming 15–20 focused hours per week. This is an estimate, not a commitment.
 
@@ -111,4 +111,4 @@ The approved phase sequence and each phase's exit criteria above remain authorit
 | Weeks 23–24 | Phase 6 import/reconciliation | Parser, staging, preview, duplicate and partial-commit tests |
 | Weeks 25–26 | Stabilization/release candidate | Full E2E, accessibility, security, backup and deployment rehearsal |
 
-This overlay does not authorize work beyond the separately authorized initial Phase 0B React/Vite scaffold merged via PR #5. Further foundation work follows Master Development Package review, Gate G0 and explicit scope authorization. Parallel work is limited to independent tasks with stable contracts; migrations, ledger semantics and privacy boundaries remain gated and reviewed.
+Approval of the schedule and workstream model does not authorize implementation beyond the initial Phase 0B React/Vite scaffold merged via PR #5. Further foundation tasks need scoped authorization. Parallel work is limited to independent tasks with stable contracts; migrations, ledger semantics and privacy boundaries remain gated and reviewed.

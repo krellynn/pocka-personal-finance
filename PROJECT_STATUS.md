@@ -12,10 +12,11 @@
 | `main` (origin) | Phase 0B foundation scaffold merged via PR #5 (`a930ad7`); no financial integration |
 | Completed PR | [PR #1](https://github.com/krellynn/pocka-personal-finance/pull/1), `docs/phase-0-architecture` → `main`, **merged** |
 | Completed PR | [PR #3](https://github.com/krellynn/pocka-personal-finance/pull/3), `docs/cloudflare-workers-deployment` → `main`, **merged** |
+| Planning PR | [PR #4](https://github.com/krellynn/pocka-personal-finance/pull/4), `docs/master-development-package-v1` → `main`, **product-owner approved 2026-11-22** |
 | Completed PR | [PR #5](https://github.com/krellynn/pocka-personal-finance/pull/5), `feat/phase-0b-application-foundation` → `main`, **merged** (squash `a930ad7`) |
 | Remote | `origin` → `https://github.com/krellynn/pocka-personal-finance.git` |
 
-The Phase 0A documentation and ADR-001 to ADR-014, plus the initial Phase 0B scaffold, are merged into `main`. Draft PR #4 contains the V1 planning package and remains under product-owner review.
+The Phase 0A documentation and ADR-001 to ADR-014, plus the initial Phase 0B scaffold, are merged into `main`. The V1 planning package is documented under `docs/`; the product owner approved its planning checklist on 2026-11-22. G2/G5/G6/G7 implementation gates remain in force.
 
 ---
 
@@ -134,6 +135,7 @@ Everything beyond the initial app shell remains unimplemented: Auth, workspaces,
 | 2026-11-21 | 0 (architecture decision) | Approved ADR-014: Cloudflare Workers + Static Assets supersedes the Vercel hosting portion of BL-04. Documentation-only update; no application or deployment changes. |
 | 2026-11-21 | 0 (documentation merge) | Merged PR #3 into `main` (squash commit `c804e33`); synchronized README, PROJECT_STATUS, and ROADMAP after merge. |
 | 2026-11-22 | 0B (foundation) | Merged PR #5 into `main` (squash commit `a930ad7`); generated npm lockfile and verified tests, typecheck, lint, and build. |
+| 2026-11-22 | V1 planning | Product owner approved scope, documented decision dispositions, domain/API planning baseline, conceptual database/RLS baseline, schedule and G0 defaults. Deferred gates remain open. |
 
 
 ## 9. Phase 0B foundation update (2026-11-22)
@@ -143,11 +145,11 @@ Everything beyond the initial app shell remains unimplemented: Auth, workspaces,
 - Added bigint minor-unit currency formatter and Asia/Jakarta date helper with unit tests.
 - Moved the original prototype to `prototype/index.html` unchanged (blob SHA `cedf21040191bb93c4cfa4ddcdce4d9c6c8e0f07`).
 - Added Wrangler Static Assets SPA fallback configuration. No Cloudflare resources or deployment were created.
-- Generated and committed `package-lock.json`; `npm test` (5 tests), `npm run typecheck`, `npm run lint`, and `npm run build` passed locally before and after merge. Draft PR #4 separately carries the V1 planning package and architecture review.
+- Generated and committed `package-lock.json`; `npm test` (5 tests), `npm run typecheck`, `npm run lint`, and `npm run build` passed locally before and after merge. The V1 planning package and architecture review are documented under `docs/`.
 - No Supabase resources, Auth, schema, migrations, RLS, ledger or RPCs were created. G2 remains a hard gate.
 
 ## 10. V1 planning package status
 
-- Draft PR #4 (docs/master-development-package-v1) contains the V1 Master Development Package, finance architecture design pack, product-owner decisions and architecture review remediation; owner approval checklist items remain open.
+- The V1 Master Development Package, finance architecture design pack, product-owner decisions and architecture review remediation are documented under `docs/`; the planning checklist was approved on 2026-11-22. Detailed finance, household, import and production deliverables remain gated.
 - The package records D-09 to D-16 approved decisions separately from remaining G2/G5/G6/G7 implementation deliverables.
-- PR #5 is merged. PR #4 remains draft pending product-owner review and approval of the checklist items in its Master Development Package.
+- PR #5 is merged. Product-owner approval of the V1 planning baseline is recorded; pending choices and implementation gates remain as documented.
