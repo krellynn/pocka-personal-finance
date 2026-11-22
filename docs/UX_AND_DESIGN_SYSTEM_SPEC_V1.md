@@ -213,3 +213,11 @@ Do not treat the current static prototype's palette, labels, hard-coded values o
 - Do not add a separate escalation flow or additional alerts under D-17.15; retain the existing D-17.14 reminder policy.
 - Keep the unpaid remainder visible for partially paid installments and remove the outstanding-aging label after full payment or approved resolution.
 - Avoid changing balances, lender terms or repayment schedules based on the aging label.
+
+
+### Extra debt repayment UX — D-17.16
+- Provide a distinct **Extra Repayment** action separate from paying the scheduled installment.
+- Explain that the recorded extra amount reduces the principal tracked by POCKA and that POCKA recalculates its remaining future schedule.
+- Make clear that this is POCKA's internal calculation and is not synchronized or confirmed by the lender.
+- Show the extra repayment in debt payment history as its own event; preserve prior schedule versions and posted history.
+- Do not expose unresolved calculation choices as if they were confirmed lender terms. Exact recalculation and interest/fee treatment remain G2 design deliverables.
