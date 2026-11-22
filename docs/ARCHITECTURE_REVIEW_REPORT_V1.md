@@ -9,7 +9,7 @@
 
 The review identified 12 findings spanning household paired posting, departed-member access, idempotency, FX rate visibility, contribution accounting, category/CoA design, RLS coverage, FX carrying value, money serialization, reversal semantics, data dictionary completeness, and pocket eligible funds.
 
-The planning documents have been updated to make technical contracts explicit and remove cross-document ambiguity. This is **not** a declaration that all 12 are fully approved or implementation-ready. Findings that require a product/finance choice remain open and are called out below. The package remains conceptual; no executable SQL, application code, dependencies, migrations, cloud resources, secrets, or deployments were created.
+The planning documents have been updated to make technical contracts explicit and remove cross-document ambiguity. This is **not** a declaration that all 12 findings are implementation-ready. Approved product decisions are distinguished from remaining detailed contracts and implementation gates below. The package remains conceptual; no executable SQL, application code, dependencies, migrations, cloud resources, secrets, or deployments were created.
 
 ## 2. Finding-by-finding disposition
 
@@ -31,7 +31,7 @@ The planning documents have been updated to make technical contracts explicit an
 ## 3. Cross-document consistency corrections
 
 - D-11 RPC-only financial mutations is **Approved — Option A**. The mutation boundary is binding; exact RPC names/signatures, grants, function security hardening, RLS SQL and tests remain G2 deliverables.
-- D-12 money wire format is a proposed contract: all JSON monetary values use integer minor-unit decimal strings. It is not a change to the approved BIGINT database storage decision in ADR-001.
+- D-12 money wire format is **Approved — Option A**: all JSON monetary values use integer minor-unit decimal strings. This does not change the approved BIGINT database storage decision in ADR-001.
 - The earlier unique (workspace_id, idempotency_key) is no longer treated as a complete request contract; operation scope and payload fingerprint are required.
 - Global and workspace manual FX rate access are separated.
 - Contribution-intent direct payment now has both personal and household accounting legs.
