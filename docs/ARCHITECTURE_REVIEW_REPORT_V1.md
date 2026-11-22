@@ -2,7 +2,7 @@
 
 **Review date:** 2026-11-21  
 **Scope:** Documentation-only review of PR #4 and its database/finance design package  
-**Disposition:** Remediated at design level; owner decisions and implementation gates remain open  
+**Disposition:** Design findings remediated; approved owner decisions recorded; implementation gates and detailed contracts remain open  
 **PR:** https://github.com/krellynn/pocka-personal-finance/pull/4
 
 ## 1. Executive result
@@ -20,17 +20,17 @@ The planning documents have been updated to make technical contracts explicit an
 | R-03 | Critical | Transaction uniqueness and command idempotency did not match | Canonical (workspace, operation, key) plus request fingerprint; replay identical retries; reject changed payload; serialize concurrent duplicates | Contract documented |
 | R-04 | High | Global and workspace manual FX rates shared broad RLS treatment | Separate global published read-only policy from exact-workspace manual-rate policy; controlled ingestion/writes | Policy boundary documented; SQL/RLS tests required |
 | R-05 | High | Personal side of contribution-intent direct payment absent from posting matrix | Personal Dr Household Contribution expense / Cr Personal asset paired with household Dr Household expense / Cr Member Contribution Funding; not a household cash transfer | Posting pair documented; CoA classification still pending |
-| R-06 | High | Category as ledger account vs dimension unresolved | Two mutually exclusive models documented; dimension model recommended for review, not approved | Owner/finance decision pending G2 |
+| R-06 | High | Category as ledger account vs dimension unresolved | Categories remain separate dimensions; CoA holds stable accounting/control accounts | **Resolved by approved D-09 Option A**; final CoA mappings remain G2 work |
 | R-07 | High | RLS matrix too coarse | Added table-by-table SELECT/INSERT/UPDATE/DELETE baseline with visibility and lifecycle boundaries | Baseline documented; convert to exact SQL/grants/tests before G2/G5 |
 | R-08 | High | FX carrying-value method unresolved | Weighted-average, FIFO and transaction-linked methods retained as candidates with required worked cases | Owner/finance decision pending |
-| R-09 | Medium | Money wire format inconsistent across documents | All JSON monetary values are integer minor-unit decimal strings, regardless of size; parse to bigint | Proposed API contract aligned; ratification at G2 |
+| R-09 | Medium | Money wire format inconsistent across documents | All JSON monetary values are integer minor-unit decimal strings, regardless of size; parse to bigint | **Resolved by approved D-12 Option A**; detailed payload schemas remain G2 work |
 | R-10 | High | Reversal semantics did not cover multiple journal entries | Transaction-level complete reversal set, locking, one-time constraint, immutable original, linked replacement and idempotent retry | Contract documented; posting tests required |
 | R-11 | High | Data dictionary not migration-ready | Defined mandatory column/type/nullability/default/constraint/index/FK/RLS/write-path/lifecycle/retention/test deliverable | Remains required G2 deliverable |
-| R-12 | High | Pocket eligible-funds edge cases unresolved | Option A remains recommended review candidate; overdraft, FX, archived account, shortfall, concurrency and household funds enumerated | Owner decision pending before pocket implementation |
+| R-12 | High | Pocket eligible-funds edge cases unresolved | Option A defines eligible funds and shortfall handling; FX conversion details remain tied to D-18/D-19 | **Resolved by approved D-16 Option A**; FX basis and implementation tests remain gated |
 
 ## 3. Cross-document consistency corrections
 
-- D-11 RPC-only financial mutations remains **Proposed**, pending explicit G2 approval. DEVELOPMENT_GUIDELINES, DOMAIN_AND_API_CONTRACTS, PRODUCT_OWNER_DECISIONS and the finance design pack now state this consistently.
+- D-11 RPC-only financial mutations is **Approved — Option A**. The mutation boundary is binding; exact RPC names/signatures, grants, function security hardening, RLS SQL and tests remain G2 deliverables.
 - D-12 money wire format is a proposed contract: all JSON monetary values use integer minor-unit decimal strings. It is not a change to the approved BIGINT database storage decision in ADR-001.
 - The earlier unique (workspace_id, idempotency_key) is no longer treated as a complete request contract; operation scope and payload fingerprint are required.
 - Global and workspace manual FX rate access are separated.
@@ -55,8 +55,8 @@ The column-level data dictionary and exact SQL RLS policy expressions are requir
 
 ## 5. Readiness assessment
 
-- **G0 — Foundation:** separate review still required for package manager, i18n/query strategy, onboarding/workspace creation, Supabase/Cloudflare setup and preview workflow. This review does not authorize Phase 0B.
-- **G2 — Finance core:** not ready for approval until D-09–D-18 decisions, final data dictionary, exact RLS expressions, RPC contracts and worked tests are approved.
+- **G0 — Foundation:** foundational choices D-01–D-07 are recorded as approved in the decision register. Phase 0B scaffold work exists on draft PR #5; lockfile generation and local typecheck/lint/test/build plus integration/preview checks remain outstanding. This report does not approve or merge PR #5.
+- **G2 — Finance core:** approved decisions D-09–D-16 provide the product/architecture baseline. G2 is still not ready for financial implementation until remaining choices (including D-18/D-19), final data dictionary, exact RLS expressions, RPC contracts/grants/security hardening and worked tests are completed and reviewed.
 - **G5 — Household:** not ready until D-20–D-25 are resolved and pair/exit/privacy acceptance tests pass.
 - **G6 — Import:** format, limits, dedupe, retention and partial-commit decisions remain open.
 - **G7 — Production:** deletion/retention, backup/restore, monitoring and deployment rehearsal remain open.
@@ -65,5 +65,5 @@ G0 may be approved independently of G2 if its own scope and dependencies are com
 
 ## 6. Scope and verification
 
-This was a documentation review and remediation. No application code or infrastructure was changed. The PR remains open and draft; it has not been merged. A follow-up read-only consistency check was completed on the updated branch. The reviewed documents contain the new contracts and readiness boundaries; remaining items are explicitly recorded as pending owner decisions or required gate deliverables.
+This was a documentation review and remediation. No application code or infrastructure was changed by PR #4. The Phase 0B scaffold is being developed separately on draft PR #5; it has not been merged and remains pending local verification. PR #4 remains open and draft; it has not been merged. The reviewed documents distinguish approved product decisions from remaining G2/G5/G6/G7 implementation deliverables.
 
