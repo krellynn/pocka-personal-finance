@@ -1,7 +1,7 @@
 # POCKA — Project Status
 
-**Last updated:** 2026-11-22
-**Current phase:** Phase 0B — Application Foundation. The initial React/Vite scaffold merged into `main` via PR #5 (squash commit `a930ad7`, 2026-11-22). Local install, tests, typecheck, lint, and build passed. Authentication, profiles, and personal-workspace provisioning have not started. Phase 0A remains complete.
+**Last updated:** 2026-11-23
+**Current phase:** Phase 0B — Application Foundation. The initial React/Vite scaffold merged into `main` via PR #5 (squash commit `a930ad7`, 2026-11-22). Local install, tests, typecheck, lint, and build passed. Phase 0B Auth (email/password, profiles, personal-workspace provisioning, identity RLS) is implemented and verified against the **local** Supabase stack only; uncommitted at time of writing. Phase 0A remains complete.
 
 ---
 
@@ -29,13 +29,13 @@ The Phase 0A documentation and ADR-001 to ADR-014, plus the initial Phase 0B sca
 | Static design prototype (`prototype/index.html`) | **Moved unchanged** and merged via PR #5 (ADR-012) |
 | React/Vite application | **Initial scaffold merged; local checks pass** |
 | Dependencies / `package.json` | **Manifest and `package-lock.json` committed; install verified** |
-| Supabase project, Auth, database | **Not started** |
-| SQL migrations / RLS policies | **Not started** |
+| Supabase project, Auth, database | **Local only**: Supabase CLI stack (Docker); email/password Auth wired into the app. No hosted project |
+| SQL migrations / RLS policies | **Identity only** (`supabase/migrations/20261123120000_identity_foundation.sql`): profiles, workspaces, workspace_members, user_settings + RLS. No financial migrations (G2) |
 | Double-entry ledger | **Not started** (specified only) |
 | Household workspace & privacy | **Not started** (specified only) |
 | Multi-currency | **Not started** (specified only) |
 | Import / reconciliation | **Not started** (specified only) |
-| Tests | **5 unit tests pass** |
+| Tests | **21 Vitest tests** (unit, component, local-Supabase integration) + **40 pgTAP** database tests pass |
 | Cloudflare Workers hosting/deployment | **Static Assets config scaffolded; no account/deployment configured** |
 | CI | **Not configured** |
 
@@ -136,6 +136,7 @@ Everything beyond the initial app shell remains unimplemented: Auth, workspaces,
 | 2026-11-21 | 0 (documentation merge) | Merged PR #3 into `main` (squash commit `c804e33`); synchronized README, PROJECT_STATUS, and ROADMAP after merge. |
 | 2026-11-22 | 0B (foundation) | Merged PR #5 into `main` (squash commit `a930ad7`); generated npm lockfile and verified tests, typecheck, lint, and build. |
 | 2026-11-22 | V1 planning | Product owner approved scope, documented decision dispositions, domain/API planning baseline, conceptual database/RLS baseline, schedule and G0 defaults. Deferred gates remain open. |
+| 2026-11-23 | 0B (auth) | With explicit product-owner approval of the local identity migration: local Supabase CLI stack, identity migration + RLS, trusted idempotent personal-workspace provisioning (D-04), email/password Auth UI, password reset, session restore, protected routes. Verified locally only. |
 
 
 ## 9. Phase 0B foundation update (2026-11-22)
@@ -153,3 +154,13 @@ Everything beyond the initial app shell remains unimplemented: Auth, workspaces,
 - The V1 Master Development Package, finance architecture design pack, product-owner decisions and architecture review remediation are documented under `docs/`; the planning checklist was approved on 2026-11-22. Detailed finance, household, import and production deliverables remain gated.
 - The package records D-09 to D-16 approved decisions separately from remaining G2/G5/G6/G7 implementation deliverables.
 - PR #5 is merged. Product-owner approval of the V1 planning baseline is recorded; pending choices and implementation gates remain as documented.
+
+## 11. Phase 0B Auth update (2026-11-23)
+
+- Local-only Supabase (CLI v3, Docker; D-05). `.env.local` holds the local URL and publishable key only; no hosted project, secrets or deployment.
+- Migration `20261123120000_identity_foundation.sql`: `profiles`, `workspaces` (`personal_owner_id UNIQUE`), `workspace_members`, `user_settings`; RLS on all four, explicit column-scoped grants to `authenticated`, nothing for `anon`, no client insert/delete.
+- D-04 provisioning: `AFTER INSERT ON auth.users` trigger calls `private.provision_user` (SECURITY DEFINER, empty search_path, ON CONFLICT DO NOTHING) inside the sign-up transaction; retries cannot duplicate. Existing users are backfilled.
+- Workspace/membership FKs to `auth.users` intentionally have no cascade: user deletion fails until the pending data-deletion decision is made.
+- App: sign-up/sign-in/sign-out, forgot/update password (`/update-password`), session restore via `INITIAL_SESSION`, `RequireAuth`/`GuestOnly` guards, display name in the shell, TanStack cache cleared on sign-out. All UI text in `id.json`.
+- Verification: `npx supabase test db` (40 pgTAP: provisioning, idempotency, two-user isolation incl. guessed IDs, roles, anon), Vitest 21 (incl. supabase-js integration, skipped without a local stack), manual browser run of every flow incl. Mailpit reset link.
+- Not done: profile editing UI, OAuth (pending decision), household co-member visibility (G5), CI.

@@ -21,7 +21,7 @@
 ## Local setup
 1. Install Node.js 20.19+.
 2. Run `npm ci` for a reproducible install; use `npm install` only when changing dependencies and the lockfile.
-3. Copy .env.example to .env.local only after a development Supabase project is configured; values are blank.
+3. Start local Supabase (Docker Desktop required): `npx supabase start -x realtime,storage-api,imgproxy,edge-runtime,logflare,vector,supavisor`. Copy .env.example to .env.local and fill `VITE_SUPABASE_URL` / `VITE_SUPABASE_PUBLISHABLE_KEY` from `npx supabase status` (API URL and publishable key only). Run `npx supabase test db` for the RLS tests; local emails (password reset) appear in Mailpit at http://127.0.0.1:54324.
 4. Run npm run dev.
 5. Run npm run typecheck, npm test, npm run lint and npm run build.
 
