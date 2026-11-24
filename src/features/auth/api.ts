@@ -51,3 +51,10 @@ export async function fetchProfile(userId: string) {
   if (error) throw error;
   return data;
 }
+
+export async function updateDisplayName(userId: string, displayName: string) {
+  const { data, error } = await supabase.from("profiles").update({ display_name: displayName }).eq("id", userId).select("id").maybeSingle();
+  if (error) throw error;
+  // RLS or a missing row turns the update into a silent no-op; report it as a failure.
+  if (!data) throw new Error("Profile not updated");
+}

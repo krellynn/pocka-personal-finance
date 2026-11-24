@@ -163,4 +163,5 @@ Everything beyond the initial app shell remains unimplemented: Auth, workspaces,
 - Workspace/membership FKs to `auth.users` intentionally have no cascade: user deletion fails until the pending data-deletion decision is made.
 - App: sign-up/sign-in/sign-out, forgot/update password (`/update-password`), session restore via `INITIAL_SESSION`, `RequireAuth`/`GuestOnly` guards, display name in the shell, TanStack cache cleared on sign-out. All UI text in `id.json`.
 - Verification: `npx supabase test db` (40 pgTAP: provisioning, idempotency, two-user isolation incl. guessed IDs, roles, anon), Vitest 21 (incl. supabase-js integration, skipped without a local stack), manual browser run of every flow incl. Mailpit reset link.
-- Not done: profile editing UI, OAuth (pending decision), household co-member visibility (G5), CI.
+- Profile editing: `/settings` updates `display_name` (trimmed, 1–80 chars; a 0-row update is reported as a failure); shell name refreshes via the shared `useProfile` query.
+- Not done: OAuth (pending decision), household co-member visibility (G5), CI.

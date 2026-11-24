@@ -209,7 +209,7 @@ function AuthLayout({ title, subtitle, children }: PropsWithChildren<{ title: st
 
 type FieldProps = ComponentProps<"input"> & { label: string; error?: string | undefined; hint?: string };
 
-function Field({ label, error, hint, ...input }: FieldProps) {
+export function Field({ label, error, hint, ...input }: FieldProps) {
   const id = useId();
   const describedBy = [error && `${id}-error`, hint && `${id}-hint`].filter(Boolean).join(" ") || undefined;
   return (
@@ -228,13 +228,13 @@ function Field({ label, error, hint, ...input }: FieldProps) {
   );
 }
 
-function ServerError({ messageKey }: { messageKey: string | null }) {
+export function ServerError({ messageKey }: { messageKey: string | null }) {
   const { t } = useTranslation();
   if (!messageKey) return null;
   return <p role="alert" className="rounded-xl bg-red-50 px-3.5 py-2.5 text-sm text-red-800">{t(messageKey)}</p>;
 }
 
-function Submit({ busy, children }: PropsWithChildren<{ busy: boolean }>) {
+export function Submit({ busy, children }: PropsWithChildren<{ busy: boolean }>) {
   const { t } = useTranslation();
   return (
     <button type="submit" disabled={busy} className="w-full rounded-xl bg-ink px-4 py-3 text-sm font-semibold text-white shadow-soft transition disabled:cursor-wait disabled:opacity-60">
