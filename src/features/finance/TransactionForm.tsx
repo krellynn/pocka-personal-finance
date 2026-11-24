@@ -9,7 +9,7 @@ import { parseAmountInput } from "../../lib/money/parseAmountInput";
 import { Field, ServerError, Submit } from "../auth/AuthPages";
 import { callLedger, fetchAccounts, fetchCategories } from "./api";
 import { financeErrorKey } from "./errors";
-import { financeKeys } from "./keys";
+import { financeKeys, invalidateLedger } from "./keys";
 import { money } from "./money";
 import { SelectField } from "./ui";
 import { useIdempotencyKey } from "./useIdempotencyKey";
@@ -63,11 +63,7 @@ export function TransactionForm({ workspaceId, timeZone }: { workspaceId: string
       idem.settle();
       setSaved(true);
       form.reset({ ...defaultValues, kind: form.getValues("kind"), accountId: form.getValues("accountId") });
-      return Promise.all(
-        [financeKeys.accounts(workspaceId), financeKeys.feed(workspaceId), financeKeys.periodTotals(workspaceId)].map((queryKey) =>
-          queryClient.invalidateQueries({ queryKey }),
-        ),
-      );
+      return invalidateLedger(queryClient, workspaceId);
     },
     onError: (error) => idem.settle(error),
   });

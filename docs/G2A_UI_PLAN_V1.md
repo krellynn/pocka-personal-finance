@@ -21,4 +21,5 @@ Screens for accounts and transactions on top of the merged G2a ledger (PR #10, #
 
 ## Known limits (accepted for G2a)
 - Edit cannot remove an income source once set (would need a migration).
+- Opening-balance amount cannot be edited in the UI: `transaction_feed.amount` is unsigned, so a negative opening balance could flip sign. Fix later by adding a signed amount to the view (migration). Date and note stay editable.
 - Feed shows max 100 rows per month, no pagination; indexes on `reverses_id`/`refund_of_id` may be needed later (migration, deferred).
