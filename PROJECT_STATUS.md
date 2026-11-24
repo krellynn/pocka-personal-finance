@@ -177,4 +177,11 @@ Everything beyond the initial app shell remains unimplemented: Auth, workspaces,
 - Migrations `20261125100000`–`100300`: currencies; ledger core (ledger/financial accounts, categories, income sources, transactions, journal entries/lines, idempotency, audit; immutability and deferred balance triggers; RLS and column grants; system accounts + 12 default categories on provisioning, backfilled); posting RPCs (`create_financial_account`, `set_financial_account_archived`, `post_income`, `post_expense`, `post_transfer`, `post_refund`, `reverse_transaction`, `edit_transaction`); read models (`account_balances`, `transaction_feed`, `period_totals`), money as text.
 - Deviation, approved spec intent: an edit that changes only category, income source or note updates in place (dimensions, D-09); other edits reverse and repost.
 - Verified: `npx supabase db reset` from empty plus `npx supabase test db`, 118 pgTAP tests (worked example, D-14/D-15 guards, idempotency incl. replay and conflict, edits, reconciliation, two-user isolation, viewer and anon, immutability). Reviewed twice by architecture-reviewer; all findings fixed.
-- Not done yet: two-session concurrency tests (double refund, archive vs post, duplicate key), the transactions/accounts UI.
+- Concurrency: done in PR #11 (`ledger.concurrency.integration.test.ts`, duplicate key, double refund, archive vs post, double reversal; 5 rounds each).
+
+## 14. G2a finance screens (2026-11-25)
+
+- Plan: `docs/G2A_UI_PLAN_V1.md` (approved). PRs #12–#17: foundation (amount parsing, error map, idempotency key), Accounts page, record income/expense/transfer, transaction list + month totals, refund/reverse/edit row actions, live Dashboard summary.
+- Money stays a digit string on the wire and `BigInt` in code; idempotency key reused only to retry an unchanged form after a network failure.
+- Verified: Vitest 80, typecheck and lint clean, each PR code-reviewed and findings fixed; manual run against local Supabase: create account, expense, refund, reversal, transfer, edit (reverse + repost), dashboard totals, and a lost-response retry that posted exactly once.
+- Known limits: opening-balance amount and income source cannot be changed from the UI (both need a migration); list shows at most 100 rows per month; no cash-flow chart yet; balances shown in IDR only (G2a scope).
