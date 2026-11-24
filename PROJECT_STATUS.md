@@ -103,7 +103,7 @@ Everything beyond the initial app shell remains unimplemented: Auth, workspaces,
 
 ## 6. Next Milestones
 
-1. **Continue Phase 0B.** PR #5 merged the initial scaffold; local tests/build/lint/typecheck pass. Remaining: visual/accessibility review and G0 review. Get explicit scope authorization before Auth/profile/personal-workspace provisioning in an isolated development environment.
+1. **Phase 0B foundation done locally**: auth, profile, personal workspace (PR #6) and the G0 visual/accessibility review (section 12). Cloudflare preview review waits for G7.
 2. **G2 finance design**: complete CoA, posting rules, FX and debt calculations, RPC contracts, RLS, grants, data dictionary and migration plan before any ledger migrations or financial implementation.
 3. **G5/G6/G7**: retain separate gates for household, import and production readiness.
 
@@ -165,3 +165,9 @@ Everything beyond the initial app shell remains unimplemented: Auth, workspaces,
 - Verification: `npx supabase test db` (40 pgTAP: provisioning, idempotency, two-user isolation incl. guessed IDs, roles, anon), Vitest 21 (incl. supabase-js integration, skipped without a local stack), manual browser run of every flow incl. Mailpit reset link.
 - Profile editing: `/settings` updates `display_name` (trimmed, 1–80 chars; a 0-row update is reported as a failure); shell name refreshes via the shared `useProfile` query.
 - Not done: OAuth (pending decision), household co-member visibility (G5), CI.
+
+## 12. G0 visual/accessibility review (2026-11-24)
+
+- Checked Dashboard, a placeholder page and Settings at desktop and 375 px: `lang="id"`, one `h1` per page, labelled navs, every control named, no horizontal scroll, no small touch targets.
+- Fixed: focus outline `--focus` (#2F6FC0, 5.05:1; dark #78A9E8); input border `--field` (3.8:1) with a focus border/ring; `--muted` #5E7066 (4.85:1 on canvas); removed the non-functional Search/Notifications buttons; phones reach Budgets/Goals/Debts/Reports through "Menu lainnya" on Settings (links shared in `src/app/navigation.ts`).
+- Remaining: Cloudflare preview review (needs a deployment, G7), dark mode is not enabled anywhere yet, Budgets and Reports share an icon, per-page document titles and a skip link.
