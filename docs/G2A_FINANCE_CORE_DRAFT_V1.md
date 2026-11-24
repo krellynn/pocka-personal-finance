@@ -1,6 +1,6 @@
 # POCKA — G2a Finance Core Design (Draft for Product-Owner Review)
 
-**Status:** DRAFT, 2026-11-24, revised after an architecture review (12 findings applied). Nothing here is approved. No migration, RPC or ledger code may be written from this document until the product owner approves it (G2 gate) and answers §10.
+**Status:** **APPROVED by the product owner on 2026-11-25** (G2a gate), including every §10 recommendation Q1–Q13 as written. Revised after an architecture review (12 findings applied) before approval. Implementation follows §9; FX, debt and adjustments remain gated (G2b/G2c).
 **Builds on:** `DATABASE_AND_FINANCE_ARCHITECTURE_DESIGN_PACK_V1.md` (the "Design Pack"), approved decisions D-09 to D-16 and D-17.1–D-17.16, ADR-001 to ADR-014. Where this draft is more specific than the Design Pack it is a proposal, not an override.
 
 ## 1. Why a split gate (G2a)

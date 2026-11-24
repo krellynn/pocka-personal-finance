@@ -193,3 +193,22 @@ These decisions resolve G0 defaults only. They do not by themselves authorize ad
 **Approved 2026-11-22:** The product owner confirmed the PR #4 planning checklist: V1 scope and exclusions, the decision register as recorded (including deferrals), the domain/API plan, the conceptual database/RLS baseline, the delivery target and parallel model, and G0 foundation defaults.
 
 Decisions explicitly marked pending remain deferred to their gates: D-18/D-19 to G2, D-20–D-25 to G5, D-26–D-30 to G6, and production lifecycle/operations decisions to G7. This approval accepts planning baselines; it does not authorize financial implementation, migrations, credentials, cloud resources or deployment.
+
+### G2a decision record (2026-11-25)
+
+**Approved:** the product owner approved `G2A_FINANCE_CORE_DRAFT_V1.md` as the G2a gate: a single-currency (workspace base currency) personal finance core covering the CoA, posting rules, data dictionary, RPC contracts, idempotency/lock order, RLS/grants, read models and migration plan in that document, and every §10 recommendation as written:
+- Q1 split G2 into G2a now, with FX/debt/adjustments later;
+- Q2 card purchase via `post_expense`, bill payment via `post_transfer`;
+- Q3 asset balances may go negative and are shown clearly;
+- Q4 seed default Indonesian categories;
+- Q5 category renames show the current name in history (no snapshot);
+- Q6 edit means reverse plus repost in one command;
+- Q7 no future-dated transactions;
+- Q8 opening-balance corrections via edit;
+- Q9 unarchive allowed;
+- Q10 writer roles owner/admin/editor;
+- Q11 card cash advance deferred;
+- Q12 refunds may go to another active same-currency account, defaulting to the original;
+- Q13 negative opening balances allowed.
+
+This authorizes the G2a migrations and posting RPCs in that document's §9. It does not approve D-17 debt detail, D-18, D-19, adjustment posting rules, household (G5), import (G6) or production (G7).
