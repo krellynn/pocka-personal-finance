@@ -2,7 +2,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 import { z } from "zod";
+import { links, mobileBarCount } from "../../app/navigation";
 import { updateDisplayName } from "../auth/api";
 import { Field, ServerError, Submit } from "../auth/AuthPages";
 import { useAuth } from "../auth/useAuth";
@@ -46,6 +48,20 @@ export function SettingsPage() {
           <Submit busy={save.isPending || profile.isPending}>{t("settings.profile.submit")}</Submit>
         </form>
       </div>
+      {/* Phones have no sidebar: reach the sections that do not fit the bottom bar from here. */}
+      <nav aria-label={t("settings.moreMenu")} className="surface-card lg:hidden">
+        <h2 className="section-title">{t("settings.moreMenu")}</h2>
+        <ul className="mt-3 divide-y divide-[color:var(--line)]">
+          {links.slice(mobileBarCount).map(({ to, key, icon: Icon }) => (
+            <li key={to}>
+              <Link to={to} className="flex items-center gap-3 py-3 text-sm font-medium">
+                <Icon size={18} aria-hidden="true" />
+                {t(key)}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </nav>
     </section>
   );
 }

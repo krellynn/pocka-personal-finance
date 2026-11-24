@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
+import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import "../../i18n";
 import * as api from "../auth/api";
@@ -17,7 +18,9 @@ function renderPage() {
   vi.mocked(api.fetchProfile).mockResolvedValue({ display_name: "Ana", avatar_url: null });
   render(
     <QueryClientProvider client={new QueryClient()}>
-      <SettingsPage />
+      <MemoryRouter>
+        <SettingsPage />
+      </MemoryRouter>
     </QueryClientProvider>,
   );
   return screen.findByDisplayValue("Ana");
@@ -49,5 +52,13 @@ describe("SettingsPage", () => {
     fireEvent.change(input, { target: { value: "Ana C" } });
     fireEvent.click(screen.getByRole("button", { name: "Simpan perubahan" }));
     expect(await screen.findByRole("alert")).toHaveTextContent("Gagal menyimpan. Coba lagi.");
+  });
+
+  it("lists the sections that do not fit the phone bottom bar", async () => {
+    await renderPage();
+    const more = screen.getByRole("navigation", { name: "Menu lainnya" });
+    for (const name of ["Anggaran", "Target", "Utang", "Laporan"]) {
+      expect(within(more).getByRole("link", { name })).toBeInTheDocument();
+    }
   });
 });

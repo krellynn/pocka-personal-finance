@@ -219,7 +219,7 @@ export function Field({ label, error, hint, ...input }: FieldProps) {
         id={id}
         aria-invalid={error ? true : undefined}
         aria-describedby={describedBy}
-        className="mt-1.5 w-full rounded-xl border border-line bg-white px-3.5 py-2.5 text-sm text-ink outline-none transition focus:border-blue focus:ring-2 focus:ring-blue/40 aria-[invalid=true]:border-red-400"
+        className="mt-1.5 w-full rounded-xl border border-[color:var(--field)] bg-white px-3.5 py-2.5 text-sm text-ink outline-none transition focus:border-[color:var(--focus)] focus:ring-2 focus:ring-[color:var(--focus)] aria-[invalid=true]:border-red-400"
         {...input}
       />
       {hint && <p id={`${id}-hint`} className="mt-1.5 text-xs text-muted">{hint}</p>}
