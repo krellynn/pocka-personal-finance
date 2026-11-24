@@ -43,3 +43,26 @@ export async function callLedger(fn: string, args: Record<string, unknown>): Pro
   if (error) throw error;
   return data as unknown as LedgerResult;
 }
+
+export const FEED_LIMIT = 100;
+
+/** Transactions in a date range, newest first. shortcut: capped at 100 rows, add paging once a month can exceed it. */
+export async function fetchFeed(workspaceId: string, from: string, to: string) {
+  const { data, error } = await supabase
+    .from("transaction_feed")
+    .select("id, kind, occurred_on, amount, note, account_name, counter_account_name, category_name, is_reversed, refunded_amount, reverses_id")
+    .eq("workspace_id", workspaceId)
+    .gte("occurred_on", from)
+    .lte("occurred_on", to)
+    .order("occurred_on", { ascending: false })
+    .order("created_at", { ascending: false })
+    .range(0, FEED_LIMIT - 1);
+  if (error) throw error;
+  return data;
+}
+
+export async function fetchPeriodTotals(workspaceId: string, from: string, to: string) {
+  const { data, error } = await supabase.rpc("period_totals", { p_workspace_id: workspaceId, p_from: from, p_to: to });
+  if (error) throw error;
+  return data;
+}
