@@ -212,3 +212,7 @@ Decisions explicitly marked pending remain deferred to their gates: D-18/D-19 to
 - Q13 negative opening balances allowed.
 
 This authorizes the G2a migrations and posting RPCs in that document's §9. It does not approve D-17 debt detail, D-18, D-19, adjustment posting rules, household (G5), import (G6) or production (G7).
+
+### G3a decision record (2026-11-25)
+
+The product owner approved `docs/G3A_POCKETS_BUDGETS_DRAFT_V1.md` in full ("Setuju semua"), including the table-shape deviations from DATABASE_SPECIFICATION §3.5/§3.6 and the recommended answers Q1–Q13: calendar-month budgets on expense categories only; pocket archive requires balance 0; optional display-only pocket target; no backdated pocket movements; no automatic pocket deduction on expenses; later-month refunds reduce the refund's month; no rollover (copy last month instead); past-month budget edits allowed and audited; account archive does not affect pockets; card spending does not reduce Unallocated (D-16); last writer wins on budgets; no budgets for archived categories. This authorizes the G3a migrations and RPCs in that document. It does not approve goals, recurring, debt, FX, household, import or production.

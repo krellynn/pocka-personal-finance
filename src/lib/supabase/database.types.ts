@@ -39,6 +39,12 @@ export type Database = {
       foreignKeyName: "audit_logs_workspace_id_fkey"
       columns: ["workspace_id"]
 isOneToOne: false
+      referencedRelation: "pocket_summary"
+      referencedColumns: ["workspace_id"]
+    },{
+      foreignKeyName: "audit_logs_workspace_id_fkey"
+      columns: ["workspace_id"]
+isOneToOne: false
       referencedRelation: "workspaces"
       referencedColumns: ["id"]
     }
@@ -73,6 +79,12 @@ isOneToOne: false
       foreignKeyName: "financial_accounts_workspace_id_fkey"
       columns: ["workspace_id"]
 isOneToOne: false
+      referencedRelation: "pocket_summary"
+      referencedColumns: ["workspace_id"]
+    },{
+      foreignKeyName: "financial_accounts_workspace_id_fkey"
+      columns: ["workspace_id"]
+isOneToOne: false
       referencedRelation: "workspaces"
       referencedColumns: ["id"]
     },{
@@ -99,6 +111,12 @@ isOneToOne: false
       foreignKeyName: "financial_commands_workspace_id_fkey"
       columns: ["workspace_id"]
 isOneToOne: false
+      referencedRelation: "pocket_summary"
+      referencedColumns: ["workspace_id"]
+    },{
+      foreignKeyName: "financial_commands_workspace_id_fkey"
+      columns: ["workspace_id"]
+isOneToOne: false
       referencedRelation: "workspaces"
       referencedColumns: ["id"]
     }
@@ -116,6 +134,12 @@ isOneToOne: false
                   }
                   Relationships: [
                     {
+      foreignKeyName: "income_sources_workspace_id_fkey"
+      columns: ["workspace_id"]
+isOneToOne: false
+      referencedRelation: "pocket_summary"
+      referencedColumns: ["workspace_id"]
+    },{
       foreignKeyName: "income_sources_workspace_id_fkey"
       columns: ["workspace_id"]
 isOneToOne: false
@@ -197,6 +221,100 @@ isOneToOne: false
       foreignKeyName: "ledger_accounts_workspace_id_fkey"
       columns: ["workspace_id"]
 isOneToOne: false
+      referencedRelation: "pocket_summary"
+      referencedColumns: ["workspace_id"]
+    },{
+      foreignKeyName: "ledger_accounts_workspace_id_fkey"
+      columns: ["workspace_id"]
+isOneToOne: false
+      referencedRelation: "workspaces"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"pocket_movements": {
+                  Row: {
+                    "amount": number,"created_at": string,"created_by": string,"currency": string,"from_pocket_id": string | null,"id": string,"note": string | null,"to_pocket_id": string | null,"workspace_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "amount": number,"created_at"?: string,"created_by": string,"currency": string,"from_pocket_id"?: string | null,"id"?: string,"note"?: string | null,"to_pocket_id"?: string | null,"workspace_id": string
+                  }
+                  Update: {
+                    "amount"?: number,"created_at"?: string,"created_by"?: string,"currency"?: string,"from_pocket_id"?: string | null,"id"?: string,"note"?: string | null,"to_pocket_id"?: string | null,"workspace_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "pocket_movements_currency_fkey"
+      columns: ["currency"]
+isOneToOne: false
+      referencedRelation: "currencies"
+      referencedColumns: ["code"]
+    },{
+      foreignKeyName: "pocket_movements_workspace_id_fkey"
+      columns: ["workspace_id"]
+isOneToOne: false
+      referencedRelation: "pocket_summary"
+      referencedColumns: ["workspace_id"]
+    },{
+      foreignKeyName: "pocket_movements_workspace_id_fkey"
+      columns: ["workspace_id"]
+isOneToOne: false
+      referencedRelation: "workspaces"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "pocket_movements_workspace_id_from_pocket_id_fkey"
+      columns: ["workspace_id","from_pocket_id"]
+isOneToOne: false
+      referencedRelation: "pocket_balances"
+      referencedColumns: ["workspace_id","id"]
+    },{
+      foreignKeyName: "pocket_movements_workspace_id_from_pocket_id_fkey"
+      columns: ["workspace_id","from_pocket_id"]
+isOneToOne: false
+      referencedRelation: "pockets"
+      referencedColumns: ["workspace_id","id"]
+    },{
+      foreignKeyName: "pocket_movements_workspace_id_to_pocket_id_fkey"
+      columns: ["workspace_id","to_pocket_id"]
+isOneToOne: false
+      referencedRelation: "pocket_balances"
+      referencedColumns: ["workspace_id","id"]
+    },{
+      foreignKeyName: "pocket_movements_workspace_id_to_pocket_id_fkey"
+      columns: ["workspace_id","to_pocket_id"]
+isOneToOne: false
+      referencedRelation: "pockets"
+      referencedColumns: ["workspace_id","id"]
+    }
+                  ]
+                },"pockets": {
+                  Row: {
+                    "archived_at": string | null,"created_at": string,"currency": string,"id": string,"name": string,"target_amount": number | null,"updated_at": string,"workspace_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "archived_at"?: string | null,"created_at"?: string,"currency": string,"id"?: string,"name": string,"target_amount"?: number | null,"updated_at"?: string,"workspace_id": string
+                  }
+                  Update: {
+                    "archived_at"?: string | null,"created_at"?: string,"currency"?: string,"id"?: string,"name"?: string,"target_amount"?: number | null,"updated_at"?: string,"workspace_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "pockets_currency_fkey"
+      columns: ["currency"]
+isOneToOne: false
+      referencedRelation: "currencies"
+      referencedColumns: ["code"]
+    },{
+      foreignKeyName: "pockets_workspace_id_fkey"
+      columns: ["workspace_id"]
+isOneToOne: false
+      referencedRelation: "pocket_summary"
+      referencedColumns: ["workspace_id"]
+    },{
+      foreignKeyName: "pockets_workspace_id_fkey"
+      columns: ["workspace_id"]
+isOneToOne: false
       referencedRelation: "workspaces"
       referencedColumns: ["id"]
     }
@@ -228,6 +346,12 @@ isOneToOne: false
                   }
                   Relationships: [
                     {
+      foreignKeyName: "transaction_categories_workspace_id_fkey"
+      columns: ["workspace_id"]
+isOneToOne: false
+      referencedRelation: "pocket_summary"
+      referencedColumns: ["workspace_id"]
+    },{
       foreignKeyName: "transaction_categories_workspace_id_fkey"
       columns: ["workspace_id"]
 isOneToOne: false
@@ -287,6 +411,12 @@ isOneToOne: false
       foreignKeyName: "transactions_workspace_id_fkey"
       columns: ["workspace_id"]
 isOneToOne: false
+      referencedRelation: "pocket_summary"
+      referencedColumns: ["workspace_id"]
+    },{
+      foreignKeyName: "transactions_workspace_id_fkey"
+      columns: ["workspace_id"]
+isOneToOne: false
       referencedRelation: "workspaces"
       referencedColumns: ["id"]
     },{
@@ -337,6 +467,12 @@ isOneToOne: false
       foreignKeyName: "user_settings_default_workspace_id_fkey"
       columns: ["default_workspace_id"]
 isOneToOne: false
+      referencedRelation: "pocket_summary"
+      referencedColumns: ["workspace_id"]
+    },{
+      foreignKeyName: "user_settings_default_workspace_id_fkey"
+      columns: ["default_workspace_id"]
+isOneToOne: false
       referencedRelation: "workspaces"
       referencedColumns: ["id"]
     }
@@ -354,6 +490,12 @@ isOneToOne: false
                   }
                   Relationships: [
                     {
+      foreignKeyName: "workspace_members_workspace_id_fkey"
+      columns: ["workspace_id"]
+isOneToOne: false
+      referencedRelation: "pocket_summary"
+      referencedColumns: ["workspace_id"]
+    },{
       foreignKeyName: "workspace_members_workspace_id_fkey"
       columns: ["workspace_id"]
 isOneToOne: false
@@ -394,9 +536,49 @@ isOneToOne: false
       foreignKeyName: "financial_accounts_workspace_id_fkey"
       columns: ["workspace_id"]
 isOneToOne: false
+      referencedRelation: "pocket_summary"
+      referencedColumns: ["workspace_id"]
+    },{
+      foreignKeyName: "financial_accounts_workspace_id_fkey"
+      columns: ["workspace_id"]
+isOneToOne: false
       referencedRelation: "workspaces"
       referencedColumns: ["id"]
     }
+                  ]
+                },"pocket_balances": {
+                  Row: {
+                    "archived_at": string | null,"balance": string | null,"created_at": string,"currency": string,"id": string,"name": string,"target_amount": string | null,"workspace_id": string
+                  }
+                  ComputedFields: never
+                  Relationships: [
+                    {
+      foreignKeyName: "pockets_currency_fkey"
+      columns: ["currency"]
+isOneToOne: false
+      referencedRelation: "currencies"
+      referencedColumns: ["code"]
+    },{
+      foreignKeyName: "pockets_workspace_id_fkey"
+      columns: ["workspace_id"]
+isOneToOne: false
+      referencedRelation: "pocket_summary"
+      referencedColumns: ["workspace_id"]
+    },{
+      foreignKeyName: "pockets_workspace_id_fkey"
+      columns: ["workspace_id"]
+isOneToOne: false
+      referencedRelation: "workspaces"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"pocket_summary": {
+                  Row: {
+                    "allocated": string | null,"eligible_funds": string | null,"is_shortfall": boolean | null,"unallocated": string | null,"workspace_id": string
+                  }
+                  ComputedFields: never
+                  Relationships: [
+                    
                   ]
                 },"transaction_feed": {
                   Row: {
@@ -410,6 +592,12 @@ isOneToOne: false
 isOneToOne: false
       referencedRelation: "currencies"
       referencedColumns: ["code"]
+    },{
+      foreignKeyName: "transactions_workspace_id_fkey"
+      columns: ["workspace_id"]
+isOneToOne: false
+      referencedRelation: "pocket_summary"
+      referencedColumns: ["workspace_id"]
     },{
       foreignKeyName: "transactions_workspace_id_fkey"
       columns: ["workspace_id"]
@@ -451,11 +639,23 @@ isOneToOne: false
                 }
           }
           Functions: {
-            "create_financial_account":
+            "allocate_to_pocket":
+{ Args: { "p_amount": string,"p_idempotency_key": string,"p_note"?: string,"p_pocket_id": string,"p_workspace_id": string }; Returns: Json
+                           },
+"create_financial_account":
 { Args: { "p_idempotency_key": string,"p_kind": string,"p_name": string,"p_opened_on"?: string,"p_opening_balance"?: string,"p_workspace_id": string }; Returns: Json
+                           },
+"create_pocket":
+{ Args: { "p_idempotency_key": string,"p_name": string,"p_target_amount"?: string,"p_workspace_id": string }; Returns: Json
+                           },
+"deallocate_from_pocket":
+{ Args: { "p_amount": string,"p_idempotency_key": string,"p_note"?: string,"p_pocket_id": string,"p_workspace_id": string }; Returns: Json
                            },
 "edit_transaction":
 { Args: { "p_account_id"?: string,"p_amount"?: string,"p_category_id"?: string,"p_counter_account_id"?: string,"p_idempotency_key": string,"p_income_source_id"?: string,"p_note"?: string,"p_occurred_on"?: string,"p_transaction_id": string,"p_workspace_id": string }; Returns: Json
+                           },
+"move_between_pockets":
+{ Args: { "p_amount": string,"p_from_pocket_id": string,"p_idempotency_key": string,"p_note"?: string,"p_to_pocket_id": string,"p_workspace_id": string }; Returns: Json
                            },
 "period_totals":
 { Args: { "p_from": string,"p_to": string,"p_workspace_id": string }; Returns: {
@@ -479,6 +679,9 @@ isOneToOne: false
                            },
 "set_financial_account_archived":
 { Args: { "p_account_id": string,"p_archived": boolean,"p_workspace_id": string }; Returns: Json
+                           },
+"set_pocket_archived":
+{ Args: { "p_archived": boolean,"p_pocket_id": string,"p_workspace_id": string }; Returns: Json
                            }
           }
           Enums: {
