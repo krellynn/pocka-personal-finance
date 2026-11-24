@@ -1,11 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
-import { useId, useState, type ReactNode } from "react";
+import { useId, useRef, useState, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { monthRange } from "../../lib/datetime/monthRange";
 import { todayInTimeZone } from "../../lib/datetime/todayInTimeZone";
 import { FEED_LIMIT, fetchFeed, fetchPeriodTotals } from "./api";
 import { financeKeys } from "./keys";
 import { money, sumTotals } from "./money";
+import { RowActions } from "./RowActions";
 import { TransactionForm } from "./TransactionForm";
 import { useWorkspace } from "./useWorkspace";
 
@@ -32,6 +33,12 @@ function MonthView({ workspaceId, timeZone }: { workspaceId: string; timeZone: s
   const monthId = useId();
   const thisMonth = todayInTimeZone(timeZone).slice(0, 7);
   const [month, setMonth] = useState(thisMonth);
+  const [saved, setSaved] = useState(false);
+  const listHeading = useRef<HTMLHeadingElement>(null);
+  const onSaved = () => {
+    setSaved(true);
+    listHeading.current?.focus();
+  };
   const { from, to } = monthRange(month);
   const feed = useQuery({ queryKey: [...financeKeys.feed(workspaceId), month], queryFn: () => fetchFeed(workspaceId, from, to) });
   const totals = useQuery({ queryKey: [...financeKeys.periodTotals(workspaceId), month], queryFn: () => fetchPeriodTotals(workspaceId, from, to) });
@@ -49,7 +56,10 @@ function MonthView({ workspaceId, timeZone }: { workspaceId: string; timeZone: s
               type="month"
               value={month}
               max={thisMonth}
-              onChange={(e) => /^\d{4}-\d{2}$/.test(e.target.value) && setMonth(e.target.value)}
+              onChange={(e) => {
+                if (/^\d{4}-\d{2}$/.test(e.target.value)) setMonth(e.target.value);
+                setSaved(false);
+              }}
               className="ml-2 rounded-xl border border-[color:var(--field)] bg-white px-3 py-2 text-sm"
             />
           </div>
@@ -65,12 +75,12 @@ function MonthView({ workspaceId, timeZone }: { workspaceId: string; timeZone: s
         {totals.isError && <p className="mt-2 text-sm text-muted">{t("transactions.totalsFailed")}</p>}
       </div>
       <div className="surface-card">
-        <h2 className="section-title">{t("transactions.listTitle")}</h2>
+        <h2 ref={listHeading} tabIndex={-1} className="section-title outline-none">{t("transactions.listTitle")}</h2>
         <p role="status" className="text-sm text-muted">
-          {feed.isPending ? t("transactions.loading") : feed.isError ? t("transactions.loadFailed") : feed.data.length === 0 ? t("transactions.empty") : ""}
+          {saved ? t("transactions.actions.done") : feed.isPending ? t("transactions.loading") : feed.isError ? t("transactions.loadFailed") : feed.data.length === 0 ? t("transactions.empty") : ""}
         </p>
         <ul className="mt-2 divide-y divide-[color:var(--line)]">
-          {feed.data?.map((row) => <FeedRow key={row.id} row={row} />)}
+          {feed.data?.map((row) => <FeedRow key={row.id} row={row} workspaceId={workspaceId} timeZone={timeZone} onSaved={onSaved} />)}
         </ul>
         {feed.data?.length === FEED_LIMIT && <p className="mt-2 text-xs text-muted">{t("transactions.capped", { count: FEED_LIMIT })}</p>}
       </div>
@@ -80,7 +90,7 @@ function MonthView({ workspaceId, timeZone }: { workspaceId: string; timeZone: s
 
 const sign: Partial<Record<string, string>> = { income: "+", refund: "+", expense: "-" };
 
-function FeedRow({ row }: { row: Row }) {
+function FeedRow({ row, workspaceId, timeZone, onSaved }: { row: Row; workspaceId: string; timeZone: string; onSaved: () => void }) {
   const { t } = useTranslation();
   const kind = row.kind ?? "";
   const title = kind === "transfer" ? `${row.account_name} → ${row.counter_account_name}` : row.category_name ?? t(`transactions.kinds.${kind}`);
@@ -100,6 +110,7 @@ function FeedRow({ row }: { row: Row }) {
         </p>
       </div>
       <p className="font-semibold tabular-nums">{(sign[kind] ?? "") + money(row.amount)}</p>
+      <RowActions row={row} workspaceId={workspaceId} timeZone={timeZone} onSaved={onSaved} />
     </li>
   );
 }

@@ -18,7 +18,7 @@ afterEach(() => {
 });
 
 const row = (over: Partial<Awaited<ReturnType<typeof api.fetchFeed>>[number]>) => ({
-  id: "t1", kind: "expense", occurred_on: "2026-11-20", amount: "75000", note: null, account_name: "BCA", counter_account_name: null,
+  id: "t1", kind: "expense", occurred_on: "2026-11-20", amount: "75000", note: null, account_id: "a1", account_name: "BCA", counter_account_name: null, category_id: "c1",
   category_name: "Makan", is_reversed: false, refunded_amount: "0", reverses_id: null, ...over,
 });
 
