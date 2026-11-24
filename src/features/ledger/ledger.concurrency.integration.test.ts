@@ -94,4 +94,43 @@ describe.skipIf(!isUp)("ledger RPCs under two concurrent sessions", () => {
       expect((await balance(acc)).balance).toBe("10000");
     }
   });
+
+  it("two allocations that together exceed eligible funds: only one lands", async () => {
+    for (let i = 0; i < ROUNDS; i++) {
+      // Park whatever is unallocated in a filler pocket, then add exactly 60.000 of eligible funds.
+      const unallocated = BigInt((await db.from("pocket_summary").select("unallocated").eq("workspace_id", ws).single()).data!.unallocated!);
+      const filler = (await rpc("create_pocket", { p_workspace_id: ws, p_idempotency_key: newKey(), p_name: `Filler ${newKey().slice(0, 8)}` })).data!.pocket_id;
+      if (unallocated > 0n) {
+        expect((await rpc("allocate_to_pocket", { p_workspace_id: ws, p_idempotency_key: newKey(), p_pocket_id: filler, p_amount: unallocated.toString() })).code).toBeNull();
+      }
+      await account("60000");
+      const pocket = (await rpc("create_pocket", { p_workspace_id: ws, p_idempotency_key: newKey(), p_name: `Pocket ${newKey().slice(0, 8)}` })).data!.pocket_id;
+      const allocate = () => rpc("allocate_to_pocket", { p_workspace_id: ws, p_idempotency_key: newKey(), p_pocket_id: pocket, p_amount: "40000" });
+      const codes = (await Promise.all([allocate(), allocate()])).map((r) => r.code).sort();
+      expect(codes).toEqual(["ALLOCATION_EXCEEDS_ELIGIBLE", null].sort());
+      const { data } = await db.from("pocket_summary").select("unallocated").eq("workspace_id", ws).single();
+      expect(BigInt(data!.unallocated!)).toBeGreaterThanOrEqual(0n);
+      // Empty the pocket so the next round starts from the same position.
+      await rpc("deallocate_from_pocket", { p_workspace_id: ws, p_idempotency_key: newKey(), p_pocket_id: pocket, p_amount: "40000" });
+    }
+  });
+
+  it("two moves draining the same pocket: one fails, nothing goes negative", async () => {
+    await account("100000");
+    const mk = async () => (await rpc("create_pocket", { p_workspace_id: ws, p_idempotency_key: newKey(), p_name: `P ${newKey().slice(0, 8)}` })).data!.pocket_id as string;
+    for (let i = 0; i < ROUNDS; i++) {
+      const [a, b, c] = [await mk(), await mk(), await mk()];
+      expect((await rpc("allocate_to_pocket", { p_workspace_id: ws, p_idempotency_key: newKey(), p_pocket_id: a, p_amount: "30000" })).code).toBeNull();
+      const move = (to: string) => rpc("move_between_pockets", { p_workspace_id: ws, p_idempotency_key: newKey(), p_from_pocket_id: a, p_to_pocket_id: to, p_amount: "20000" });
+      const codes = (await Promise.all([move(b), move(c)])).map((r) => r.code).sort();
+      expect(codes).toEqual(["POCKET_INSUFFICIENT", null].sort());
+      const { data } = await db.from("pocket_balances").select("balance").eq("id", a).single();
+      expect(data!.balance).toBe("10000");
+      await rpc("deallocate_from_pocket", { p_workspace_id: ws, p_idempotency_key: newKey(), p_pocket_id: a, p_amount: "10000" });
+      for (const p of [b, c]) {
+        const bal = (await db.from("pocket_balances").select("balance").eq("id", p).single()).data!.balance!;
+        if (bal !== "0") await rpc("deallocate_from_pocket", { p_workspace_id: ws, p_idempotency_key: newKey(), p_pocket_id: p, p_amount: bal });
+      }
+    }
+  });
 });

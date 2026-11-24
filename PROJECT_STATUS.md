@@ -186,3 +186,11 @@ Everything beyond the initial app shell remains unimplemented: Auth, workspaces,
 - Verified: Vitest 80, typecheck and lint clean, each PR code-reviewed and findings fixed; manual run against local Supabase: create account, expense, refund, reversal, transfer, edit (reverse + repost), dashboard totals, and a lost-response retry that posted exactly once.
 - Migration `20261125110000_feed_signed_amount.sql` (approved 2026-11-25): `transaction_feed.signed_amount`, so opening balances are edited with their sign; 6 pgTAP tests (124 total).
 - Known limits: income source cannot be cleared from the UI (needs a migration, deferred until there is an income-source UI); list shows at most 100 rows per month; no cash-flow chart yet; balances shown in IDR only (G2a scope).
+
+## 15. G3a pockets database (2026-11-25)
+
+- Design `docs/G3A_POCKETS_BUDGETS_DRAFT_V1.md` approved with Q1–Q13 (decision record in PRODUCT_OWNER_DECISIONS).
+- Migration `20261125120000_pockets.sql`: `pockets`, immutable `pocket_movements` (one row per allocate/deallocate/move; NULL side = Unallocated), per-workspace advisory lock, RPCs `create_pocket`, `set_pocket_archived`, `allocate_to_pocket`, `deallocate_from_pocket`, `move_between_pockets`, views `pocket_balances`, `pocket_summary`. IDR only (`CURRENCY_NOT_SUPPORTED`). No journal entries.
+- Verified: `db reset` + 163 pgTAP (39 new: D-16 eligible funds, shortfall rule, moves/deallocations during shortfall, archive guard, idempotency, no ledger effect, isolation, roles), two-session tests for double allocation and draining moves. Architecture-reviewed; findings fixed (IDR guard). Pocket rename is a direct column update like account rename (no audit row).
+- Next: Pockets page, then budgets migration (PR-6 in the design).
+
