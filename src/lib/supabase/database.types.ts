@@ -400,7 +400,7 @@ isOneToOne: false
                   ]
                 },"transaction_feed": {
                   Row: {
-                    "account_id": string | null,"account_name": string | null,"amount": string | null,"category_id": string | null,"category_kind": string | null,"category_name": string | null,"counter_account_id": string | null,"counter_account_name": string | null,"created_at": string,"currency": string,"id": string,"income_source_id": string | null,"income_source_name": string | null,"is_reversed": boolean | null,"kind": string,"note": string | null,"occurred_on": string,"refund_of_id": string | null,"refunded_amount": string | null,"reverses_id": string | null,"workspace_id": string
+                    "account_id": string | null,"account_name": string | null,"amount": string | null,"category_id": string | null,"category_kind": string | null,"category_name": string | null,"counter_account_id": string | null,"counter_account_name": string | null,"created_at": string,"currency": string,"id": string,"income_source_id": string | null,"income_source_name": string | null,"is_reversed": boolean | null,"kind": string,"note": string | null,"occurred_on": string,"refund_of_id": string | null,"refunded_amount": string | null,"reverses_id": string | null,"signed_amount": string | null,"workspace_id": string
                   }
                   ComputedFields: never
                   Relationships: [

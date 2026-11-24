@@ -172,11 +172,12 @@ function RefundPanel({ row, workspaceId, today, close, remaining }: Ctx & { rema
 function EditPanel({ row, workspaceId, today, close, refunded }: Ctx) {
   const { t } = useTranslation();
   const categories = useQuery({ queryKey: financeKeys.categories(workspaceId), queryFn: () => fetchCategories(workspaceId), staleTime: 5 * 60_000 });
-  // shortcut: the feed has no sign for opening balances, so their amount is not editable here; add a signed
-  // amount to transaction_feed (migration) to allow it. Amount/date changes on a refunded expense are refused.
-  const fixedAmount = row.kind === "opening_balance";
+  // Opening balances may be negative (Q13), so they are edited by their signed amount.
+  const opening = row.kind === "opening_balance";
+  const current = opening ? row.signed_amount : row.amount;
+  // Amount/date changes on a refunded expense are refused (HAS_DEPENDENT_REFUNDS).
   const fixedDate = refunded > 0n;
-  const original = { amount: money(row.amount), date: row.occurred_on, categoryId: row.category_id ?? "", note: row.note ?? "" };
+  const original = { amount: money(current), date: row.occurred_on, categoryId: row.category_id ?? "", note: row.note ?? "" };
   const [v, setV] = useState(original);
   const [invalid, setInvalid] = useState<string | null>(null);
   const { action, touched } = useLedgerAction(workspaceId, close);
@@ -192,9 +193,9 @@ function EditPanel({ row, workspaceId, today, close, refunded }: Ctx) {
     const args: Record<string, unknown> = { p_transaction_id: row.id };
     // Only changed fields go out: the RPC treats a missing value as "keep" (opening balances keep their sign).
     if (v.amount !== original.amount) {
-      const parsed = parseAmountInput(v.amount);
-      if (parsed === null) return setInvalid("transactions.validation.amount");
-      if (parsed !== row.amount) args.p_amount = parsed;
+      const parsed = parseAmountInput(v.amount, { allowNegative: opening });
+      if (parsed === null) return setInvalid(opening ? "transactions.validation.openingAmount" : "transactions.validation.amount");
+      if (parsed !== current) args.p_amount = parsed;
     }
     if (v.date !== original.date) {
       if (!/^\d{4}-\d{2}-\d{2}$/.test(v.date) || v.date > today) return setInvalid("transactions.validation.date");
@@ -211,11 +212,11 @@ function EditPanel({ row, workspaceId, today, close, refunded }: Ctx) {
     <PanelForm title={t("transactions.actions.editTitle")} onSubmit={submit} busy={action.isPending} error={action.error}
       submitLabel={t("transactions.actions.editSubmit")} onCancel={() => close(false)}>
       <p className="text-xs text-muted">
-        {t(fixedDate ? "transactions.actions.editRefundedHint" : fixedAmount ? "transactions.actions.editOpeningHint" : "transactions.actions.editHint")}
+        {t(fixedDate ? "transactions.actions.editRefundedHint" : "transactions.actions.editHint")}
       </p>
-      {!fixedAmount && !fixedDate && (
+      {!fixedDate && (
         <Field label={t("transactions.fields.amount")} inputMode="numeric" autoFocus value={v.amount} onChange={set("amount")}
-          error={invalid === "transactions.validation.amount" ? t(invalid) : undefined} />
+          error={invalid === "transactions.validation.amount" || invalid === "transactions.validation.openingAmount" ? t(invalid) : undefined} />
       )}
       {!fixedDate && (
         <Field label={t("transactions.fields.date")} type="date" max={today} value={v.date} onChange={set("date")}
