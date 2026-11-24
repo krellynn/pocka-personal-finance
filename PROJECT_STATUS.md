@@ -104,7 +104,7 @@ Everything beyond the initial app shell remains unimplemented: Auth, workspaces,
 ## 6. Next Milestones
 
 1. **Phase 0B foundation done locally**: auth, profile, personal workspace (PR #6) and the G0 visual/accessibility review (section 12). Cloudflare preview review waits for G7.
-2. **G2 finance design**: draft for the first slice (G2a, single-currency core) is in `docs/G2A_FINANCE_CORE_DRAFT_V1.md`, awaiting product-owner answers to its §10. complete CoA, posting rules, FX and debt calculations, RPC contracts, RLS, grants, data dictionary and migration plan before any ledger migrations or financial implementation.
+2. **G2 finance design**: draft for the first slice (G2a, single-currency core) is in `docs/G2A_FINANCE_CORE_DRAFT_V1.md`, approved 2026-11-25 (G2a); implementation in progress. FX (D-18/D-19), debt detail and adjustment rules still need their own approval (G2b/G2c) before any code.
 3. **G5/G6/G7**: retain separate gates for household, import and production readiness.
 
 ---
