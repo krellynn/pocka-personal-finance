@@ -5,12 +5,13 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
 import { todayInTimeZone } from "../../lib/datetime/todayInTimeZone";
-import { formatMinorUnits } from "../../lib/money/formatMinorUnits";
 import { parseAmountInput } from "../../lib/money/parseAmountInput";
 import { Field, ServerError, Submit } from "../auth/AuthPages";
 import { callLedger, fetchAccounts } from "./api";
 import { financeErrorKey } from "./errors";
 import { financeKeys } from "./keys";
+import { money } from "./money";
+import { SelectField } from "./ui";
 import { useIdempotencyKey } from "./useIdempotencyKey";
 import { useWorkspace } from "./useWorkspace";
 
@@ -22,8 +23,6 @@ const createErrorKey = (error: unknown) =>
   typeof error === "object" && error !== null && "details" in error && error.details === "name taken"
     ? "accounts.validation.nameTaken"
     : financeErrorKey(error);
-
-const money = (amount: string | null) => formatMinorUnits(BigInt(amount ?? "0"), { code: "IDR", minorUnits: 0 });
 
 export function AccountsPage() {
   const { t } = useTranslation();
@@ -117,7 +116,6 @@ type Values = z.infer<ReturnType<typeof schema>>;
 
 function CreateAccountForm({ workspaceId, timeZone }: { workspaceId: string; timeZone: string }) {
   const { t } = useTranslation();
-  const kindId = useId();
   const today = todayInTimeZone(timeZone);
   const [saved, setSaved] = useState(false);
   const idem = useIdempotencyKey();
@@ -159,16 +157,9 @@ function CreateAccountForm({ workspaceId, timeZone }: { workspaceId: string; tim
     <div className="surface-card">
       <h2 className="section-title">{t("accounts.createTitle")}</h2>
       <form onSubmit={form.handleSubmit((v) => create.mutate(v))} noValidate className="mt-4 space-y-4">
-        <div>
-          <label htmlFor={kindId} className="text-sm font-medium">{t("accounts.fields.kind")}</label>
-          <select
-            id={kindId}
-            className="mt-1.5 w-full rounded-xl border border-[color:var(--field)] bg-white px-3.5 py-2.5 text-sm text-ink outline-none focus:border-[color:var(--focus)] focus:ring-2 focus:ring-[color:var(--focus)]"
-            {...form.register("kind", { onChange: onEdit })}
-          >
-            {kinds.map((k) => <option key={k} value={k}>{t(`accounts.kinds.${k}`)}</option>)}
-          </select>
-        </div>
+        <SelectField label={t("accounts.fields.kind")} {...form.register("kind", { onChange: onEdit })}>
+          {kinds.map((k) => <option key={k} value={k}>{t(`accounts.kinds.${k}`)}</option>)}
+        </SelectField>
         <Field label={t("accounts.fields.name")} error={err("name")} {...form.register("name", { onChange: onEdit })} />
         <Field
           label={t("accounts.fields.openingBalance")}
