@@ -10,3 +10,7 @@ export function sumTotals(rows: { kind: string; total: string | null }[]) {
   const expense = sum("expense");
   return { income, expense, net: income - expense };
 }
+
+/** A transfer, or a reversal of one, has two accounts and no category: show it as "From → To". */
+export const isTransferLike = (row: { kind: string; counter_account_name: string | null; category_name: string | null }) =>
+  row.kind === "transfer" || (!!row.counter_account_name && !row.category_name);

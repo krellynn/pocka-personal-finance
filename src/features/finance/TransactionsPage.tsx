@@ -5,7 +5,7 @@ import { monthRange } from "../../lib/datetime/monthRange";
 import { todayInTimeZone } from "../../lib/datetime/todayInTimeZone";
 import { FEED_LIMIT, fetchFeed, fetchPeriodTotals } from "./api";
 import { financeKeys } from "./keys";
-import { money, sumTotals } from "./money";
+import { isTransferLike, money, sumTotals } from "./money";
 import { RowActions } from "./RowActions";
 import { TransactionForm } from "./TransactionForm";
 import { useWorkspace } from "./useWorkspace";
@@ -93,7 +93,7 @@ const sign: Partial<Record<string, string>> = { income: "+", refund: "+", expens
 function FeedRow({ row, workspaceId, timeZone, onSaved }: { row: Row; workspaceId: string; timeZone: string; onSaved: () => void }) {
   const { t } = useTranslation();
   const kind = row.kind ?? "";
-  const title = kind === "transfer" ? `${row.account_name} → ${row.counter_account_name}` : row.category_name ?? t(`transactions.kinds.${kind}`);
+  const title = isTransferLike(row) ? `${row.account_name} → ${row.counter_account_name}` : row.category_name ?? t(`transactions.kinds.${kind}`);
   const refunded = row.refunded_amount && row.refunded_amount !== "0" ? row.refunded_amount : null;
   return (
     <li className="flex flex-wrap items-center justify-between gap-2 py-3">
