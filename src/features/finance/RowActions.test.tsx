@@ -15,7 +15,7 @@ afterEach(() => {
 type Row = Parameters<typeof RowActions>[0]["row"];
 const row = (over: Partial<Row>): Row => ({
   id: "t1", kind: "expense", occurred_on: "2026-11-20", amount: "50000", note: "lama", account_id: "bca", account_name: "BCA",
-  counter_account_name: null, category_id: "food", category_name: "Makan", is_reversed: false, refunded_amount: "0", reverses_id: null, ...over,
+  counter_account_name: null, category_id: "food", category_name: "Makan", is_reversed: false, refunded_amount: "0", reverses_id: null, signed_amount: over.amount ?? "50000", ...over,
 });
 
 function renderActions(r: Row) {
@@ -98,12 +98,16 @@ describe("RowActions", () => {
     expect(api.callLedger).not.toHaveBeenCalled();
   });
 
-  it("locks amount and date where an edit would be wrong or refused", () => {
-    renderActions(row({ kind: "opening_balance", category_id: null }));
+  it("edits an opening balance by its signed amount", async () => {
+    renderActions(row({ kind: "opening_balance", category_id: null, amount: "25000", signed_amount: "-25000" }));
     click("Ubah");
-    expect(screen.queryByLabelText("Jumlah")).toBeNull();
-    expect(screen.getByLabelText("Tanggal")).toBeInTheDocument();
-    cleanup();
+    expect(screen.getByLabelText("Jumlah")).toHaveValue("-Rp25.000");
+    fireEvent.change(screen.getByLabelText("Jumlah"), { target: { value: "-Rp 30.000" } });
+    click("Simpan perubahan");
+    await waitFor(() => expect(lastCall()).toEqual(["edit_transaction", expect.objectContaining({ p_amount: "-30000" })]));
+  });
+
+  it("locks amount and date of a refunded expense", () => {
     renderActions(row({ refunded_amount: "1000" }));
     click("Ubah");
     expect(screen.queryByLabelText("Jumlah")).toBeNull();

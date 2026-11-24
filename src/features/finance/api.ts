@@ -50,7 +50,7 @@ export const FEED_LIMIT = 100;
 export async function fetchFeed(workspaceId: string, from: string, to: string) {
   const { data, error } = await supabase
     .from("transaction_feed")
-    .select("id, kind, occurred_on, amount, note, account_id, account_name, counter_account_name, category_id, category_name, is_reversed, refunded_amount, reverses_id")
+    .select("id, kind, occurred_on, amount, note, account_id, account_name, counter_account_name, category_id, category_name, is_reversed, refunded_amount, reverses_id, signed_amount")
     .eq("workspace_id", workspaceId)
     .gte("occurred_on", from)
     .lte("occurred_on", to)
