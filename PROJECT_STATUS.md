@@ -171,3 +171,10 @@ Everything beyond the initial app shell remains unimplemented: Auth, workspaces,
 - Checked Dashboard, a placeholder page and Settings at desktop and 375 px: `lang="id"`, one `h1` per page, labelled navs, every control named, no horizontal scroll, no small touch targets.
 - Fixed: focus outline `--focus` (#2F6FC0, 5.05:1; dark #78A9E8); input border `--field` (3.8:1) with a focus border/ring; `--muted` #5E7066 (4.85:1 on canvas); removed the non-functional Search/Notifications buttons; phones reach Budgets/Goals/Debts/Reports through "Menu lainnya" on Settings (links shared in `src/app/navigation.ts`).
 - Remaining: Cloudflare preview review (needs a deployment, G7), dark mode is not enabled anywhere yet, Budgets and Reports share an icon, per-page document titles and a skip link.
+
+## 13. G2a ledger database (2026-11-25)
+
+- Migrations `20261125100000`–`100300`: currencies; ledger core (ledger/financial accounts, categories, income sources, transactions, journal entries/lines, idempotency, audit; immutability and deferred balance triggers; RLS and column grants; system accounts + 12 default categories on provisioning, backfilled); posting RPCs (`create_financial_account`, `set_financial_account_archived`, `post_income`, `post_expense`, `post_transfer`, `post_refund`, `reverse_transaction`, `edit_transaction`); read models (`account_balances`, `transaction_feed`, `period_totals`), money as text.
+- Deviation, approved spec intent: an edit that changes only category, income source or note updates in place (dimensions, D-09); other edits reverse and repost.
+- Verified: `npx supabase db reset` from empty plus `npx supabase test db`, 118 pgTAP tests (worked example, D-14/D-15 guards, idempotency incl. replay and conflict, edits, reconciliation, two-user isolation, viewer and anon, immutability). Reviewed twice by architecture-reviewer; all findings fixed.
+- Not done yet: two-session concurrency tests (double refund, archive vs post, duplicate key), the transactions/accounts UI.
