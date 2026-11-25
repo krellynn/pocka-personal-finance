@@ -191,6 +191,14 @@ Everything beyond the initial app shell remains unimplemented: Auth, workspaces,
 
 - Design `docs/G3A_POCKETS_BUDGETS_DRAFT_V1.md` approved with Q1–Q13 (decision record in PRODUCT_OWNER_DECISIONS).
 - Migration `20261125120000_pockets.sql`: `pockets`, immutable `pocket_movements` (one row per allocate/deallocate/move; NULL side = Unallocated), per-workspace advisory lock, RPCs `create_pocket`, `set_pocket_archived`, `allocate_to_pocket`, `deallocate_from_pocket`, `move_between_pockets`, views `pocket_balances`, `pocket_summary`. IDR only (`CURRENCY_NOT_SUPPORTED`). No journal entries.
-- Verified: `db reset` + 163 pgTAP (39 new: D-16 eligible funds, shortfall rule, moves/deallocations during shortfall, archive guard, idempotency, no ledger effect, isolation, roles), two-session tests for double allocation and draining moves. Architecture-reviewed; findings fixed (IDR guard). Pocket rename is a direct column update like account rename (no audit row).
-- Next: Pockets page, then budgets migration (PR-6 in the design).
+- Verified: `db reset` + 163 pgTAP (39 new: D-16 eligible funds, shortfall rule, moves/deallocations during shortfall, archive guard, idempotency, no ledger effect, isolation, roles), two-session tests for double allocation and draining moves. Architecture-reviewed; findings fixed (IDR guard). Pocket rename is a direct column update like account rename (audited since migration `20261126020000`, see §16).
 
+
+## 16. G3a pockets and budgets complete (2026-11-26)
+
+- Screens (PR #20–#24, #26): Pockets page (summary with shortfall warning, list, create, inline rename, archive/unarchive with zero-balance rule, allocate/return/move form, latest 50 movements); Budgets page (month picker, plan vs actual, "Tanpa anggaran" group, exact BigInt totals, set plan with "0" to remove, "Salin dari bulan lalu"). Postings and account changes invalidate pocket and budget queries.
+- Migration `20261126010000_budgets.sql` (PR #25): `budgets` (first-of-month, expense category, planned > 0), `set_budget` (absolute, no idempotency key, "0" deletes, removal allowed on archived categories, audited old/new, advisory lock), `copy_budgets` (missing active categories only, rerun copies nothing), `budget_vs_actual(ws, month)` security-invoker function (any date means its month; unbudgeted spending has `has_budget = false`, `is_over = false`; sum(actual) reconciles with `period_totals`). Planned and post-reviewed by architecture-reviewer.
+- Migration `20261126020000_rename_audit.sql` (PR #27): trigger audits direct renames of pockets and accounts (old/new, actor); pockets get `updated_at` maintenance; archived pockets and accounts cannot be renamed.
+- Verified: 207 pgTAP, 98 Vitest, tsc, lint, build. Browser check on local Supabase: account, two pockets, over-allocation rejected with the right message, allocate, move, history, budget set and copy all worked; only expected 400 was the rejected allocation.
+- Known limits: movements list capped at 50 rows; same-day movements show date only; local `db reset` wipes local test accounts.
+- Next gates need product-owner decisions: G2b/G2c, G5–G7.

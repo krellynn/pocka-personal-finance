@@ -61,3 +61,8 @@ Members read pockets, movements, budgets; client writes only `pockets.name` (own
 - Table shapes deviate from DATABASE_SPECIFICATION §3.5/§3.6 (see §2) — needs explicit approval.
 - Invariant 18 ("Σ allocations ≤ eligible funds") should read "at allocation time"; spending may break it later (D-16).
 - Performance: eligible funds are re-summed per allocation — fine at personal scale; cache only if profiling shows a need.
+
+## 8. Implementation notes (2026-11-26)
+- `budget_vs_actual` is a function `(ws, month)` (views take no parameters); unbudgeted spending is one row per category with `has_budget = false`, grouped as "Tanpa anggaran" in the UI.
+- `set_budget` "0" may remove a plan on a since-archived category (Q13 blocks only new or changed plans).
+- Direct renames are audited by trigger; archived pockets and accounts cannot be renamed.
