@@ -66,3 +66,24 @@ export async function fetchPeriodTotals(workspaceId: string, from: string, to: s
   if (error) throw error;
   return data;
 }
+
+export async function fetchPockets(workspaceId: string) {
+  const { data, error } = await supabase
+    .from("pocket_balances")
+    .select("id, name, balance, target_amount, archived_at")
+    .eq("workspace_id", workspaceId)
+    .order("name");
+  if (error) throw error;
+  return data;
+}
+
+/** Eligible funds, allocated and "Belum dialokasikan" (negative = shortfall, D-16). */
+export async function fetchPocketSummary(workspaceId: string) {
+  const { data, error } = await supabase
+    .from("pocket_summary")
+    .select("eligible_funds, allocated, unallocated, is_shortfall")
+    .eq("workspace_id", workspaceId)
+    .maybeSingle();
+  if (error) throw error;
+  return data;
+}
