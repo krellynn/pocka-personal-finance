@@ -1,11 +1,11 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { cleanup, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import "../../i18n";
 import * as api from "./api";
 import { PocketsPage } from "./PocketsPage";
 
-vi.mock("./api", () => ({ fetchWorkspace: vi.fn(), fetchPockets: vi.fn(), fetchPocketSummary: vi.fn() }));
+vi.mock("./api", () => ({ fetchWorkspace: vi.fn(), fetchPockets: vi.fn(), fetchPocketSummary: vi.fn(), callLedger: vi.fn() }));
 vi.mock("../auth/useAuth", () => ({ useAuth: () => ({ session: { user: { id: "u1" } }, loading: false }) }));
 
 afterEach(() => {
@@ -22,7 +22,7 @@ function renderPage(pockets: ReturnType<typeof pocket>[], summary: Awaited<Retur
   vi.mocked(api.fetchPockets).mockResolvedValue(pockets);
   vi.mocked(api.fetchPocketSummary).mockResolvedValue(summary);
   render(
-    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false }, mutations: { retry: false } } })}>
       <PocketsPage />
     </QueryClientProvider>,
   );
@@ -50,5 +50,34 @@ describe("PocketsPage", () => {
   it("shows the empty state", async () => {
     renderPage([], { eligible_funds: "0", allocated: "0", unallocated: "0", is_shortfall: false });
     expect(await screen.findByText("Belum ada pocket.")).toBeInTheDocument();
+  });
+
+  it("creates a pocket with the target as a digit string", async () => {
+    vi.mocked(api.callLedger).mockResolvedValue({ replayed: false });
+    renderPage([], { eligible_funds: "0", allocated: "0", unallocated: "0", is_shortfall: false });
+    await screen.findByText("Belum ada pocket.");
+    fireEvent.change(screen.getByLabelText("Nama pocket"), { target: { value: " Liburan " } });
+    fireEvent.change(screen.getByLabelText("Target (opsional)"), { target: { value: "Rp 5.000.000" } });
+    fireEvent.click(screen.getByRole("button", { name: "Simpan pocket" }));
+    expect(await screen.findByText("Pocket tersimpan.")).toBeInTheDocument();
+    expect(api.callLedger).toHaveBeenCalledWith("create_pocket", expect.objectContaining({ p_workspace_id: "w1", p_name: "Liburan", p_target_amount: "5000000" }));
+  });
+
+  it("shows a duplicate name error", async () => {
+    vi.mocked(api.callLedger).mockRejectedValue({ code: "P0001", message: "VALIDATION_FAILED", details: "name taken" });
+    renderPage([], { eligible_funds: "0", allocated: "0", unallocated: "0", is_shortfall: false });
+    await screen.findByText("Belum ada pocket.");
+    fireEvent.change(screen.getByLabelText("Nama pocket"), { target: { value: "Darurat" } });
+    fireEvent.click(screen.getByRole("button", { name: "Simpan pocket" }));
+    expect(await screen.findByRole("alert")).toHaveTextContent("Nama pocket ini sudah dipakai.");
+  });
+
+  it("archives an empty pocket and blocks one with a balance", async () => {
+    vi.mocked(api.callLedger).mockResolvedValue({ replayed: false });
+    renderPage([pocket({}), pocket({ id: "p2", name: "Isi", balance: "1000" })], { eligible_funds: "1000", allocated: "1000", unallocated: "0", is_shortfall: false });
+    expect(await screen.findByRole("button", { name: "Arsipkan Isi" })).toBeDisabled();
+    fireEvent.click(screen.getByRole("button", { name: "Arsipkan Darurat" }));
+    expect(await screen.findByText("Pocket diarsipkan.")).toBeInTheDocument();
+    expect(api.callLedger).toHaveBeenCalledWith("set_pocket_archived", { p_workspace_id: "w1", p_pocket_id: "p1", p_archived: true });
   });
 });

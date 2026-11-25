@@ -2,6 +2,7 @@ const knownCodes: Record<string, string> = {
   VALIDATION_FAILED: "finance.errors.validation",
   RESOURCE_ARCHIVED: "finance.errors.archived",
   RESOURCE_HAS_BALANCE: "finance.errors.hasBalance",
+  CURRENCY_NOT_SUPPORTED: "finance.errors.currencyNotSupported",
   REFUND_EXCEEDS_ORIGINAL: "finance.errors.refundExceeds",
   HAS_DEPENDENT_REFUNDS: "finance.errors.hasRefunds",
   POSTED_ENTRY_IMMUTABLE: "finance.errors.alreadyReversed",
@@ -24,3 +25,9 @@ export function financeErrorKey(error: unknown): string {
     ? (knownCodes[error.message] as string)
     : "finance.errors.generic";
 }
+
+/** create_* RPCs report a duplicate name as VALIDATION_FAILED with the fixed detail "name taken". */
+export const nameTakenOr = (error: unknown, nameTakenKey: string) =>
+  typeof error === "object" && error !== null && "details" in error && error.details === "name taken"
+    ? nameTakenKey
+    : financeErrorKey(error);
