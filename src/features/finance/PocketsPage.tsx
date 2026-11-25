@@ -11,6 +11,7 @@ import { nameTakenOr } from "./errors";
 import { financeKeys } from "./keys";
 import { money } from "./money";
 import { PocketFundsForm } from "./PocketFundsForm";
+import { PocketHistory } from "./PocketHistory";
 import { useIdempotencyKey } from "./useIdempotencyKey";
 import { useWorkspace } from "./useWorkspace";
 
@@ -74,6 +75,7 @@ export function PocketsPage() {
       </div>
       {ws && active.length > 0 && <PocketFundsForm workspaceId={ws.id} pockets={active} />}
       {ws && <CreatePocketForm workspaceId={ws.id} />}
+      {ws && <PocketHistory workspaceId={ws.id} timeZone={ws.timezone} names={new Map((pockets.data ?? []).map((p) => [p.id, p.name]))} />}
     </section>
   );
 }

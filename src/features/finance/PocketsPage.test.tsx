@@ -5,7 +5,7 @@ import "../../i18n";
 import * as api from "./api";
 import { PocketsPage } from "./PocketsPage";
 
-vi.mock("./api", () => ({ fetchWorkspace: vi.fn(), fetchPockets: vi.fn(), fetchPocketSummary: vi.fn(), callLedger: vi.fn(), renamePocket: vi.fn() }));
+vi.mock("./api", () => ({ fetchWorkspace: vi.fn(), fetchPockets: vi.fn(), fetchPocketSummary: vi.fn(), callLedger: vi.fn(), renamePocket: vi.fn(), fetchPocketMovements: vi.fn(), MOVEMENTS_LIMIT: 50 }));
 vi.mock("../auth/useAuth", () => ({ useAuth: () => ({ session: { user: { id: "u1" } }, loading: false }) }));
 
 afterEach(() => {
@@ -17,10 +17,12 @@ const pocket = (over: Partial<Awaited<ReturnType<typeof api.fetchPockets>>[numbe
   id: "p1", name: "Darurat", balance: "0", target_amount: null, archived_at: null, ...over,
 });
 
-function renderPage(pockets: ReturnType<typeof pocket>[], summary: Awaited<ReturnType<typeof api.fetchPocketSummary>>) {
+type Movements = Awaited<ReturnType<typeof api.fetchPocketMovements>>;
+function renderPage(pockets: ReturnType<typeof pocket>[], summary: Awaited<ReturnType<typeof api.fetchPocketSummary>>, movements: Movements = []) {
   vi.mocked(api.fetchWorkspace).mockResolvedValue({ id: "w1", timezone: "Asia/Jakarta", base_currency: "IDR" });
   vi.mocked(api.fetchPockets).mockResolvedValue(pockets);
   vi.mocked(api.fetchPocketSummary).mockResolvedValue(summary);
+  vi.mocked(api.fetchPocketMovements).mockResolvedValue(movements);
   render(
     <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false }, mutations: { retry: false } } })}>
       <PocketsPage />
@@ -95,5 +97,18 @@ describe("PocketsPage", () => {
     expect(screen.getByRole("button", { name: "Ganti nama Darurat" })).toHaveFocus();
     expect(api.renamePocket).toHaveBeenNthCalledWith(1, "p1", "Liburan");
     expect(api.renamePocket).toHaveBeenNthCalledWith(2, "p1", "Dana Darurat");
+  });
+
+  it("lists movements with Belum dialokasikan for the empty side", async () => {
+    renderPage([pocket({ balance: "300000" }), pocket({ id: "p2", name: "Liburan", balance: "50000" })],
+      { eligible_funds: "1000000", allocated: "350000", unallocated: "650000", is_shortfall: false },
+      [
+        { id: "m2", from_pocket_id: "p1", to_pocket_id: "p2", amount: "50000", note: "tiket", created_at: "2026-11-25T18:00:00Z" },
+        { id: "m1", from_pocket_id: null, to_pocket_id: "p1", amount: "999999999999999", note: null, created_at: "2026-11-01T01:00:00Z" },
+      ]);
+    expect(await screen.findByText("Darurat → Liburan")).toBeInTheDocument();
+    expect(screen.getByText("Belum dialokasikan → Darurat")).toBeInTheDocument();
+    expect(screen.getByText("2026-11-26 · tiket")).toBeInTheDocument();
+    expect(screen.getByText("Rp999.999.999.999.999")).toBeInTheDocument();
   });
 });
