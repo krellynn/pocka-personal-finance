@@ -87,10 +87,10 @@ describe("PocketsPage", () => {
     fireEvent.click(await screen.findByRole("button", { name: "Ganti nama Darurat" }));
     const input = screen.getAllByLabelText("Nama pocket")[0]!;
     fireEvent.change(input, { target: { value: " Liburan " } });
-    fireEvent.click(screen.getByRole("button", { name: "Simpan" }));
+    fireEvent.click(screen.getByRole("button", { name: "Simpan nama" }));
     expect(await screen.findByText("Nama pocket ini sudah dipakai.")).toBeInTheDocument();
     fireEvent.change(input, { target: { value: "Dana Darurat" } });
-    fireEvent.click(screen.getByRole("button", { name: "Simpan" }));
+    fireEvent.click(screen.getByRole("button", { name: "Simpan nama" }));
     expect(await screen.findByText("Nama pocket diperbarui.")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Ganti nama Darurat" })).toHaveFocus();
     expect(api.renamePocket).toHaveBeenNthCalledWith(1, "p1", "Liburan");
