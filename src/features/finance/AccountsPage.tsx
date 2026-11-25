@@ -9,7 +9,7 @@ import { parseAmountInput } from "../../lib/money/parseAmountInput";
 import { Field, ServerError, Submit } from "../auth/AuthPages";
 import { callLedger, fetchAccounts } from "./api";
 import { financeErrorKey } from "./errors";
-import { financeKeys } from "./keys";
+import { financeKeys, invalidateLedger } from "./keys";
 import { money } from "./money";
 import { SelectField } from "./ui";
 import { useIdempotencyKey } from "./useIdempotencyKey";
@@ -34,7 +34,7 @@ export function AccountsPage() {
     mutationFn: ({ id, archived }: { id: string; archived: boolean }) =>
       callLedger("set_financial_account_archived", { p_workspace_id: ws!.id, p_account_id: id, p_archived: archived }),
     onSuccess: () => listHeading.current?.focus(),
-    onSettled: () => queryClient.invalidateQueries({ queryKey: financeKeys.accounts(ws!.id) }),
+    onSettled: () => invalidateLedger(queryClient, ws!.id),
   });
 
   const active = accounts.data?.filter((a) => !a.archived_at) ?? [];
@@ -136,7 +136,7 @@ function CreateAccountForm({ workspaceId, timeZone }: { workspaceId: string; tim
       idem.settle();
       setSaved(true);
       form.reset(defaultValues);
-      return queryClient.invalidateQueries({ queryKey: financeKeys.accounts(workspaceId) });
+      return invalidateLedger(queryClient, workspaceId);
     },
     onError: (error) => idem.settle(error),
   });
