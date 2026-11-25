@@ -85,6 +85,8 @@ select results_eq(
 select is((select sum(actual::bigint) from public.budget_vs_actual((select v from t where k = 'ws'), '2026-10-01')),
   (select sum(total::bigint) from public.period_totals((select v from t where k = 'ws'), '2026-10-01', '2026-10-31') where kind = 'expense'),
   'actual reconciles with period_totals');
+select results_eq($$select category_id, planned, actual from public.budget_vs_actual((select v from t where k = 'ws'), '2026-10-17')$$,
+  $$select category_id, planned, actual from public.budget_vs_actual((select v from t where k = 'ws'), '2026-10-01')$$, 'a mid-month date means that month');
 select public.set_budget((select v from t where k = 'ws'), '2026-10-01', (select v from t where k = 'food'), '600000');
 select is((select is_over from public.budget_vs_actual((select v from t where k = 'ws'), '2026-10-01') where category_id = (select v from t where k = 'food')), true, 'over budget flagged');
 select is((select remaining from public.budget_vs_actual((select v from t where k = 'ws'), '2026-10-01') where category_id = (select v from t where k = 'food')), '-100000', 'remaining goes negative');

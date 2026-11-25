@@ -97,12 +97,14 @@ create function public.budget_vs_actual(p_workspace_id uuid, p_month date)
 returns table (category_id uuid, category_name text, category_archived boolean, has_budget boolean,
                planned text, actual text, remaining text, is_over boolean)
 language sql stable security invoker set search_path = '' as $$
-  with b as (
+  -- Any date in the month means that month, so the plan and the spending window always match.
+  with mo as (select date_trunc('month', p_month)::date as d),
+  b as (
     select bu.category_id, bu.planned_amount from public.budgets bu
-     where bu.workspace_id = p_workspace_id and bu.period_month = p_month
+     where bu.workspace_id = p_workspace_id and bu.period_month = (select d from mo)
   ), a as (
     select pt.category_id, pt.total::bigint as actual
-      from public.period_totals(p_workspace_id, p_month, (p_month + interval '1 month' - interval '1 day')::date) pt
+      from mo, public.period_totals(p_workspace_id, mo.d, (mo.d + interval '1 month' - interval '1 day')::date) pt
      where pt.kind = 'expense'
   )
   select c.id, c.name, c.archived_at is not null, b.category_id is not null,
