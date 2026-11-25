@@ -49,6 +49,44 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"budgets": {
+                  Row: {
+                    "category_id": string,"created_at": string,"currency": string,"period_month": string,"planned_amount": number,"updated_at": string,"workspace_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "category_id": string,"created_at"?: string,"currency": string,"period_month": string,"planned_amount": number,"updated_at"?: string,"workspace_id": string
+                  }
+                  Update: {
+                    "category_id"?: string,"created_at"?: string,"currency"?: string,"period_month"?: string,"planned_amount"?: number,"updated_at"?: string,"workspace_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "budgets_currency_fkey"
+      columns: ["currency"]
+isOneToOne: false
+      referencedRelation: "currencies"
+      referencedColumns: ["code"]
+    },{
+      foreignKeyName: "budgets_workspace_id_category_id_fkey"
+      columns: ["workspace_id","category_id"]
+isOneToOne: false
+      referencedRelation: "transaction_categories"
+      referencedColumns: ["workspace_id","id"]
+    },{
+      foreignKeyName: "budgets_workspace_id_fkey"
+      columns: ["workspace_id"]
+isOneToOne: false
+      referencedRelation: "pocket_summary"
+      referencedColumns: ["workspace_id"]
+    },{
+      foreignKeyName: "budgets_workspace_id_fkey"
+      columns: ["workspace_id"]
+isOneToOne: false
+      referencedRelation: "workspaces"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"currencies": {
                   Row: {
                     "code": string,"minor_units": number,"name": string
@@ -642,6 +680,14 @@ isOneToOne: false
             "allocate_to_pocket":
 { Args: { "p_amount": string,"p_idempotency_key": string,"p_note"?: string,"p_pocket_id": string,"p_workspace_id": string }; Returns: Json
                            },
+"budget_vs_actual":
+{ Args: { "p_month": string,"p_workspace_id": string }; Returns: {
+              "actual": string,"category_archived": boolean,"category_id": string,"category_name": string,"has_budget": boolean,"is_over": boolean,"planned": string,"remaining": string
+            }[]
+                           },
+"copy_budgets":
+{ Args: { "p_from_month": string,"p_to_month": string,"p_workspace_id": string }; Returns: Json
+                           },
 "create_financial_account":
 { Args: { "p_idempotency_key": string,"p_kind": string,"p_name": string,"p_opened_on"?: string,"p_opening_balance"?: string,"p_workspace_id": string }; Returns: Json
                            },
@@ -676,6 +722,9 @@ isOneToOne: false
                            },
 "reverse_transaction":
 { Args: { "p_idempotency_key": string,"p_reason"?: string,"p_transaction_id": string,"p_workspace_id": string }; Returns: Json
+                           },
+"set_budget":
+{ Args: { "p_amount": string,"p_category_id": string,"p_month": string,"p_workspace_id": string }; Returns: Json
                            },
 "set_financial_account_archived":
 { Args: { "p_account_id": string,"p_archived": boolean,"p_workspace_id": string }; Returns: Json
