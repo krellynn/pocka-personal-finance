@@ -94,3 +94,17 @@ export async function renamePocket(pocketId: string, name: string) {
   if (error) throw error;
   if (!data) throw { code: "P0001", message: "WORKSPACE_ACCESS_DENIED" };
 }
+
+export const MOVEMENTS_LIMIT = 50;
+
+/** Latest pocket movements, newest first; amount cast to text so money never passes through a JS number. */
+export async function fetchPocketMovements(workspaceId: string) {
+  const { data, error } = await supabase
+    .from("pocket_movements")
+    .select("id, from_pocket_id, to_pocket_id, amount:amount::text, note, created_at")
+    .eq("workspace_id", workspaceId)
+    .order("created_at", { ascending: false })
+    .range(0, MOVEMENTS_LIMIT - 1);
+  if (error) throw error;
+  return data;
+}
