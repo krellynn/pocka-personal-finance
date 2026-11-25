@@ -90,13 +90,15 @@ function MonthBudgets({ workspaceId, timeZone }: { workspaceId: string; timeZone
               </thead>
               <tbody className="divide-y divide-[color:var(--line)]">
                 {budgeted.map((r) => <BudgetRow key={r.category_id} row={r} />)}
-                {unbudgeted.length > 0 && (
+              </tbody>
+              {unbudgeted.length > 0 && (
+                <tbody className="divide-y divide-[color:var(--line)]">
                   <tr>
                     <th scope="rowgroup" colSpan={4} className="pt-4 pb-1 text-left text-xs font-semibold text-muted">{t("budgets.unbudgeted")}</th>
                   </tr>
-                )}
-                {unbudgeted.map((r) => <BudgetRow key={r.category_id} row={r} />)}
-              </tbody>
+                  {unbudgeted.map((r) => <BudgetRow key={r.category_id} row={r} />)}
+                </tbody>
+              )}
               <tfoot>
                 <tr className="border-t border-[color:var(--line)] font-semibold">
                   <th scope="row" className="py-2 text-left">{t("budgets.total")}</th>
@@ -117,7 +119,7 @@ function MonthBudgets({ workspaceId, timeZone }: { workspaceId: string; timeZone
           {t("budgets.copy")}
         </button>
       </div>
-      <SetBudgetForm workspaceId={workspaceId} month={first} />
+      <SetBudgetForm key={month} workspaceId={workspaceId} month={first} archivedBudgeted={new Set(budgeted.filter((r) => r.category_archived).map((r) => r.category_id))} />
     </>
   );
 }
@@ -145,12 +147,13 @@ const schema = z.object({
 type Values = z.infer<typeof schema>;
 const defaultValues: Values = { category: "", amount: "" };
 
-function SetBudgetForm({ workspaceId, month }: { workspaceId: string; month: string }) {
+function SetBudgetForm({ workspaceId, month, archivedBudgeted }: { workspaceId: string; month: string; archivedBudgeted: Set<string> }) {
   const { t } = useTranslation();
   const [saved, setSaved] = useState(false);
   const queryClient = useQueryClient();
   const categories = useQuery({ queryKey: financeKeys.categories(workspaceId), queryFn: () => fetchCategories(workspaceId) });
-  const expense = categories.data?.filter((c) => c.kind === "expense" && !c.archived_at) ?? [];
+  // Archived categories are listed only while they still hold a plan this month, so it can be removed with 0.
+  const expense = categories.data?.filter((c) => c.kind === "expense" && (!c.archived_at || archivedBudgeted.has(c.id))) ?? [];
   const form = useForm<Values>({ resolver: zodResolver(schema), defaultValues });
   // set_budget is an absolute upsert, so a retry needs no idempotency key.
   const save = useMutation({
