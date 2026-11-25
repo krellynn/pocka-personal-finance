@@ -8,7 +8,7 @@ import { todayInTimeZone } from "../../lib/datetime/todayInTimeZone";
 import { parseAmountInput } from "../../lib/money/parseAmountInput";
 import { Field, ServerError, Submit } from "../auth/AuthPages";
 import { callLedger, fetchAccounts } from "./api";
-import { financeErrorKey } from "./errors";
+import { financeErrorKey, nameTakenOr } from "./errors";
 import { financeKeys, invalidateLedger } from "./keys";
 import { money } from "./money";
 import { SelectField } from "./ui";
@@ -17,12 +17,6 @@ import { useWorkspace } from "./useWorkspace";
 
 const kinds = ["cash", "bank", "ewallet", "credit_card"] as const;
 type Account = Awaited<ReturnType<typeof fetchAccounts>>[number];
-
-// A duplicate name is VALIDATION_FAILED with the fixed detail "name taken" (create_financial_account).
-const createErrorKey = (error: unknown) =>
-  typeof error === "object" && error !== null && "details" in error && error.details === "name taken"
-    ? "accounts.validation.nameTaken"
-    : financeErrorKey(error);
 
 export function AccountsPage() {
   const { t } = useTranslation();
@@ -176,7 +170,7 @@ function CreateAccountForm({ workspaceId, timeZone }: { workspaceId: string; tim
           })}
         />
         <Field label={t("accounts.fields.openedOn")} type="date" max={today} error={err("openedOn")} {...form.register("openedOn", { onChange: onEdit })} />
-        <ServerError messageKey={create.isError ? createErrorKey(create.error) : null} />
+        <ServerError messageKey={create.isError ? nameTakenOr(create.error, "accounts.validation.nameTaken") : null} />
         <p role="status" className="text-sm text-muted">{saved ? t("accounts.created") : ""}</p>
         <Submit busy={create.isPending}>{t("accounts.submit")}</Submit>
       </form>

@@ -83,7 +83,7 @@ describe("AccountsPage", () => {
     renderPage([account({ balance: "5000" }), account({ id: "a2", name: "Kosong" })]);
     expect(await screen.findByRole("button", { name: "Arsipkan BCA" })).toBeDisabled();
     fireEvent.click(screen.getByRole("button", { name: "Arsipkan Kosong" }));
-    expect(await screen.findByRole("alert")).toHaveTextContent("Akun masih punya saldo");
+    expect(await screen.findByRole("alert")).toHaveTextContent("Masih ada saldo");
     expect(api.callLedger).toHaveBeenCalledWith("set_financial_account_archived", { p_workspace_id: "w1", p_account_id: "a2", p_archived: true });
   });
 });
