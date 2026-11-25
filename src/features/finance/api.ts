@@ -108,3 +108,23 @@ export async function fetchPocketMovements(workspaceId: string) {
   if (error) throw error;
   return data;
 }
+
+/** Plan vs actual for a "YYYY-MM-01" month; unbudgeted spending comes back with has_budget = false. */
+export async function fetchBudgetVsActual(workspaceId: string, month: string) {
+  const { data, error } = await supabase.rpc("budget_vs_actual", { p_workspace_id: workspaceId, p_month: month });
+  if (error) throw error;
+  // Generated types mark every column non-null; planned and remaining are null when has_budget is false.
+  return data as (Omit<(typeof data)[number], "planned" | "remaining"> & { planned: string | null; remaining: string | null })[];
+}
+
+/** Absolute plan for one category and month; "0" removes it. */
+export async function setBudget(workspaceId: string, month: string, categoryId: string, amount: string) {
+  const { error } = await supabase.rpc("set_budget", { p_workspace_id: workspaceId, p_month: month, p_category_id: categoryId, p_amount: amount });
+  if (error) throw error;
+}
+
+export async function copyBudgets(workspaceId: string, fromMonth: string, toMonth: string) {
+  const { data, error } = await supabase.rpc("copy_budgets", { p_workspace_id: workspaceId, p_from_month: fromMonth, p_to_month: toMonth });
+  if (error) throw error;
+  return (data as { copied: number }).copied;
+}
