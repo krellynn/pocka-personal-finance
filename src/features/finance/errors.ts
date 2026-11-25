@@ -3,6 +3,8 @@ const knownCodes: Record<string, string> = {
   RESOURCE_ARCHIVED: "finance.errors.archived",
   RESOURCE_HAS_BALANCE: "finance.errors.hasBalance",
   CURRENCY_NOT_SUPPORTED: "finance.errors.currencyNotSupported",
+  ALLOCATION_EXCEEDS_ELIGIBLE: "finance.errors.allocationExceeds",
+  POCKET_INSUFFICIENT: "finance.errors.pocketInsufficient",
   REFUND_EXCEEDS_ORIGINAL: "finance.errors.refundExceeds",
   HAS_DEPENDENT_REFUNDS: "finance.errors.hasRefunds",
   POSTED_ENTRY_IMMUTABLE: "finance.errors.alreadyReversed",
