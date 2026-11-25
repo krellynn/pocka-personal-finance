@@ -5,7 +5,7 @@ import "../../i18n";
 import * as api from "./api";
 import { PocketsPage } from "./PocketsPage";
 
-vi.mock("./api", () => ({ fetchWorkspace: vi.fn(), fetchPockets: vi.fn(), fetchPocketSummary: vi.fn(), callLedger: vi.fn() }));
+vi.mock("./api", () => ({ fetchWorkspace: vi.fn(), fetchPockets: vi.fn(), fetchPocketSummary: vi.fn(), callLedger: vi.fn(), renamePocket: vi.fn() }));
 vi.mock("../auth/useAuth", () => ({ useAuth: () => ({ session: { user: { id: "u1" } }, loading: false }) }));
 
 afterEach(() => {
@@ -79,5 +79,21 @@ describe("PocketsPage", () => {
     fireEvent.click(screen.getByRole("button", { name: "Arsipkan Darurat" }));
     expect(await screen.findByText("Pocket diarsipkan.")).toBeInTheDocument();
     expect(api.callLedger).toHaveBeenCalledWith("set_pocket_archived", { p_workspace_id: "w1", p_pocket_id: "p1", p_archived: true });
+  });
+
+  it("renames a pocket with a trimmed name and maps a duplicate", async () => {
+    vi.mocked(api.renamePocket).mockRejectedValueOnce({ code: "23505", message: "duplicate key" }).mockResolvedValueOnce(undefined);
+    renderPage([pocket({})], { eligible_funds: "0", allocated: "0", unallocated: "0", is_shortfall: false });
+    fireEvent.click(await screen.findByRole("button", { name: "Ganti nama Darurat" }));
+    const input = screen.getAllByLabelText("Nama pocket")[0]!;
+    fireEvent.change(input, { target: { value: " Liburan " } });
+    fireEvent.click(screen.getByRole("button", { name: "Simpan" }));
+    expect(await screen.findByText("Nama pocket ini sudah dipakai.")).toBeInTheDocument();
+    fireEvent.change(input, { target: { value: "Dana Darurat" } });
+    fireEvent.click(screen.getByRole("button", { name: "Simpan" }));
+    expect(await screen.findByText("Nama pocket diperbarui.")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Ganti nama Darurat" })).toHaveFocus();
+    expect(api.renamePocket).toHaveBeenNthCalledWith(1, "p1", "Liburan");
+    expect(api.renamePocket).toHaveBeenNthCalledWith(2, "p1", "Dana Darurat");
   });
 });

@@ -26,8 +26,9 @@ export function financeErrorKey(error: unknown): string {
     : "finance.errors.generic";
 }
 
-/** create_* RPCs report a duplicate name as VALIDATION_FAILED with the fixed detail "name taken". */
+/** RPCs report a duplicate name as VALIDATION_FAILED "name taken"; a direct table update as unique_violation 23505. */
 export const nameTakenOr = (error: unknown, nameTakenKey: string) =>
-  typeof error === "object" && error !== null && "details" in error && error.details === "name taken"
+  typeof error === "object" && error !== null &&
+  (("details" in error && error.details === "name taken") || ("code" in error && error.code === "23505"))
     ? nameTakenKey
     : financeErrorKey(error);

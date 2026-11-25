@@ -1,12 +1,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
 import { parseAmountInput } from "../../lib/money/parseAmountInput";
 import { Field, ServerError, Submit } from "../auth/AuthPages";
-import { callLedger, fetchPockets, fetchPocketSummary } from "./api";
+import { callLedger, fetchPockets, fetchPocketSummary, renamePocket } from "./api";
 import { nameTakenOr } from "./errors";
 import { financeKeys } from "./keys";
 import { money } from "./money";
@@ -34,7 +34,7 @@ export function PocketsPage() {
   const archived = pockets.data?.filter((p) => p.archived_at) ?? [];
   const s = summary.data;
   const row = (p: Pocket) => (
-    <PocketRow key={p.id} pocket={p} busy={archive.isPending} onToggle={() => archive.mutate({ id: p.id, archived: !p.archived_at })} />
+    <PocketRow key={p.id} workspaceId={ws!.id} pocket={p} busy={archive.isPending} onToggle={() => archive.mutate({ id: p.id, archived: !p.archived_at })} />
   );
 
   return (
@@ -86,9 +86,60 @@ function Stat({ label, value, hint, warn }: { label: string; value: string | nul
   );
 }
 
-function PocketRow({ pocket, busy, onToggle }: { pocket: Pocket; busy: boolean; onToggle: () => void }) {
+function PocketRow({ workspaceId, pocket, busy, onToggle }: { workspaceId: string; pocket: Pocket; busy: boolean; onToggle: () => void }) {
   const { t } = useTranslation();
   const hintId = useId();
+  const queryClient = useQueryClient();
+  const [editing, setEditing] = useState(false);
+  const renameButton = useRef<HTMLButtonElement>(null);
+  const wasEditing = useRef(false);
+  // Closing the inline form returns focus to its trigger so keyboard users keep their place.
+  useEffect(() => {
+    if (wasEditing.current && !editing) renameButton.current?.focus();
+    wasEditing.current = editing;
+  }, [editing]);
+  const [name, setName] = useState(pocket.name);
+  const rename = useMutation({
+    mutationFn: (newName: string) => renamePocket(pocket.id, newName),
+    onSuccess: () => setEditing(false),
+    onSettled: () => queryClient.invalidateQueries({ queryKey: financeKeys.pockets(workspaceId) }),
+  });
+  const trimmed = name.trim();
+  const nameInvalid = trimmed.length < 1 || trimmed.length > 60;
+  if (editing) {
+    return (
+      <li className="py-3">
+        <form
+          noValidate
+          className="space-y-2"
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (!nameInvalid) rename.mutate(trimmed);
+          }}
+        >
+          <Field
+            label={t("pockets.fields.name")}
+            value={name}
+            autoFocus
+            error={nameInvalid ? t("pockets.validation.name") : undefined}
+            onChange={(e) => {
+              setName(e.target.value);
+              rename.reset();
+            }}
+          />
+          <ServerError messageKey={rename.isError ? nameTakenOr(rename.error, "pockets.validation.nameTaken") : null} />
+          <div className="flex gap-2">
+            <button type="submit" disabled={rename.isPending} className="rounded-lg bg-ink px-3 py-1.5 text-xs font-medium text-white disabled:opacity-50">
+              {t("pockets.renameSave")}
+            </button>
+            <button type="button" onClick={() => setEditing(false)} className="rounded-lg border border-[color:var(--field)] px-3 py-1.5 text-xs font-medium">
+              {t("pockets.renameCancel")}
+            </button>
+          </div>
+        </form>
+      </li>
+    );
+  }
   const isArchived = !!pocket.archived_at;
   const blocked = !isArchived && (pocket.balance ?? "0") !== "0";
   const label = isArchived ? t("pockets.unarchive") : t("pockets.archive");
@@ -96,10 +147,26 @@ function PocketRow({ pocket, busy, onToggle }: { pocket: Pocket; busy: boolean; 
     <li className="flex flex-wrap items-center justify-between gap-3 py-3">
       <div>
         <p className="font-medium">{pocket.name}</p>
+        {rename.isSuccess && <p role="status" className="text-xs text-muted">{t("pockets.renamed")}</p>}
         {pocket.target_amount && <p className="text-xs text-muted">{t("pockets.target", { amount: money(pocket.target_amount) })}</p>}
       </div>
       <div className="flex flex-wrap items-center justify-end gap-x-3 gap-y-1">
         <p className="text-right font-semibold tabular-nums">{money(pocket.balance ?? "0")}</p>
+        {!isArchived && (
+          <button
+            ref={renameButton}
+            type="button"
+            onClick={() => {
+              setName(pocket.name);
+              rename.reset();
+              setEditing(true);
+            }}
+            aria-label={`${t("pockets.rename")} ${pocket.name}`}
+            className="rounded-lg border border-[color:var(--field)] px-3 py-1.5 text-xs font-medium"
+          >
+            {t("pockets.rename")}
+          </button>
+        )}
         <button
           type="button"
           onClick={onToggle}

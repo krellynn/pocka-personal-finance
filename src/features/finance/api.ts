@@ -87,3 +87,10 @@ export async function fetchPocketSummary(workspaceId: string) {
   if (error) throw error;
   return data;
 }
+
+/** Rename goes straight to the table: RLS lets writers update only `name`. No row back means no access. */
+export async function renamePocket(pocketId: string, name: string) {
+  const { data, error } = await supabase.from("pockets").update({ name }).eq("id", pocketId).select("id").maybeSingle();
+  if (error) throw error;
+  if (!data) throw { code: "P0001", message: "WORKSPACE_ACCESS_DENIED" };
+}
