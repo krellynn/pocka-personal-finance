@@ -202,3 +202,11 @@ Everything beyond the initial app shell remains unimplemented: Auth, workspaces,
 - Verified: 207 pgTAP, 98 Vitest, tsc, lint, build. Browser check on local Supabase: account, two pockets, over-allocation rejected with the right message, allocate, move, history, budget set and copy all worked; only expected 400 was the rejected allocation.
 - Known limits: movements list capped at 50 rows; same-day movements show date only; local `db reset` wipes local test accounts.
 - Next gates need product-owner decisions: G2b/G2c, G5–G7.
+
+## 17. G3b goals complete (2026-11-28)
+
+- Design: `docs/G3B_GOALS_DRAFT_V1.md` (approved 2026-11-28, Q1–Q4 as recommended, architecture-reviewer amendments in §8). The earlier untracked `20261128000000_goals.sql` was rejected (failed on this schema, broke the RPC-only and audit rules); it is not part of the repo.
+- Migration `20261128010000_goals.sql`: `goals` (name 1–60 unique among active, target > 0, optional date up to 2100 and note, optional pocket link by composite FK, one active goal per pocket), `create_goal` (idempotent), `update_goal` (absolute, no-op writes no audit), `set_goal_archived` (releases the pocket link, unarchive returns unlinked), `goal_progress` security-invoker view (floor percent, exact 15-digit math). Goal RPCs and `set_pocket_archived` share `lock_pockets`. `set_pocket_archived` is redefined: a pocket with an active goal fails `POCKET_LINKED_TO_GOAL`.
+- Screen: "Target" page (list with progress bars, create/edit form, archive/unarchive). Errors `POCKET_ALREADY_LINKED` and `POCKET_LINKED_TO_GOAL` mapped in the i18n catalog.
+- Verified: 267 pgTAP, 106 Vitest, tsc, lint.
+- Known limits: unknown goal id reports `VALIDATION_FAILED 'goal'` (same style as pockets) rather than a dedicated code; no client-side past-date check (the server rejects it); milestones, multi-currency (G2b) and auto-allocation are out of scope.
