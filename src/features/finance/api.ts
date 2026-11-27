@@ -128,3 +128,14 @@ export async function copyBudgets(workspaceId: string, fromMonth: string, toMont
   if (error) throw error;
   return (data as { copied: number }).copied;
 }
+
+/** Goals with progress; money and percent are computed by the database (goal_progress). */
+export async function fetchGoals(workspaceId: string) {
+  const { data, error } = await supabase
+    .from("goal_progress")
+    .select("id, name, target_amount, target_date, notes, pocket_id, archived_at, saved, remaining, percent, is_reached")
+    .eq("workspace_id", workspaceId)
+    .order("name");
+  if (error) throw error;
+  return data;
+}
